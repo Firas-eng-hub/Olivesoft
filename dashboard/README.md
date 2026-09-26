@@ -23,7 +23,7 @@ Import this Git repository and set **Root Directory** to `dashboard`. Vercel wil
 2. On a matched tender, inspect the requirement matrix and evidence library, then select **Generate proposal**.
 3. Watch simulated progress in **Activity**, then download the static sample PDF or PPTX in **Proposals**.
 4. Use **Add new tender** to create a local demo record. **Reset demo** in Activity restores the starting data.
-5. Open **Knowledge base** to select OliveSoft CVs, expertise files, or project references for the planned platform-to-Drive upload. The selected files stay in browser memory until you leave the section and are not uploaded while the n8n integration is pending.
+5. Open **Knowledge base** to select OliveSoft CVs, expertise files, or project references. Upload is available only when the protected server endpoint and n8n workflow are configured; selected files stay in browser memory until you leave the section.
 
 The data is synthetic and saved in browser local storage. Proposal progress, fit scores, and trend visuals are illustrative. The downloadable files are static, clearly labelled demo fixtures; they are not generated from the selected tender. To regenerate them, run `python3 scripts/generate_demo_artifacts.py`.
 
@@ -33,4 +33,4 @@ The data is synthetic and saved in browser local storage. Proposal progress, fit
 
 All workflow decisions, scoring, retrieval, and proposal generation must remain in n8n. The dashboard should display persisted results and submit explicit actions. A `proposal_ready` lead must represent two verified artifacts in the live integration, as specified in [../Plan.md](../Plan.md).
 
-The Knowledge base is a UI preview for platform uploads into the private Drive corpus. See [Drive knowledge integration](../docs/drive-knowledge.md) for the upload and n8n ingestion contract. No Drive credentials or private document contents belong in this repository or the browser bundle.
+The Knowledge base has a server-side upload proxy for PDF, DOCX, and TXT files up to 4 MB. It checks a team password and forwards each file to the protected n8n upload webhook. Set the values in [`.env.example`](.env.example) as Vercel environment variables; keep real secrets out of Git. The n8n draft remains unpublished while its Drive OAuth and dedicated webhook credentials are being repaired. See [Drive knowledge integration](../docs/drive-knowledge.md) for setup and remaining RAG work.

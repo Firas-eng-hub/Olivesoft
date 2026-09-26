@@ -58,6 +58,7 @@ Use the supplied filenames consistently in exports, documentation, imports, and 
 | `09_actions.json` | Dhiya | Missing; explicit generation/retry actions with preconditions and idempotency |
 | `10_error_handler.json` | Dhiya | Missing; record execution failures; runner must also persist its own failures |
 | `11_rag_evaluation.json` | Nour | Missing; run labelled FR/EN queries and persist benchmark metrics |
+| `12_knowledge_upload.json` | Firas / Nour | Draft; platform upload to private Drive, then durable ingestion and index status |
 | Reusable validator sub-workflow | Shared | Missing; validate shared input/output schemas without assuming npm imports |
 
 `00_test.json` is an echo test, not intake. It currently has no webhook authentication and must not be counted as the authenticated feasibility test.
