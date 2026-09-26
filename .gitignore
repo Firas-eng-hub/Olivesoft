@@ -1,0 +1,11 @@
+# Local agent and editor state
+.agents/
+.codex/
+.DS_Store
+*.swp
+
+# Local secrets and Vercel metadata
+.env
+.env.*
+!.env.example
+.vercel/
