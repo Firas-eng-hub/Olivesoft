@@ -1,6 +1,6 @@
 # Platform uploads to Supabase Storage
 
-The **Knowledge base** accepts PDF, DOCX, and TXT files up to 4 MB. The dashboard server checks a team upload password, validates the file, and sends its bytes to the protected n8n webhook. The [upload workflow draft](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/dvXGNUUukgVpkZgL) writes the original to a **private Supabase Storage bucket** under `cv/`, `expertise/`, or `project/`. A successful upload returns the bucket and object path. It does **not** mean the file has been indexed for RAG.
+The **Knowledge base** accepts PDF, DOCX, and TXT files up to 4 MB. The dashboard server checks a team upload password, validates the file, and sends its bytes to the protected n8n webhook. The [upload workflow draft](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/dvXGNUUukgVpkZgL) writes the original to a **private Supabase Storage bucket** under `cv/`, `expertise/`, or `project/`. A successful upload returns the bucket and object path and queues `knowledge_ingestion` asynchronously. It does **not** mean the file has been indexed for RAG.
 
 The workflow is unpublished. Configure the values below, rebind the webhook credential, then test before publishing. The checked-in workflow is [12_knowledge_upload.json](../n8n/workflows/12_knowledge_upload.json).
 
@@ -40,14 +40,35 @@ Add these three **server-side** variables in **Vercel → Project → Settings �
 
 Do **not** add the Supabase secret key to Vercel for this flow. Vercel never calls Supabase directly. Keep the team password and webhook API key different. `.env.example` contains names only.
 
-## 4. RAG integration still required
+## 4. Ingestion and matching workflows
 
-The existing `knowledge_ingestion` workflow scans Google Drive and currently extracts text files only. It has **not** been converted to Supabase Storage and does not process these uploads. The existing `wf3_rag_matching` draft searches placeholder Qdrant collection URLs while ingestion writes to `olivesoft_knowledge`. Uploads will be stored privately but **will not appear in matching** until these steps are implemented and verified:
+The live drafts are [knowledge_ingestion](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/1nspjntygwd5WWej) and [wf3_rag_matching](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/s3hsG3EMPMUWzBbK). Their credential-free exports are [03_knowledge_ingestion.json](../n8n/workflows/03_knowledge_ingestion.json) and [05_requirement_matching.json](../n8n/workflows/05_requirement_matching.json).
 
-1. Persist upload jobs with bucket, object path, category, content hash, state, and retry-safe uniqueness in PostgreSQL. Return a durable job ID after that state is saved.
-2. Add a single-object input to `knowledge_ingestion` that downloads the object from Supabase Storage using server-side credentials. Extract PDF, DOCX, and TXT text; reject empty or image-only documents; record failures and retries.
-3. Chunk and embed the extracted text using the same model and Qdrant collection that matching queries. Store bucket and object path in each source citation. Provide an authenticated way to generate a short-lived signed URL for human review.
-4. Expose authenticated indexing status in the dashboard. Keep the upload receipt labeled **indexing pending** until the ingestion state confirms otherwise.
-5. Run a live retrieval check with French and English queries and verify cited content against the original private document.
+`knowledge_ingestion` now accepts `{ "bucket": "...", "storage_path": "cv/EXECUTION_ID/file.pdf" }` from the upload workflow, validates the private bucket/path, downloads the object from Supabase Storage, extracts PDF/TXT text or decompresses DOCX `word/document.xml`, chunks it, embeds with `gemini-embedding-2` at 768 dimensions, and upserts into Qdrant `olivesoft_knowledge`. Empty or image-only documents fail extraction. Its old Drive scan nodes were removed; the manual fixture branch remains for isolated tests. The workflow currently has a disconnected `Config` branch for Qdrant collection setup that must be run separately if the collection does not already exist.
 
-Supabase private buckets require authorized downloads or signed URLs; a public object URL should not be constructed for CVs. See [Supabase Storage buckets](https://supabase.com/docs/guides/storage/buckets/fundamentals), [standard uploads](https://supabase.com/docs/guides/storage/uploads/standard-uploads), and [API keys](https://supabase.com/docs/guides/getting-started/api-keys).
+`wf3_rag_matching` now uses the same Gemini model and 768 dimensions. It queries the one Qdrant collection with filters for `cv`, `project`, and `expertise`, only accepts payloads with `source: supabase_storage`, deduplicates by document, and carries `source_bucket`/`source_path` in its match payload. Disconnected Drive/Dropbox nodes were removed. It continues using the project's Supabase Postgres tables for leads and matches.
+
+Add `OLIVESOFT_QDRANT_URL` to the **n8n server** (the full Qdrant base URL, including port if needed). Check the n8n Header Auth credentials on both workflows: Gemini requests need `x-goog-api-key`, and Qdrant requests need `api-key`. The existing generic credentials have similar names; inspect and rebind each node rather than assuming its current binding is correct. Supabase Storage requests read the three `OLIVESOFT_SUPABASE_*` environment values from section 1. Vercel still needs only the three variables in section 3.
+
+## Other live workflows
+
+| Workflow | Supabase change |
+| --- | --- |
+| `wf1_tender_detection` | Already persists leads through the project's Supabase Postgres credential; no Drive node. |
+| `wf2_prospect_research` | Already reads and writes Supabase Postgres; calls `wf3_rag_matching`, so it inherits the new source evidence. |
+| `wf4_proposal_generation` | Already reads matches and writes artifact metadata to Supabase Postgres; its placeholder render service and artifact file storage still need implementation before it can produce a private Supabase file. |
+| `wf5_api` | Already reads leads, matches, and artifact metadata from Supabase Postgres; authenticated file delivery for private artifacts remains open. |
+
+No other live workflow contains a Drive node. The remaining proposal and artifact work is separate from CV/expertise ingestion and is not validated by this change.
+
+## 5. Verification before publication
+
+These graph changes are saved as **unpublished drafts**. Node configuration validation passed, but no live Supabase credential or object was available for an end-to-end run. Before publishing:
+
+1. Test TXT, PDF, and DOCX uploads from the dashboard and confirm each original is in the private bucket. Check that `knowledge_ingestion` receives the same bucket/path and writes nonempty chunks to `olivesoft_knowledge`.
+2. Test a malformed path, wrong bucket, empty PDF, bad DOCX, and a Supabase download failure. Confirm failures do not create Qdrant points.
+3. Run matching against a researched lead with known evidence. Confirm the result cites the expected Supabase bucket/path and that no `REPLACE-ME` Qdrant URL is used.
+4. Check credentials on the existing Postgres, Gemini, and Qdrant nodes. Verify `wf4_proposal_generation` and `wf5_api` separately before production use; they use Supabase Postgres but proposal rendering and artifact delivery still have other open work.
+5. Add a durable PostgreSQL upload/indexing job and authenticated status endpoint before treating the UI's **indexing pending** receipt as a complete indexing state. An authenticated signed URL is still needed for human review of private sources.
+
+Supabase private buckets require authorized downloads or signed URLs; a public object URL should not be constructed for CVs. See [Supabase Storage buckets](https://supabase.com/docs/guides/storage/buckets/fundamentals), [standard uploads](https://supabase.com/docs/guides/storage/uploads/standard-uploads), and [API keys](https://supabase.com/docs/guides/getting-started/api-keys). Qdrant's [query API](https://qdrant.tech/documentation/search/) supports payload filters in a single collection. Gemini's [embedding API](https://ai.google.dev/api/embeddings) supports a 768-dimensional retrieval configuration.

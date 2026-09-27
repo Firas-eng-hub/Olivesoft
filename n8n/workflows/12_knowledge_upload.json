@@ -110,12 +110,12 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        990,
-        -120
+        1430,
+        -130
       ],
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ status: \"uploaded\", bucket: $env.OLIVESOFT_SUPABASE_BUCKET, storage_path: $json.Key ? $(\"Validate upload\").first().json.storage_path : null, indexing: \"pending\" }) }}",
+        "responseBody": "={{ JSON.stringify({ status: \"uploaded\", bucket: $(\"Build ingestion request\").first().json.bucket, storage_path: $(\"Build ingestion request\").first().json.storage_path, indexing: \"pending\" }) }}",
         "options": {
           "responseCode": 201
         }
@@ -136,6 +136,30 @@
         "options": {
           "responseCode": 400
         }
+      }
+    },
+    {
+      "id": "728a9f89-3130-4f66-a0b2-1ade25d7e3a7",
+      "name": "Build ingestion request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, -130],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const stored = $input.first().json;\nif (!stored.Key) throw new Error('Supabase did not confirm the stored object');\nconst source = $('Validate upload').first().json;\nreturn [{ json: { bucket: $env.OLIVESOFT_SUPABASE_BUCKET, storage_path: source.storage_path } }];"
+      }
+    },
+    {
+      "id": "e22e4ee4-b8fc-44b7-b28f-2c83cc42652f",
+      "name": "Queue Supabase ingestion",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [1190, -130],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": { "__rl": true, "mode": "id", "value": "1nspjntygwd5WWej" },
+        "options": { "waitForSubWorkflow": false }
       }
     }
   ],
@@ -184,12 +208,18 @@
       "main": [
         [
           {
-            "node": "Respond Supabase upload",
+            "node": "Build ingestion request",
             "type": "main",
             "index": 0
           }
         ]
       ]
+    },
+    "Build ingestion request": {
+      "main": [[{ "node": "Queue Supabase ingestion", "type": "main", "index": 0 }]]
+    },
+    "Queue Supabase ingestion": {
+      "main": [[{ "node": "Respond Supabase upload", "type": "main", "index": 0 }]]
     }
   },
   "settings": {

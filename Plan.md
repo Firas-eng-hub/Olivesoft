@@ -49,9 +49,9 @@ Use the supplied filenames consistently in exports, documentation, imports, and 
 | `00_intake.json` | Dhiya | Missing; authenticate, validate, persist a job, then return HTTP 202 |
 | `01_tender_detection.json` | Dhiya | Missing; extract/validate tender, deduplicate, score relevance, persist lead |
 | `02_prospect_research.json` | Firas | Exists; adapt its contract and research behavior, then validate on hosted n8n |
-| `03_knowledge_ingestion.json` | Nour | Missing; extract, chunk, embed, index, and version internal documents |
+| `03_knowledge_ingestion.json` | Nour | Supabase Storage draft; PDF/DOCX/TXT extraction and Qdrant indexing, live gate pending |
 | `04_rag_search.json` | Nour | Missing; requirement search with filters, document deduplication, and evidence |
-| `05_requirement_matching.json` | Nour | Missing; support judgments, coverage, mandatory review flags, persistence |
+| `05_requirement_matching.json` | Nour | Supabase-sourced Qdrant draft; support judgments and coverage still pending live gate |
 | `06_proposal_generation.json` | Firas | Replace/adapt current `04_proposal_generation.json`; remove API renderer dependency |
 | `07_job_runner.json` | Dhiya | Missing; atomic claiming, stage execution, checkpointing, retries, recovery |
 | `08_read_api.json` | Dhiya | Missing; authenticated paginated leads, details, jobs, and artifact lookup |
