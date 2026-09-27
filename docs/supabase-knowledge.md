@@ -2,7 +2,7 @@
 
 The **Knowledge base** accepts PDF, DOCX, and TXT files up to 4 MB. The dashboard server checks a team upload password, validates the file, and sends its bytes to the protected n8n webhook. The [upload workflow draft](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/dvXGNUUukgVpkZgL) writes the original to a **private Supabase Storage bucket** under `cv/`, `expertise/`, or `project/`. A successful upload returns the bucket and object path and queues `knowledge_ingestion` asynchronously. It does **not** mean the file has been indexed for RAG.
 
-The workflow is unpublished. Configure the values below, rebind the webhook credential, then test before publishing. The checked-in workflow is [12_knowledge_upload.json](../n8n/workflows/12_knowledge_upload.json).
+The upload workflow is published with the dedicated `OLIVESOFT_N8N_UPLOAD_API_KEY` Header Auth credential. Its live Storage and indexing path still needs an end-to-end test. The checked-in workflow is [12_knowledge_upload.json](../n8n/workflows/12_knowledge_upload.json).
 
 ## 1. Supabase setup
 
@@ -43,9 +43,9 @@ Save and test the credential, then bind it to the Postgres nodes in `wf1_tender_
 
 ## 2. Protect and publish the n8n webhook
 
-Open the [upload workflow draft](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/dvXGNUUukgVpkZgL). Its webhook currently points at an unrelated existing `Header Auth account` credential. Create a **dedicated** n8n Header Auth credential named `OliveSoft Upload Header Auth` with header name `api-key` and a long random value. Rebind the webhook to it. Do not reuse the Qdrant header credential.
+Open the [upload workflow](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/dvXGNUUukgVpkZgL). Its webhook is bound to the dedicated n8n Header Auth credential `OLIVESOFT_N8N_UPLOAD_API_KEY`. Confirm its header name is `api-key` and that its value matches Vercel's server-side variable of the same name. Do not reuse the Qdrant header credential.
 
-Test one TXT upload through n8n's test webhook and verify the object appears in the private bucket. Then test a PDF and DOCX, bad category, oversized file, wrong key, and a failed Supabase request. Publish only after those checks pass. The production URL is:
+Test one TXT upload from the dashboard and verify the object appears in the private bucket. Then test a PDF and DOCX, bad category, oversized file, wrong key, and a failed Supabase request. The production URL is:
 
 `https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/webhook/olivesoft/v1/knowledge/upload`
 
@@ -67,7 +67,7 @@ Do **not** add the Supabase secret key to Vercel for this flow. Vercel never cal
 
 ## 4. Ingestion and matching workflows
 
-The live drafts are [knowledge_ingestion](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/1nspjntygwd5WWej) and [wf3_rag_matching](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/s3hsG3EMPMUWzBbK). Their credential-free exports are [03_knowledge_ingestion.json](../n8n/workflows/03_knowledge_ingestion.json) and [05_requirement_matching.json](../n8n/workflows/05_requirement_matching.json).
+The published workflows are [knowledge_ingestion](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/1nspjntygwd5WWej) and [wf3_rag_matching](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/s3hsG3EMPMUWzBbK). Their credential-free exports are [03_knowledge_ingestion.json](../n8n/workflows/03_knowledge_ingestion.json) and [05_requirement_matching.json](../n8n/workflows/05_requirement_matching.json).
 
 `knowledge_ingestion` now accepts `{ "bucket": "...", "storage_path": "cv/EXECUTION_ID/file.pdf" }` from the upload workflow, validates the private bucket/path, downloads the object from Supabase Storage, extracts PDF/TXT text or decompresses DOCX `word/document.xml`, chunks it, embeds with `gemini-embedding-2` at 768 dimensions, and upserts into Qdrant `olivesoft_knowledge`. Empty or image-only documents fail extraction. Its old Drive scan nodes were removed; the manual fixture branch remains for isolated tests. The workflow currently has a disconnected `Config` branch for Qdrant collection setup that must be run separately if the collection does not already exist.
 
@@ -88,7 +88,7 @@ No other live workflow contains a Drive node. The remaining proposal and artifac
 
 ## 5. Verification before publication
 
-These graph changes are saved as **unpublished drafts**. Node configuration validation passed, but no live Supabase credential or object was available for an end-to-end run. Before publishing:
+These graph changes are published. Node configuration validation passed, but no live Supabase credential or object was available for an end-to-end run. Before relying on the integration:
 
 1. Test TXT, PDF, and DOCX uploads from the dashboard and confirm each original is in the private bucket. Check that `knowledge_ingestion` receives the same bucket/path and writes nonempty chunks to `olivesoft_knowledge`.
 2. Test a malformed path, wrong bucket, empty PDF, bad DOCX, and a Supabase download failure. Confirm failures do not create Qdrant points.

@@ -1,0 +1,319 @@
+{
+  "name": "wf1_tender_detection",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## WF1 — Tender Detection (chain entry)\nPublic endpoint: `POST /webhook/tenders`. Responds 201 immediately, then chains wf2→wf3→wf4 asynchronously.\n\n### Configure (owner: Dhiya)\n1. Attach **Supabase Postgres** credential to all 3 Postgres nodes.\n2. Attach **Z.ai GLM** credential (OpenAI-compatible, base URL `https://api.z.ai/api/coding/paas/v4`) to `Z.ai GLM (extract)` — model `glm-4.6`.\n3. **SECURITY**: webhook is public — add a secret header/query check (IF node) before anything else.\n4. `Validate & Normalize`: enforce `contracts/tender.schema.json` (required: title, requirements[]). Accept JSON | CSV | PDF later (plan.md 1.B normalization).\n5. `Relevance Scoring`: replace the keyword heuristic with rules + LLM score (0-100).\n6. Optional: add a Schedule Trigger later to poll TED API (Firas' `scripts/import_ted.py` can also POST here).\n7. Retry: set `Retry On Fail` on the LLM node (2-3 tries) for quota hiccups.",
+        "height": 760,
+        "width": 660,
+        "color": 2
+      },
+      "id": "sn-wf1-config",
+      "name": "Config — WF1 Detection",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        -416
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tenders",
+        "responseMode": "responseNode",
+        "options": {},
+        "authentication": "headerAuth"
+      },
+      "id": "wh-wf1",
+      "name": "POST /tenders",
+      "webhookId": "44d3f2d5-8204-4017-bb7c-f93070df4ced",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// TODO: full validation vs contracts/tender.schema.json (title + requirements required)\nconst body = ($json && $json.body) ? $json.body : $json;\nconst out = {\n  title: body.title ?? 'Untitled tender',\n  source: body.source ?? 'manual',\n  raw_payload: body,\n  language: body.language ?? 'en',\n};\nreturn [{ json: out }];"
+      },
+      "id": "validate-wf1",
+      "name": "Validate & Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -368,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "hasOutputParser": true,
+        "text": "={{ 'Extract tender facts from this submitted tender as structured JSON. Use only supplied facts. Preserve title and organisation. Return null for unknown sector, budget, currency, deadline, and source_url. Requirements should be a list of explicit needs. Tender: ' + JSON.stringify($json.raw_payload) }}"
+      },
+      "id": "chain-wf1",
+      "name": "Extract Tender Fields",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -96,
+        0
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "cachedResultName": "GLM-4.6",
+          "mode": "list",
+          "value": "glm-4.6"
+        },
+        "options": {}
+      },
+      "id": "lm-wf1",
+      "name": "Z.ai GLM (extract)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -128,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"title\": \"...\",\n  \"organisation\": null,\n  \"budget\": null,\n  \"currency\": null,\n  \"sector\": null,\n  \"requirements\": [\"...\"],\n  \"deadline\": null,\n  \"language\": \"en\",\n  \"source_url\": null\n}"
+      },
+      "id": "parser-wf1",
+      "name": "Tender Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        64,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// TODO: replace heuristic with rules + LLM score (see plan.md 1.B)\nconst lead = $('Validate & Normalize').first().json;\nconst ex = $json.output ?? $json;\nlet score = 50;\nconst t = ((ex.title ?? '') + ' ' + (ex.sector ?? '')).toLowerCase();\nconst itWords = ['software', 'development', 'web', 'mobile', 'application', 'digital', 'data', 'cloud', 'system', 'plateforme', 'developpement', 'numerique'];\nfor (const w of itWords) if (t.includes(w)) score += 8;\nif (Array.isArray(ex.requirements) && ex.requirements.length >= 3) score += 10;\nscore = Math.max(0, Math.min(100, score));\nconst row = {\n  title: ex.title ?? lead.title ?? 'Untitled tender',\n  source: lead.source ?? 'manual',\n  raw_payload: lead.raw_payload ?? lead,\n  extracted: ex,\n  relevance_score: score,\n  deadline: ex.deadline ?? null,\n};\nreturn [{ json: { row_json: JSON.stringify(row) } }];"
+      },
+      "id": "score-wf1",
+      "name": "Relevance Scoring",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -96
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH payload AS (SELECT $1::jsonb AS p)\nINSERT INTO leads (title, source, raw_payload, extracted, relevance_score, status, deadline)\nSELECT p->>'title', COALESCE(p->>'source','manual'), COALESCE(p->'raw_payload','{}'::jsonb),\n       COALESCE(p->'extracted','{}'::jsonb), COALESCE((p->>'relevance_score')::numeric, 0), 'detected',\n       NULLIF(p->>'deadline','')::date\nFROM payload\nRETURNING id, title, status;",
+        "options": {
+          "queryReplacement": "={{ $json.row_json }}"
+        }
+      },
+      "id": "pg-insert-wf1",
+      "name": "Insert Lead (detected)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        432,
+        0
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ lead_id: $json.id, status: $json.status }) }}",
+        "options": {}
+      },
+      "id": "resp-wf1",
+      "name": "Respond 201 {lead_id}",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        688,
+        -128
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "yCkgzoyxGkFdWFto"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "id": "ewf-wf2",
+      "name": "Run wf2 Prospect Research",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        688,
+        128
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const src = $json ?? {};\nlet leadId = '';\ntry { leadId = src.lead_id ?? src.id ?? ''; } catch (e) {}\nconst errRaw = src.error ?? src.message ?? src;\nconst errText = typeof errRaw === 'string' ? errRaw : (errRaw.message ?? JSON.stringify(errRaw));\nreturn [{ json: { error_json: JSON.stringify({ lead_id: String(leadId ?? ''), error: String(errText).slice(0, 500) }) } }];"
+      },
+      "id": "err-build-wf1",
+      "name": "Build Error Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE leads SET status = 'failed', updated_at = now()\nWHERE id = NULLIF($1::jsonb->>'lead_id', '')::uuid\nRETURNING id, status;",
+        "options": {
+          "queryReplacement": "={{ $json.error_json }}"
+        }
+      },
+      "id": "err-fail-wf1",
+      "name": "Mark Lead Failed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        720,
+        336
+      ]
+    }
+  ],
+  "connections": {
+    "Build Error Payload": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Mark Lead Failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Extract Tender Fields": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Relevance Scoring",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Build Error Payload",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Insert Lead (detected)": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Respond 201 {lead_id}",
+            "type": "main"
+          },
+          {
+            "node": "Run wf2 Prospect Research",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Build Error Payload",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "POST /tenders": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Validate & Normalize",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Relevance Scoring": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Insert Lead (detected)",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Tender Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "index": 0,
+            "node": "Extract Tender Fields",
+            "type": "ai_outputParser"
+          }
+        ]
+      ]
+    },
+    "Validate & Normalize": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Extract Tender Fields",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Z.ai GLM (extract)": {
+      "ai_languageModel": [
+        [
+          {
+            "index": 0,
+            "node": "Extract Tender Fields",
+            "type": "ai_languageModel"
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "timezone": "Africa/Tunis",
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  }
+}
