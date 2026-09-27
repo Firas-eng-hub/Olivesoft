@@ -18,6 +18,27 @@ The workflow is unpublished. Configure the values below, rebind the webhook cred
 
    The workflow sends that key in the Storage API's `apikey` header. If your n8n deployment restricts `$env` expressions, put the secret in an n8n credential and update the HTTP Request node to use it before publishing. Never paste the key into a node parameter or workflow export.
 
+The supplied project reference is `okhntgauzbumgidpuyvx`, so its Storage API base URL is `https://okhntgauzbumgidpuyvx.supabase.co`. The local [n8n environment template](../n8n/.env.example) and ignored `n8n/.env` now contain that URL and the supplied pooler settings. **No database password or Supabase secret key was provided**, so both secret fields remain empty. The project reference, database password, and Supabase secret key are three different values.
+
+The hosted n8n instance runs on Azure App Service. A repository `.env` file is only a local reference; uploading this repository will not set the hosted n8n environment. In the Azure portal, open **App Services → your n8n app → Settings → Environment variables → App settings**, add `OLIVESOFT_SUPABASE_URL`, `OLIVESOFT_SUPABASE_BUCKET`, `OLIVESOFT_SUPABASE_SECRET_KEY`, and `OLIVESOFT_QDRANT_URL`, then apply the changes. Azure restarts the app when settings change. Confirm that the bucket name matches the private bucket you created. See [Azure App Service app settings](https://learn.microsoft.com/en-us/azure/app-service/configure-common?tabs=portalfli).
+
+### Supabase Postgres pooler credential in n8n
+
+The Postgres nodes use an **n8n Postgres credential**, not the Storage secret key and not the `OLIVESOFT_DB_*` values in `.env`. In n8n, open **Credentials**, create or edit a Postgres credential, and enter:
+
+| Field | Value |
+| --- | --- |
+| Host | `aws-1-eu-west-1.pooler.supabase.com` |
+| Port | `5432` (shared pooler, session mode) |
+| Database | `postgres` |
+| User | `postgres.okhntgauzbumgidpuyvx` |
+| Password | Your **database password** from the Supabase project, not the `sb_secret_` API key |
+| SSL/TLS | Enable it for the connection |
+
+Use **Supabase Dashboard → Connect → Session pooler** to confirm or reset the database password. If you paste a full connection URL, percent-encode reserved characters in the password; when filling n8n's separate Password field, enter the actual password. Supabase documents port `5432` as shared session mode and `6543` as transaction mode; the latter does not support prepared statements. See [Supabase database connections](https://supabase.com/docs/guides/database/connecting-to-postgres).
+
+Save and test the credential, then bind it to the Postgres nodes in `wf1_tender_detection`, `wf2_prospect_research`, `wf3_rag_matching`, `wf4_proposal_generation`, and `wf5_api`. The MCP connection can see credential names but cannot read or replace their secret values, so this binding and connection test must be done in n8n. If you update the existing `Postgres account` credential, confirm it points to this project before running writes.
+
 ## 2. Protect and publish the n8n webhook
 
 Open the [upload workflow draft](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/dvXGNUUukgVpkZgL). Its webhook currently points at an unrelated existing `Header Auth account` credential. Create a **dedicated** n8n Header Auth credential named `OliveSoft Upload Header Auth` with header name `api-key` and a long random value. Rebind the webhook to it. Do not reuse the Qdrant header credential.
