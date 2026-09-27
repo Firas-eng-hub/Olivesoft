@@ -20,6 +20,8 @@ The workflow is unpublished. Configure the values below, rebind the webhook cred
 
 The supplied project reference is `okhntgauzbumgidpuyvx`, so its Storage API base URL is `https://okhntgauzbumgidpuyvx.supabase.co`. The local [n8n environment template](../n8n/.env.example) and ignored `n8n/.env` now contain that URL and the supplied pooler settings. **No database password or Supabase secret key was provided**, so both secret fields remain empty. The project reference, database password, and Supabase secret key are three different values.
 
+The supplied legacy Supabase **anon** key is stored only in the ignored local `n8n/.env` as `OLIVESOFT_SUPABASE_ANON_KEY`. The current workflows do not read it. It has the low-privilege `anon` role and cannot replace `OLIVESOFT_SUPABASE_SECRET_KEY` for the private server-side Storage flow without adding an explicit Storage access policy. Supabase recommends new publishable and secret keys for new integrations; see [API key types](https://supabase.com/docs/guides/getting-started/api-keys).
+
 The hosted n8n instance runs on Azure App Service. A repository `.env` file is only a local reference; uploading this repository will not set the hosted n8n environment. In the Azure portal, open **App Services → your n8n app → Settings → Environment variables → App settings**, add `OLIVESOFT_SUPABASE_URL`, `OLIVESOFT_SUPABASE_BUCKET`, `OLIVESOFT_SUPABASE_SECRET_KEY`, and `OLIVESOFT_QDRANT_URL`, then apply the changes. Azure restarts the app when settings change. Confirm that the bucket name matches the private bucket you created. See [Azure App Service app settings](https://learn.microsoft.com/en-us/azure/app-service/configure-common?tabs=portalfli).
 
 ### Supabase Postgres pooler credential in n8n
@@ -60,6 +62,8 @@ Add these three **server-side** variables in **Vercel → Project → Settings �
 | `OLIVESOFT_N8N_UPLOAD_API_KEY` | The value of the dedicated n8n `api-key` credential |
 
 Do **not** add the Supabase secret key to Vercel for this flow. Vercel never calls Supabase directly. Keep the team password and webhook API key different. `.env.example` contains names only.
+
+`OLIVESOFT_DOCS_TOKEN` currently has **no reader** in the dashboard or n8n workflow exports. Adding it in Vercel does not protect the upload form or grant Supabase access. The upload form uses `OLIVESOFT_UPLOAD_TEAM_PASSWORD`; the server-to-n8n request uses `OLIVESOFT_N8N_UPLOAD_API_KEY`. Keep those values separate from the Supabase anon and secret keys.
 
 ## 4. Ingestion and matching workflows
 
