@@ -64,11 +64,11 @@ export async function POST(request: Request) {
       cache: "no-store",
       signal: AbortSignal.timeout(30000),
     });
-    if (!upstream.ok) return failure("Drive upload failed. Please retry later.", 502);
+    if (!upstream.ok) return failure("Supabase upload failed. Please retry later.", 502);
     const result: unknown = await upstream.json();
-    if (typeof result !== "object" || result === null || !("drive_file_id" in result) || typeof result.drive_file_id !== "string" || !result.drive_file_id) return failure("Drive did not confirm the upload.", 502);
-    return Response.json({ status: "uploaded", driveFileId: result.drive_file_id, indexing: "pending" }, { status: 201, headers: { "Cache-Control": "no-store" } });
+    if (typeof result !== "object" || result === null || !("storage_path" in result) || typeof result.storage_path !== "string" || !result.storage_path || !("bucket" in result) || typeof result.bucket !== "string" || !result.bucket) return failure("Supabase did not confirm the upload.", 502);
+    return Response.json({ status: "uploaded", storagePath: result.storage_path, bucket: result.bucket, indexing: "pending" }, { status: 201, headers: { "Cache-Control": "no-store" } });
   } catch {
-    return failure("Drive upload is unavailable. Please retry later.", 502);
+    return failure("Supabase upload is unavailable. Please retry later.", 502);
   }
 }

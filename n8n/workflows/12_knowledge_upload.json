@@ -1,5 +1,5 @@
 {
-  "name": "OliveSoft Knowledge Upload (draft)",
+  "name": "OliveSoft Knowledge Upload to Supabase (draft)",
   "active": false,
   "nodes": [
     {
@@ -34,7 +34,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const item = $input.first();\nconst headers = item.json.headers ?? {};\nconst binary = item.binary?.data;\nconst kind = String(headers['x-olivesoft-kind'] ?? '').toLowerCase();\nconst originalName = String(headers['x-olivesoft-filename'] ?? binary?.fileName ?? '').split(/[\\\\/]/).pop() ?? '';\nconst fileName = originalName.replace(/[^a-zA-Z0-9._ -]/g, '_').slice(0, 120);\nconst mime = String(headers['content-type'] ?? binary?.mimeType ?? '').split(';')[0].toLowerCase();\nconst size = Number(headers['content-length'] ?? 0);\nconst validKind = ['cv', 'expertise', 'project'].includes(kind);\nconst validMime = (fileName.endsWith('.pdf') && mime === 'application/pdf') || (fileName.endsWith('.docx') && mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') || (fileName.endsWith('.txt') && mime === 'text/plain');\nconst validName = /\\.(pdf|docx|txt)$/i.test(fileName);\nconst valid = Boolean(binary && validKind && validMime && validName && size > 0 && size <= 4194304);\nreturn [{ json: { status: valid ? 'valid' : 'invalid', error: valid ? null : 'Invalid file, category, or size', kind, file_name: fileName, mime_type: mime }, binary: item.binary }];"
+        "jsCode": "const item = $input.first();\nconst headers = item.json.headers ?? {};\nconst binary = item.binary?.data;\nconst kind = String(headers['x-olivesoft-kind'] ?? '').toLowerCase();\nconst originalName = String(headers['x-olivesoft-filename'] ?? binary?.fileName ?? '').split(/[\\\\/]/).pop() ?? '';\nconst fileName = originalName.replace(/[^a-zA-Z0-9._ -]/g, '_').slice(0, 120);\nconst mime = String(headers['content-type'] ?? binary?.mimeType ?? '').split(';')[0].toLowerCase();\nconst size = Number(headers['content-length'] ?? 0);\nconst validKind = ['cv', 'expertise', 'project'].includes(kind);\nconst validMime = (fileName.endsWith('.pdf') && mime === 'application/pdf') || (fileName.endsWith('.docx') && mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') || (fileName.endsWith('.txt') && mime === 'text/plain');\nconst validName = /\\.(pdf|docx|txt)$/i.test(fileName);\nconst storagePath = `${kind}/${$execution.id}/${fileName}`;\nconst valid = Boolean(binary && validKind && validMime && validName && size > 0 && size <= 4194304);\nreturn [{ json: { status: valid ? 'valid' : 'invalid', error: valid ? null : 'Invalid file, category, or size', kind, file_name: fileName, mime_type: mime, storage_path: storagePath }, binary: item.binary }];"
       }
     },
     {
@@ -69,37 +69,44 @@
     },
     {
       "id": "f67b6bd6-f049-4708-be04-e191d0b67205",
-      "name": "Upload to OliveSoft Drive",
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
+      "name": "Upload to Supabase Storage",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
       "position": [
         730,
         -120
       ],
       "parameters": {
-        "resource": "file",
-        "operation": "upload",
-        "authentication": "oAuth2",
+        "method": "POST",
+        "url": "={{ $env.OLIVESOFT_SUPABASE_URL.replace(/\\/$/, '') + '/storage/v1/object/' + encodeURIComponent($env.OLIVESOFT_SUPABASE_BUCKET) + '/' + $json.storage_path.split('/').map(encodeURIComponent).join('/') }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.OLIVESOFT_SUPABASE_SECRET_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "={{ $json.mime_type }}"
+            },
+            {
+              "name": "x-upsert",
+              "value": "false"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
         "inputDataFieldName": "data",
-        "name": "={{ $json.file_name }}",
-        "driveId": {
-          "__rl": true,
-          "mode": "list",
-          "value": "My Drive"
-        },
-        "folderId": {
-          "__rl": true,
-          "mode": "id",
-          "value": "={{ $env.OLIVESOFT_KNOWLEDGE_FOLDER_ID }}"
-        },
         "options": {
-          "simplifyOutput": true
+          "timeout": 30000
         }
       }
     },
     {
       "id": "6c3976ca-e524-4ff8-9140-a44bc77f62ee",
-      "name": "Respond Drive upload",
+      "name": "Respond Supabase upload",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
@@ -108,7 +115,7 @@
       ],
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ status: \"uploaded\", drive_file_id: $json.id, file_name: $json.name, indexing: \"pending\" }) }}",
+        "responseBody": "={{ JSON.stringify({ status: \"uploaded\", bucket: $env.OLIVESOFT_SUPABASE_BUCKET, storage_path: $json.Key ? $(\"Validate upload\").first().json.storage_path : null, indexing: \"pending\" }) }}",
         "options": {
           "responseCode": 201
         }
@@ -159,7 +166,7 @@
       "main": [
         [
           {
-            "node": "Upload to OliveSoft Drive",
+            "node": "Upload to Supabase Storage",
             "type": "main",
             "index": 0
           }
@@ -173,11 +180,11 @@
         ]
       ]
     },
-    "Upload to OliveSoft Drive": {
+    "Upload to Supabase Storage": {
       "main": [
         [
           {
-            "node": "Respond Drive upload",
+            "node": "Respond Supabase upload",
             "type": "main",
             "index": 0
           }
