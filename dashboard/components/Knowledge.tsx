@@ -12,7 +12,7 @@ const maxBytes = 4 * 1024 * 1024;
 
 function sizeLabel(bytes: number) { return bytes < 1048576 ? `${Math.ceil(bytes / 1024)} KB` : `${(bytes / 1048576).toFixed(1)} MB`; }
 
-export default function Knowledge() {
+export default function Knowledge({ initialPassword = "" }: { initialPassword?: string }) {
   const picker = useRef<HTMLInputElement>(null);
   const [kind, setKind] = useState<Kind>("cv");
   const [queue, setQueue] = useState<Pending[]>([]);
@@ -20,7 +20,7 @@ export default function Knowledge() {
   const [error, setError] = useState("");
   const [dragging, setDragging] = useState(false);
   const [query, setQuery] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState(initialPassword);
   const [configured, setConfigured] = useState(false);
   const [busy, setBusy] = useState(false);
 
