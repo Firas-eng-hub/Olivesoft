@@ -23,6 +23,7 @@ Import this Git repository and set **Root Directory** to `dashboard`. Vercel wil
 2. On a matched tender, inspect the requirement matrix and evidence library, then select **Generate proposal**.
 3. Watch simulated progress in **Activity**, then download the static sample PDF or PPTX in **Proposals**.
 4. Use **Add new tender** to create a local demo record. **Reset demo** in Activity restores the starting data.
+5. Open **Knowledge base** to select OliveSoft CVs, expertise files, or project references. Upload is available only when the protected server endpoint and n8n workflow are configured; selected files stay in browser memory until you leave the section.
 
 The data is synthetic and saved in browser local storage. Proposal progress, fit scores, and trend visuals are illustrative. The downloadable files are static, clearly labelled demo fixtures; they are not generated from the selected tender. To regenerate them, run `python3 scripts/generate_demo_artifacts.py`.
 
@@ -31,3 +32,5 @@ The data is synthetic and saved in browser local storage. Proposal progress, fit
 `lib/types.ts` defines the frontend view models and `DashboardAdapter`. `lib/adapter.ts` provides the local demo implementation. Once the authenticated n8n read and action webhooks are deployed, add a live adapter that maps their responses into these models. Keep n8n credentials and action authentication on the server side; do not expose them in client code. The published webhook base is `/webhook/olivesoft/v1`, but exact route contracts are not yet implemented in this checkout.
 
 All workflow decisions, scoring, retrieval, and proposal generation must remain in n8n. The dashboard should display persisted results and submit explicit actions. A `proposal_ready` lead must represent two verified artifacts in the live integration, as specified in [../Plan.md](../Plan.md).
+
+The Knowledge base has a server-side upload proxy for PDF, DOCX, and TXT files up to 4 MB. It checks a team password and forwards each file to the protected n8n upload webhook. Set the values in [`.env.example`](.env.example) as Vercel environment variables; keep real secrets out of Git. The n8n draft remains unpublished while its Supabase settings and dedicated webhook credential are configured. See [Supabase knowledge integration](../docs/supabase-knowledge.md) for setup and remaining RAG work.

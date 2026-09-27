@@ -1,0 +1,228 @@
+{
+  "name": "OliveSoft Knowledge Upload to Supabase (draft)",
+  "active": false,
+  "nodes": [
+    {
+      "id": "6926e9b2-bb3f-4b25-89f4-aca46a8ea3e6",
+      "name": "POST /olivesoft/v1/knowledge/upload",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "olivesoft/v1/knowledge/upload",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {
+          "binaryData": true,
+          "binaryPropertyName": "data"
+        }
+      },
+      "webhookId": "434d3dc9-8c92-4455-9224-8d0aef4d98bf"
+    },
+    {
+      "id": "e803c645-78d3-4733-aa97-fe60a7e08166",
+      "name": "Validate upload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        250,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item = $input.first();\nconst headers = item.json.headers ?? {};\nconst binary = item.binary?.data;\nconst kind = String(headers['x-olivesoft-kind'] ?? '').toLowerCase();\nconst originalName = String(headers['x-olivesoft-filename'] ?? binary?.fileName ?? '').split(/[\\\\/]/).pop() ?? '';\nconst fileName = originalName.replace(/[^a-zA-Z0-9._ -]/g, '_').slice(0, 120);\nconst mime = String(headers['content-type'] ?? binary?.mimeType ?? '').split(';')[0].toLowerCase();\nconst size = Number(headers['content-length'] ?? 0);\nconst validKind = ['cv', 'expertise', 'project'].includes(kind);\nconst validMime = (fileName.endsWith('.pdf') && mime === 'application/pdf') || (fileName.endsWith('.docx') && mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') || (fileName.endsWith('.txt') && mime === 'text/plain');\nconst validName = /\\.(pdf|docx|txt)$/i.test(fileName);\nconst storagePath = `${kind}/${$execution.id}/${fileName}`;\nconst valid = Boolean(binary && validKind && validMime && validName && size > 0 && size <= 4194304);\nreturn [{ json: { status: valid ? 'valid' : 'invalid', error: valid ? null : 'Invalid file, category, or size', kind, file_name: fileName, mime_type: mime, storage_path: storagePath }, binary: item.binary }];"
+      }
+    },
+    {
+      "id": "63545822-4ab1-4823-b51e-f9c459c4837d",
+      "name": "Valid file?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.status }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "valid"
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "f67b6bd6-f049-4708-be04-e191d0b67205",
+      "name": "Upload to Supabase Storage",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        730,
+        -120
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OLIVESOFT_SUPABASE_URL.replace(/\\/$/, '') + '/storage/v1/object/' + encodeURIComponent($env.OLIVESOFT_SUPABASE_BUCKET) + '/' + $json.storage_path.split('/').map(encodeURIComponent).join('/') }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.OLIVESOFT_SUPABASE_SECRET_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "={{ $json.mime_type }}"
+            },
+            {
+              "name": "x-upsert",
+              "value": "false"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "6c3976ca-e524-4ff8-9140-a44bc77f62ee",
+      "name": "Respond Supabase upload",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1430,
+        -130
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ status: \"uploaded\", bucket: $(\"Build ingestion request\").first().json.bucket, storage_path: $(\"Build ingestion request\").first().json.storage_path, indexing: \"pending\" }) }}",
+        "options": {
+          "responseCode": 201
+        }
+      }
+    },
+    {
+      "id": "a8138015-c7d5-4765-abda-78345a6df670",
+      "name": "Reject invalid upload",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        730,
+        140
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ error: $json.error }) }}",
+        "options": {
+          "responseCode": 400
+        }
+      }
+    },
+    {
+      "id": "728a9f89-3130-4f66-a0b2-1ade25d7e3a7",
+      "name": "Build ingestion request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, -130],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const stored = $input.first().json;\nif (!stored.Key) throw new Error('Supabase did not confirm the stored object');\nconst source = $('Validate upload').first().json;\nreturn [{ json: { bucket: $env.OLIVESOFT_SUPABASE_BUCKET, storage_path: source.storage_path } }];"
+      }
+    },
+    {
+      "id": "e22e4ee4-b8fc-44b7-b28f-2c83cc42652f",
+      "name": "Queue Supabase ingestion",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [1190, -130],
+      "parameters": {
+        "mode": "each",
+        "source": "database",
+        "workflowId": { "__rl": true, "mode": "id", "value": "1nspjntygwd5WWej" },
+        "options": { "waitForSubWorkflow": false }
+      }
+    }
+  ],
+  "connections": {
+    "POST /olivesoft/v1/knowledge/upload": {
+      "main": [
+        [
+          {
+            "node": "Validate upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate upload": {
+      "main": [
+        [
+          {
+            "node": "Valid file?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid file?": {
+      "main": [
+        [
+          {
+            "node": "Upload to Supabase Storage",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reject invalid upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Supabase Storage": {
+      "main": [
+        [
+          {
+            "node": "Build ingestion request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build ingestion request": {
+      "main": [[{ "node": "Queue Supabase ingestion", "type": "main", "index": 0 }]]
+    },
+    "Queue Supabase ingestion": {
+      "main": [[{ "node": "Respond Supabase upload", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

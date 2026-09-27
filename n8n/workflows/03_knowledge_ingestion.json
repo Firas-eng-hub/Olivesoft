@@ -1,0 +1,991 @@
+{
+  "name": "knowledge_ingestion",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        368
+      ],
+      "id": "7100e6d6-4bb0-4357-9536-c3e338b997f1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b0000000-0000-4000-8000-000000000001",
+              "name": "qdrant_url",
+              "value": "={{ $env.OLIVESOFT_QDRANT_URL }}",
+              "type": "string"
+            },
+            {
+              "id": "b0000000-0000-4000-8000-000000000002",
+              "name": "collection",
+              "value": "olivesoft_knowledge",
+              "type": "string"
+            },
+            {
+              "id": "b0000000-0000-4000-8000-000000000005",
+              "name": "dimensions",
+              "value": 768,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "99e9688d-6a55-4783-81a1-2d8e79c702a4",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        -16
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Config').first().json.qdrant_url }}/collections/{{ $('Config').first().json.collection }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ vectors: { size: $('Config').first().json.dimensions, distance: 'Cosine' } }) }}",
+        "options": {}
+      },
+      "id": "d023ddcb-fa56-44eb-bbe9-07eb8c457935",
+      "name": "Qdrant : créer la collection",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        -16
+      ],
+      "executeOnce": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Config').first().json.qdrant_url }}/collections/{{ $('Config').first().json.collection }}/index?wait=true",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"field_name\":\"asset_type\",\"field_schema\":\"keyword\"}",
+        "options": {}
+      },
+      "id": "ffabfe0a-7c4b-49d7-a6f4-59c27d716b78",
+      "name": "Qdrant : index asset_type",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        448,
+        -16
+      ],
+      "executeOnce": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Config').first().json.qdrant_url }}/collections/{{ $('Config').first().json.collection }}/index?wait=true",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"field_name\":\"document_id\",\"field_schema\":\"keyword\"}",
+        "options": {}
+      },
+      "id": "7f99bf82-4660-4c0a-9bd4-d70502b8abf7",
+      "name": "Qdrant : index document_id",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        672,
+        -16
+      ],
+      "executeOnce": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Config').first().json.qdrant_url }}/collections/{{ $('Config').first().json.collection }}/index?wait=true",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"field_name\":\"version\",\"field_schema\":\"keyword\"}",
+        "options": {}
+      },
+      "id": "1df9fa30-94ae-43d9-b2d1-aa984ec6fd80",
+      "name": "Qdrant : index version",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        896,
+        -16
+      ],
+      "executeOnce": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Config').first().json.qdrant_url }}/collections/{{ $('Config').first().json.collection }}/index?wait=true",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"field_name\":\"keywords_norm\",\"field_schema\":\"keyword\"}",
+        "options": {}
+      },
+      "id": "d3857132-06fe-4c10-bd9e-1cfe76ad6736",
+      "name": "Qdrant : index keywords_norm",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        -16
+      ],
+      "executeOnce": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config').first().json.qdrant_url }}/collections/{{ $('Config').first().json.collection }}/points/count",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{ \"exact\": true }",
+        "options": {}
+      },
+      "id": "29c3412d-6cd0-4b1e-8bf9-ec7c62474f37",
+      "name": "Qdrant : vérifier (compter les points)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1360,
+        -16
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Découpage « intelligent » : par section Markdown, avec en-tête de contexte et mots-clés.\n// Un item par document -> un item par chunk, avec un ID de point déterministe.\nconst cfg = $('Config1').first().json;\nconst SIZE = cfg.chunk_size;        // taille max d'un chunk (caractères)\nconst OVERLAP = cfg.chunk_overlap;  // chevauchement quand une section doit être coupée\nconst MIN_SECTION = 400;            // sections plus courtes : regroupées avec leurs voisines\nconst TYPE = { cv: 'cv', expertise: 'expertise', project: 'project' };\nconst LABEL = { cv: 'CV', project: 'Projet', expertise: 'Expertise' };\nconst KEYWORD_SECTIONS = /^(competences|certifications|technologies couvertes|stack)$/;\n\n// Hash 53 bits (cyrb53) : même texte -> même entier, accepté comme ID par Qdrant.\nfunction hash53(str) {\n  let h1 = 0xdeadbeef, h2 = 0x41c6ce57;\n  for (let i = 0; i < str.length; i++) {\n    const c = str.charCodeAt(i);\n    h1 = Math.imul(h1 ^ c, 2654435761);\n    h2 = Math.imul(h2 ^ c, 1597334677);\n  }\n  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);\n  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);\n  return 4294967296 * (2097151 & h2) + (h1 >>> 0);\n}\n\n// Minuscules, sans accents ni parenthèses : \"Python (langage de programmation)\" -> \"python\".\nconst norm = s => s.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase()\n  .replace(/\\(.*?\\)/g, ' ').replace(/\\s+/g, ' ').trim();\n\n// Lit le Markdown : titre, sous-titre, sections \"## ...\" et mots-clés.\nfunction parse(text) {\n  const lines = text.replace(/\\r/g, '').split('\\n');\n  const title = (lines.find(l => l.startsWith('# ')) || '').replace(/^#\\s*/, '').trim();\n  const raw = [];\n  let current = { name: 'Introduction', lines: [] };\n  for (const l of lines) {\n    if (l.startsWith('# ')) continue;\n    const m = l.match(/^##\\s+(.*)/);\n    if (m) { raw.push(current); current = { name: m[1].trim(), lines: [] }; }\n    else current.lines.push(l);\n  }\n  raw.push(current);\n  const sections = raw.map(s => ({ name: s.name, body: s.lines.join('\\n').trim() })).filter(s => s.body);\n\n  const intro = sections.find(s => s.name === 'Introduction');\n  const subtitle = intro ? intro.body.split('\\n')[0].replace(/\\*\\*/g, '').trim().slice(0, 120) : '';\n\n  const kw = [];\n  for (const s of sections) if (KEYWORD_SECTIONS.test(norm(s.name))) kw.push(...s.body.split(/[,\\n]/));\n  for (const l of lines) {\n    const m = l.match(/^\\*\\*(stack|technologies?)\\*\\*\\s*:\\s*(.*)/i);\n    if (m) kw.push(...m[2].split(','));\n  }\n  const keywords = [...new Set(kw.map(k => k.replace(/^[-*\\s]+/, '').replace(/\\*\\*/g, '').trim())\n    .filter(k => k && k.length < 80))];\n  return { title, subtitle, sections, keywords };\n}\n\n// Coupe une section trop longue entre deux lignes, avec chevauchement.\nfunction splitLong(text) {\n  const out = [];\n  let cur = '';\n  for (const line of text.split('\\n')) {\n    if (line.length > SIZE) {\n      if (cur.trim()) out.push(cur.trim());\n      cur = '';\n      for (let i = 0; i < line.length; i += SIZE - OVERLAP) out.push(line.slice(i, i + SIZE));\n      continue;\n    }\n    if (cur && (cur + '\\n' + line).length > SIZE) {\n      out.push(cur.trim());\n      cur = cur.slice(-OVERLAP) + '\\n' + line;\n    } else {\n      cur = cur ? cur + '\\n' + line : line;\n    }\n  }\n  if (cur.trim()) out.push(cur.trim());\n  return out;\n}\n\n// Une section = un chunk ; les petites sections voisines sont regroupées (sans dépasser SIZE).\nfunction group(sections) {\n  const chunks = [];\n  let cur = null;\n  for (const s of sections) {\n    const block = s.name === 'Introduction' ? s.body : `## ${s.name}\\n${s.body}`;\n    if (block.length > SIZE) {\n      if (cur) chunks.push(cur);\n      cur = null;\n      splitLong(block).forEach((t, k) => chunks.push({ names: [k ? `${s.name} (suite)` : s.name], text: t }));\n      continue;\n    }\n    const small = cur && (cur.text.length < MIN_SECTION || block.length < MIN_SECTION);\n    if (small && (cur.text + '\\n\\n' + block).length <= SIZE) {\n      cur.names.push(s.name);\n      cur.text += '\\n\\n' + block;\n    } else {\n      if (cur) chunks.push(cur);\n      cur = { names: [s.name], text: block };\n    }\n  }\n  if (cur) chunks.push(cur);\n  return chunks;\n}\n\nconst out = [];\n$input.all().forEach((item, i) => {\n  const file = $('Validate Supabase object').first().json;\n  const text = String(item.json.text ?? item.json.data ?? '').trim();\n  const asset_type = TYPE[file.kind];\n  if (!text || !asset_type) throw new Error('No extractable text or invalid category');\n\n  const document_id = `${file.bucket}/${file.storage_path}`;\n  const version = hash53(text).toString(16); // change dès que le contenu change\n  const { title, subtitle, sections, keywords } = parse(text);\n  const docHeader = `[${LABEL[asset_type]}] ${title}${subtitle ? ' — ' + subtitle : ''}`;\n\n  group(sections).forEach((c, idx) => {\n    const header = `${docHeader} | Sections : ${c.names.join(', ')}`;\n    out.push({\n      json: {\n        id: hash53(`${document_id}|${version}|${idx}`),\n        embed_text: `title: ${header} | text: ${c.text}`,\n        payload: {\n          document_id, asset_type, title, version, chunk_index: idx,\n          sections: c.names, header,\n          keywords, keywords_norm: [...new Set(keywords.map(norm))],\n          source: 'supabase_storage', source_bucket: file.bucket, source_path: file.storage_path,\n          embedding_model: cfg.embedding_model, synthetic: false, text: c.text,\n        },\n      },\n    });\n  });\n});\nreturn out;\n"
+      },
+      "id": "b914759f-e5f4-419f-8524-e85fec25cf0f",
+      "name": "Chunks + IDs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        992,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://generativelanguage.googleapis.com/v1beta/models/' + $('Config1').first().json.embedding_model + ':embedContent' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: { parts: [{ text: $json.embed_text }] }, embedContentConfig: { outputDimensionality: $('Config1').first().json.dimensions, taskType: 'RETRIEVAL_DOCUMENT' } }) }}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 5
+            }
+          }
+        }
+      },
+      "id": "91db2726-dd30-41a7-87a1-0abd1f5c8729",
+      "name": "Gemini embeddings",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1216,
+        368
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "// Assemble chaque chunk avec son vecteur, puis prépare l'upsert Qdrant.\nconst cfg = $('Config1').first().json;\nconst points = $input.all().map((item, i) => {\n  const c = $('Chunks + IDs').itemMatching(i).json;\n  const vector = item.json.embedding && item.json.embedding.values;\n  if (!vector || vector.length !== cfg.dimensions) {\n    throw new Error(`Embedding invalide pour ${c.payload.document_id} (chunk ${c.payload.chunk_index})`);\n  }\n  return { id: c.id, vector, payload: c.payload };\n});\n\n// Version courante de chaque document, pour supprimer ensuite les anciennes.\nconst docs = {};\nfor (const p of points) docs[p.payload.document_id] = p.payload.version;\n\nreturn [{ json: {\n  points,\n  docs: Object.entries(docs).map(([document_id, version]) => ({ document_id, version })),\n} }];\n"
+      },
+      "id": "ac5c6684-2f1a-4a7b-8ece-8f7fa6652776",
+      "name": "Construire les points",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Config1').first().json.qdrant_url }}/collections/{{ $('Config1').first().json.collection }}/points?wait=true",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ points: $json.points }) }}",
+        "options": {}
+      },
+      "id": "e0f3c869-33b1-4def-b86b-c7bd197f517c",
+      "name": "Qdrant : upsert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1664,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Un item par document, pour supprimer ses chunks d'anciennes versions.\nreturn $('Construire les points').first().json.docs.map(d => ({ json: d }));\n"
+      },
+      "id": "5238763a-be85-43ca-b7f6-68ffa4703740",
+      "name": "Un item par document",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1872,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config1').first().json.qdrant_url }}/collections/{{ $('Config1').first().json.collection }}/points/delete?wait=true",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ filter: { must: [{ key: 'document_id', match: { value: $json.document_id } }], must_not: [{ key: 'version', match: { value: $json.version } }] } }) }}",
+        "options": {}
+      },
+      "id": "bc510045-6abf-4545-a57e-0235d896d6bc",
+      "name": "Qdrant : supprimer anciennes versions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2096,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b0000000-0000-4000-8000-000000000001",
+              "name": "qdrant_url",
+              "value": "={{ $env.OLIVESOFT_QDRANT_URL }}",
+              "type": "string"
+            },
+            {
+              "id": "b0000000-0000-4000-8000-000000000002",
+              "name": "collection",
+              "value": "olivesoft_knowledge",
+              "type": "string"
+            },
+            {
+              "id": "b0000000-0000-4000-8000-000000000004",
+              "name": "embedding_model",
+              "value": "gemini-embedding-2",
+              "type": "string"
+            },
+            {
+              "id": "b0000000-0000-4000-8000-000000000005",
+              "name": "dimensions",
+              "value": 768,
+              "type": "number"
+            },
+            {
+              "id": "b0000000-0000-4000-8000-000000000006",
+              "name": "chunk_size",
+              "value": 1500,
+              "type": "number"
+            },
+            {
+              "id": "b0000000-0000-4000-8000-000000000007",
+              "name": "chunk_overlap",
+              "value": 200,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d3b532ae-36d0-46d3-89d2-d65d093f1f7e",
+      "name": "Config1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Documents de test (fixture sans Supabase Storage) : 1 CV, 1 projet, 1 stack.\n// Chaque item imite la sortie de « Extraire le texte » : dossier, nom du fichier, texte.\nconst docs = [\n  {\n    \"folder\": \"cv\",\n    \"file_name\": \"cv_01_youssef_cherni.md\",\n    \"data\": \"# Youssef Cherni\\n**Ingenieur Integration de Donnees** — Integration Des Donnees\\n\\nSfax, Tunisie · youssef.cherni@olivesoft-demo.fr\\n6 ans d'experience\\n\\n## Profil\\nConsultant(e) Ingenieur Integration de Donnees avec 6 ans d'experience, specialise(e) dans les projets integration des donnees pour des clients en France et en Tunisie, sur des secteurs varies (distribution, banque, industrie, sante, conseil).\\n\\n## Competences\\nTalend, Apache Airflow, SQL, Python (langage de programmation), Kafka, API REST\\n\\n## Langues\\n- Francais — Langue maternelle\\n- Arabe — Langue maternelle\\n- Anglais — Courant (C1)\\n\\n## Formation\\n- Diplome National d'Ingenieur en Informatique, ENIS (Ecole Nationale d'Ingenieurs de Sfax) (2019)\\n\\n## Certifications\\n- Talend Data Integration Certified\\n\\n## Experience professionnelle chez OliveSoft\\n- **Ingenieur Integration de Donnees (lead)** — Mission client *Atlas Retail Group* (Distribution, Tunisie), 2025, 8 mois, lot *Integration Des Donnees*: Integration des flux commerciaux multi-canal.\\n- **Ingenieur Integration de Donnees** — Mission client *Banque Meridienne* (Banque & Finance, Tunisie), 2024-2025, 10 mois, lot *Integration Des Donnees*: Consolidation des donnees clients multi-agences.\\n- **Ingenieur Integration de Donnees** — Mission client *Atelier Nomade* (E-Commerce / Decoration, Tunisie), 2025, 5 mois, lot *Dashboard & BI*: Tableaux de bord de prevision des ventes.\\n- **Ingenieur Integration de Donnees** — Mission client *GroupeMerid* (Services / RH, France), 2025, 7 mois, lot *Data Platform*: Centralisation des donnees RH multi-filiales.\\n\"\n  },\n  {\n    \"folder\": \"projets\",\n    \"file_name\": \"projet_01.md\",\n    \"data\": \"# Integration des flux commerciaux multi-canal\\n**Client**: Atlas Retail Group (Distribution, Tunisie)\\n**Ligne de service**: Integration Des Donnees\\n**Periode**: 2025, 8 mois\\n**Stack**: Talend, Apache Airflow, Kafka, PostgreSQL, API REST\\n\\n## Contexte\\nAtlas Retail Group pilotait ses ventes a partir de fichiers Excel consolides manuellement chaque semaine par 6 points de vente, avec des ecarts frequents entre le stock magasin et le stock affiche en ligne.\\n\\n## Approche OliveSoft\\nMise en place d'un hub d'integration Talend orchestre par Airflow, connectant la caisse en magasin, l'ERP et la marketplace du client via des connecteurs API REST et des flux Kafka pour les evenements de stock en quasi temps reel.\\n\\n## Architecture & decisions techniques\\n- Ingestion evenementielle (Kafka) pour le stock, batch nocturne (Airflow) pour la comptabilite\\n- Choix de PostgreSQL plutot qu'un entrepot cloud pour limiter le cout vu le volume (< 5 Go/jour)\\n- Tests de qualite de donnees automatises avant chaque publication vers la marketplace\\n\\n## Equipe\\n- Youssef Cherni — Ingenieur Integration de Donnees (lead)\\n- Nour Baccar — Data Integration Consultant\\n- Rim Hachicha — QA Data\\n\\n## Resultats\\n- Reduction des ecarts de stock de 92%\\n- Temps de consolidation hebdomadaire ramene de 2 jours a 1 heure\\n- Disponibilite du flux de synchronisation stock a 99,5%\\n\"\n  },\n  {\n    \"folder\": \"stacks\",\n    \"file_name\": \"stack_02.md\",\n    \"data\": \"# Stack profile — BI & Analytics\\n\\nReporting decisionnel, tableaux de bord et modelisation de donnees pour le pilotage metier.\\n\\n## Technologies couvertes\\nPower BI, Tableau, SQL, DAX, Azure Synapse, Looker Studio\\n\\n## Consultants rattaches\\n- Salma Bouhlel — BI Developer (5 ans d'experience)\\n- Ines Cherif — Data Analyst / BI Consultant (4 ans d'experience)\\n- Khalil Ammar — Power BI Developer (6 ans d'experience)\\n- Sabrine Jaziri — BI & Reporting Analyst (2 ans d'experience)\\n\\n## Projets de reference\\n- `projet_04` — Tableaux de bord de prevision des ventes (client Atelier Nomade)\\n- `projet_05` — Pilotage des indicateurs de sinistralite (client AssurCap Group)\\n- `projet_06` — Refonte du reporting de performance commerciale (client Ovalis Conseil)\\n\"\n  }\n];\nreturn docs.map(d => ({ json: d }));\n"
+      },
+      "id": "69dd3c28-3f17-4125-a2cc-bca6520206a2",
+      "name": "Documents de test",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        176,
+        944
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b0000000-0000-4000-8000-000000000001",
+              "name": "qdrant_url",
+              "value": "={{ $env.OLIVESOFT_QDRANT_URL }}",
+              "type": "string"
+            },
+            {
+              "id": "b0000000-0000-4000-8000-000000000002",
+              "name": "collection",
+              "value": "olivesoft_knowledge",
+              "type": "string"
+            },
+            {
+              "id": "b0000000-0000-4000-8000-000000000004",
+              "name": "embedding_model",
+              "value": "gemini-embedding-2",
+              "type": "string"
+            },
+            {
+              "id": "b0000000-0000-4000-8000-000000000005",
+              "name": "dimensions",
+              "value": 768,
+              "type": "number"
+            },
+            {
+              "id": "b0000000-0000-4000-8000-000000000006",
+              "name": "chunk_size",
+              "value": 1500,
+              "type": "number"
+            },
+            {
+              "id": "b0000000-0000-4000-8000-000000000007",
+              "name": "chunk_overlap",
+              "value": 200,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5242cba0-1976-4343-bc7d-d9b132c8fc7e",
+      "name": "Config2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -48,
+        944
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Découpage « intelligent » : par section Markdown, avec en-tête de contexte et mots-clés.\n// Un item par document -> un item par chunk, avec un ID de point déterministe.\nconst cfg = $('Config2').first().json;\nconst SIZE = cfg.chunk_size;        // taille max d'un chunk (caractères)\nconst OVERLAP = cfg.chunk_overlap;  // chevauchement quand une section doit être coupée\nconst MIN_SECTION = 400;            // sections plus courtes : regroupées avec leurs voisines\nconst TYPE = { cv: 'cv', projets: 'project', stacks: 'stack' }; // dossier Drive -> asset_type du contrat\nconst LABEL = { cv: 'CV', project: 'Projet', stack: 'Stack' };\nconst KEYWORD_SECTIONS = /^(competences|certifications|technologies couvertes|stack)$/;\n\n// Hash 53 bits (cyrb53) : même texte -> même entier, accepté comme ID par Qdrant.\nfunction hash53(str) {\n  let h1 = 0xdeadbeef, h2 = 0x41c6ce57;\n  for (let i = 0; i < str.length; i++) {\n    const c = str.charCodeAt(i);\n    h1 = Math.imul(h1 ^ c, 2654435761);\n    h2 = Math.imul(h2 ^ c, 1597334677);\n  }\n  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);\n  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);\n  return 4294967296 * (2097151 & h2) + (h1 >>> 0);\n}\n\n// Minuscules, sans accents ni parenthèses : \"Python (langage de programmation)\" -> \"python\".\nconst norm = s => s.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase()\n  .replace(/\\(.*?\\)/g, ' ').replace(/\\s+/g, ' ').trim();\n\n// Lit le Markdown : titre, sous-titre, sections \"## ...\" et mots-clés.\nfunction parse(text) {\n  const lines = text.replace(/\\r/g, '').split('\\n');\n  const title = (lines.find(l => l.startsWith('# ')) || '').replace(/^#\\s*/, '').trim();\n  const raw = [];\n  let current = { name: 'Introduction', lines: [] };\n  for (const l of lines) {\n    if (l.startsWith('# ')) continue;\n    const m = l.match(/^##\\s+(.*)/);\n    if (m) { raw.push(current); current = { name: m[1].trim(), lines: [] }; }\n    else current.lines.push(l);\n  }\n  raw.push(current);\n  const sections = raw.map(s => ({ name: s.name, body: s.lines.join('\\n').trim() })).filter(s => s.body);\n\n  const intro = sections.find(s => s.name === 'Introduction');\n  const subtitle = intro ? intro.body.split('\\n')[0].replace(/\\*\\*/g, '').trim().slice(0, 120) : '';\n\n  const kw = [];\n  for (const s of sections) if (KEYWORD_SECTIONS.test(norm(s.name))) kw.push(...s.body.split(/[,\\n]/));\n  for (const l of lines) {\n    const m = l.match(/^\\*\\*(stack|technologies?)\\*\\*\\s*:\\s*(.*)/i);\n    if (m) kw.push(...m[2].split(','));\n  }\n  const keywords = [...new Set(kw.map(k => k.replace(/^[-*\\s]+/, '').replace(/\\*\\*/g, '').trim())\n    .filter(k => k && k.length < 80))];\n  return { title, subtitle, sections, keywords };\n}\n\n// Coupe une section trop longue entre deux lignes, avec chevauchement.\nfunction splitLong(text) {\n  const out = [];\n  let cur = '';\n  for (const line of text.split('\\n')) {\n    if (line.length > SIZE) {\n      if (cur.trim()) out.push(cur.trim());\n      cur = '';\n      for (let i = 0; i < line.length; i += SIZE - OVERLAP) out.push(line.slice(i, i + SIZE));\n      continue;\n    }\n    if (cur && (cur + '\\n' + line).length > SIZE) {\n      out.push(cur.trim());\n      cur = cur.slice(-OVERLAP) + '\\n' + line;\n    } else {\n      cur = cur ? cur + '\\n' + line : line;\n    }\n  }\n  if (cur.trim()) out.push(cur.trim());\n  return out;\n}\n\n// Une section = un chunk ; les petites sections voisines sont regroupées (sans dépasser SIZE).\nfunction group(sections) {\n  const chunks = [];\n  let cur = null;\n  for (const s of sections) {\n    const block = s.name === 'Introduction' ? s.body : `## ${s.name}\\n${s.body}`;\n    if (block.length > SIZE) {\n      if (cur) chunks.push(cur);\n      cur = null;\n      splitLong(block).forEach((t, k) => chunks.push({ names: [k ? `${s.name} (suite)` : s.name], text: t }));\n      continue;\n    }\n    const small = cur && (cur.text.length < MIN_SECTION || block.length < MIN_SECTION);\n    if (small && (cur.text + '\\n\\n' + block).length <= SIZE) {\n      cur.names.push(s.name);\n      cur.text += '\\n\\n' + block;\n    } else {\n      if (cur) chunks.push(cur);\n      cur = { names: [s.name], text: block };\n    }\n  }\n  if (cur) chunks.push(cur);\n  return chunks;\n}\n\nconst out = [];\n$input.all().forEach((item, i) => {\n  const file = { name: item.json.file_name, id: null };\n  const folder = { name: item.json.folder };\n  const text = (item.json.data || '').trim();\n  const asset_type = TYPE[folder.name];\n  if (!text || !asset_type) return; // fichier vide ou dossier inconnu : rejeté\n\n  const document_id = `${folder.name}/${file.name}`;\n  const version = hash53(text).toString(16); // change dès que le contenu change\n  const { title, subtitle, sections, keywords } = parse(text);\n  const docHeader = `[${LABEL[asset_type]}] ${title}${subtitle ? ' — ' + subtitle : ''}`;\n\n  group(sections).forEach((c, idx) => {\n    const header = `${docHeader} | Sections : ${c.names.join(', ')}`;\n    out.push({\n      json: {\n        id: hash53(`${document_id}|${version}|${idx}`),\n        embed_text: `title: ${header} | text: ${c.text}`,\n        payload: {\n          document_id, asset_type, title, version, chunk_index: idx,\n          sections: c.names, header,\n          keywords, keywords_norm: [...new Set(keywords.map(norm))],\n          source: 'fixture', source_file_id: file.id,\n          embedding_model: cfg.embedding_model, synthetic: true, text: c.text,\n        },\n      },\n    });\n  });\n});\nreturn out;\n"
+      },
+      "id": "8c06e1b3-8894-4890-bdcf-57bb690a2b21",
+      "name": "Chunks + IDs1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        944
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://generativelanguage.googleapis.com/v1beta/models/' + $('Config2').first().json.embedding_model + ':embedContent' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: { parts: [{ text: $json.embed_text }] }, output_dimensionality: $('Config2').first().json.dimensions }) }}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 5
+            }
+          }
+        }
+      },
+      "id": "1fd4c971-45f6-4305-aae1-f7b61575525b",
+      "name": "Gemini embeddings1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        624,
+        944
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "// Assemble chaque chunk avec son vecteur, puis prépare l'upsert Qdrant.\nconst cfg = $('Config2').first().json;\nconst points = $input.all().map((item, i) => {\n  const c = $('Chunks + IDs1').itemMatching(i).json;\n  const vector = item.json.embedding && item.json.embedding.values;\n  if (!vector || vector.length !== cfg.dimensions) {\n    throw new Error(`Embedding invalide pour ${c.payload.document_id} (chunk ${c.payload.chunk_index})`);\n  }\n  return { id: c.id, vector, payload: c.payload };\n});\n\n// Version courante de chaque document, pour supprimer ensuite les anciennes.\nconst docs = {};\nfor (const p of points) docs[p.payload.document_id] = p.payload.version;\n\nreturn [{ json: {\n  points,\n  docs: Object.entries(docs).map(([document_id, version]) => ({ document_id, version })),\n} }];\n"
+      },
+      "id": "5c87a262-067a-487a-acba-23d31b675050",
+      "name": "Construire les points1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        944
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Config2').first().json.qdrant_url }}/collections/{{ $('Config2').first().json.collection }}/points?wait=true",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ points: $json.points }) }}",
+        "options": {}
+      },
+      "id": "9fd4f5c8-84f7-4219-b26e-13be10ca4b2d",
+      "name": "Qdrant : upsert1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1056,
+        944
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Un item par document, pour supprimer ses chunks d'anciennes versions.\nreturn $('Construire les points1').first().json.docs.map(d => ({ json: d }));\n"
+      },
+      "id": "864fa998-a832-4a6b-b032-9e62d5f2d203",
+      "name": "Un item par document1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        944
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config2').first().json.qdrant_url }}/collections/{{ $('Config2').first().json.collection }}/points/delete?wait=true",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ filter: { must: [{ key: 'document_id', match: { value: $json.document_id } }], must_not: [{ key: 'version', match: { value: $json.version } }] } }) }}",
+        "options": {}
+      },
+      "id": "c7a841ab-fe62-4b25-ae0b-081a556352fa",
+      "name": "Qdrant : supprimer anciennes versions1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1504,
+        944
+      ]
+    },
+    {
+      "parameters": {
+        "content": "\n**Avant le 1er lancement**\n0. Lancer une fois le workflow **03_setup_qdrant** (crée la collection) c est la 1ere workflow a lancer une seul fois pour les configurations quadrant .c est la configuation de quadrant et l lancement de la 1 ere collection \n\n",
+        "height": 148,
+        "width": 600,
+        "color": "={{ '#48F000' }}"
+      },
+      "id": "9e690ace-fde3-4ac9-80b0-8488bfaa1b89",
+      "name": "Mode d'emploi3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        -32
+      ]
+    },
+    {
+      "id": "supabase-from-supabase-upload",
+      "name": "From Supabase upload",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -700,
+        180
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      }
+    },
+    {
+      "id": "supabase-validate-supabase-object",
+      "name": "Validate Supabase object",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        180
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const input = $('From Supabase upload').first().json;\nconst bucket = String(input.bucket ?? '');\nconst storagePath = String(input.storage_path ?? '');\nif (bucket !== $env.OLIVESOFT_SUPABASE_BUCKET) throw new Error('Unexpected storage bucket');\nif (!/^(cv|expertise|project)\\/[0-9]+\\/[a-zA-Z0-9._ -]+\\.(pdf|docx|txt)$/i.test(storagePath)) throw new Error('Invalid storage path');\nconst parts = storagePath.split('/');\nconst fileName = parts.at(-1);\nreturn [{ json: { bucket, storage_path: storagePath, kind: parts[0], file_name: fileName, extension: fileName.split('.').at(-1).toLowerCase() } }];"
+      }
+    },
+    {
+      "id": "supabase-download-supabase-object",
+      "name": "Download Supabase object",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        50,
+        180
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.OLIVESOFT_SUPABASE_URL.replace(/\\/$/, '') + '/storage/v1/object/authenticated/' + encodeURIComponent($json.bucket) + '/' + $json.storage_path.split('/').map(encodeURIComponent).join('/') }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.OLIVESOFT_SUPABASE_SECRET_KEY }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          },
+          "timeout": 30000
+        }
+      }
+    },
+    {
+      "id": "supabase-route-supabase-file",
+      "name": "Route Supabase file",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        300,
+        180
+      ],
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 3,
+        "output": "={{ ({ pdf: 0, docx: 1, txt: 2 })[$('Validate Supabase object').first().json.extension] ?? -1 }}"
+      }
+    },
+    {
+      "id": "supabase-extract-pdf-text",
+      "name": "Extract PDF text",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        550,
+        -40
+      ],
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      }
+    },
+    {
+      "id": "supabase-extract-txt-text",
+      "name": "Extract TXT text",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        550,
+        340
+      ],
+      "parameters": {
+        "operation": "text",
+        "destinationKey": "data"
+      }
+    },
+    {
+      "id": "supabase-decompress-docx",
+      "name": "Decompress DOCX",
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1.1,
+      "position": [
+        550,
+        150
+      ],
+      "parameters": {
+        "operation": "decompress",
+        "outputPrefix": "file_"
+      }
+    },
+    {
+      "id": "supabase-extract-docx-text",
+      "name": "Extract DOCX text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        790,
+        150
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const items = $input.all();\nlet found;\nfor (let i = 0; i < items.length && !found; i++) {\n  for (const [key, value] of Object.entries(items[i].binary ?? {})) {\n    if (/(^|\\/)word\\/document\\.xml$/i.test(String(value.fileName ?? key))) { found = { i, key }; break; }\n  }\n}\nif (!found) throw new Error('DOCX has no word/document.xml');\nconst xml = (await this.helpers.getBinaryDataBuffer(found.i, found.key)).toString('utf8');\nconst text = xml.replace(/<w:tab\\b[^>]*\\/>/g, '\\t').replace(/<w:br\\b[^>]*\\/>/g, '\\n').replace(/<\\/w:p>/g, '\\n').replace(/<[^>]+>/g, '').replace(/&#(\\d+);/g, (_, n) => String.fromCodePoint(Number(n))).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '\"').replace(/&amp;/g, '&').trim();\nif (!text) throw new Error('DOCX contains no extractable text');\nreturn [{ json: { data: text } }];"
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Config2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Qdrant : créer la collection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant : créer la collection": {
+      "main": [
+        [
+          {
+            "node": "Qdrant : index asset_type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant : index asset_type": {
+      "main": [
+        [
+          {
+            "node": "Qdrant : index document_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant : index document_id": {
+      "main": [
+        [
+          {
+            "node": "Qdrant : index version",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant : index version": {
+      "main": [
+        [
+          {
+            "node": "Qdrant : index keywords_norm",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant : index keywords_norm": {
+      "main": [
+        [
+          {
+            "node": "Qdrant : vérifier (compter les points)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chunks + IDs": {
+      "main": [
+        [
+          {
+            "node": "Gemini embeddings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini embeddings": {
+      "main": [
+        [
+          {
+            "node": "Construire les points",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construire les points": {
+      "main": [
+        [
+          {
+            "node": "Qdrant : upsert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant : upsert": {
+      "main": [
+        [
+          {
+            "node": "Un item par document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Un item par document": {
+      "main": [
+        [
+          {
+            "node": "Qdrant : supprimer anciennes versions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config1": {
+      "main": [
+        [
+          {
+            "node": "Validate Supabase object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Documents de test": {
+      "main": [
+        [
+          {
+            "node": "Chunks + IDs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config2": {
+      "main": [
+        [
+          {
+            "node": "Documents de test",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chunks + IDs1": {
+      "main": [
+        [
+          {
+            "node": "Gemini embeddings1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini embeddings1": {
+      "main": [
+        [
+          {
+            "node": "Construire les points1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construire les points1": {
+      "main": [
+        [
+          {
+            "node": "Qdrant : upsert1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant : upsert1": {
+      "main": [
+        [
+          {
+            "node": "Un item par document1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Un item par document1": {
+      "main": [
+        [
+          {
+            "node": "Qdrant : supprimer anciennes versions1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "From Supabase upload": {
+      "main": [
+        [
+          {
+            "node": "Config1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Supabase object": {
+      "main": [
+        [
+          {
+            "node": "Download Supabase object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Supabase object": {
+      "main": [
+        [
+          {
+            "node": "Route Supabase file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Supabase file": {
+      "main": [
+        [
+          {
+            "node": "Extract PDF text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Decompress DOCX",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract TXT text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract PDF text": {
+      "main": [
+        [
+          {
+            "node": "Chunks + IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract TXT text": {
+      "main": [
+        [
+          {
+            "node": "Chunks + IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decompress DOCX": {
+      "main": [
+        [
+          {
+            "node": "Extract DOCX text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract DOCX text": {
+      "main": [
+        [
+          {
+            "node": "Chunks + IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

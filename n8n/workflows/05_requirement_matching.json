@@ -1,0 +1,443 @@
+{
+  "name": "wf3_rag_matching",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## WF3 — RAG Matching\nSupabase Postgres lead context → Gemini embedding (768 dimensions) → Qdrant `olivesoft_knowledge` filtered by CV, project, expertise and `supabase_storage` source → evidence-linked matches.\n\nConfigure Postgres, Gemini header `x-goog-api-key`, Qdrant header `api-key`, and n8n `OLIVESOFT_QDRANT_URL`. Only privately stored source bucket/path metadata is returned; use an authenticated signed URL for review.",
+        "height": 780,
+        "width": 680,
+        "color": 3
+      },
+      "id": "sn-wf3-config",
+      "name": "Config — WF3 RAG",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        -800
+      ]
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "ewf-trigger-wf3",
+      "name": "Called by wf2",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -624,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "matching-test",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "wh-match",
+      "name": "POST /matching-test (manual)",
+      "webhookId": "29e0ea28-682c-4df7-ad16-dff0fb1d842b",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = $json;\nconst id = j.lead_id ?? j.id ?? (j.body && (j.body.lead_id ?? j.body.id)) ?? '';\nreturn [{ json: { lead_id: String(id) } }];"
+      },
+      "id": "resolve-lead-wf3",
+      "name": "Resolve Lead Id",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -368,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT l.id AS lead_id, l.title, l.extracted, p.sector, p.domain_needs\nFROM leads l\nLEFT JOIN LATERAL (\n  SELECT * FROM prospects pr WHERE pr.lead_id = l.id ORDER BY pr.id DESC LIMIT 1\n) p ON true\nWHERE l.id = $1::int AND l.status = 'researched'\nLIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ $json.lead_id }}"
+        }
+      },
+      "id": "pg-load-wf3",
+      "name": "Load Lead + Prospect",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -176,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const lead = $json;\nconst reqs = (lead.extracted && lead.extracted.requirements) ? lead.extracted.requirements : [];\nconst queries = Array.isArray(reqs) && reqs.length ? reqs.map(String) : [String(lead.title ?? 'tender')];\nreturn [{ json: { lead_id: lead.lead_id, title: lead.title, sector: lead.sector, queries } }];"
+      },
+      "id": "build-queries",
+      "name": "Build Requirement Queries",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        128,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-2:embedContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: { parts: [{ text: $json.queries.join('\\n') }] }, embedContentConfig: { outputDimensionality: 768, taskType: 'RETRIEVAL_QUERY' } }) }}",
+        "options": {}
+      },
+      "id": "http-embed",
+      "name": "Gemini Query Embedding",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        384,
+        400
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OLIVESOFT_QDRANT_URL.replace(/\\/$/, '') + '/collections/olivesoft_knowledge/points/query' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ query: $('Gemini Query Embedding').first().json.embedding.values, filter: { must: [{ key: 'asset_type', match: { value: 'cv' } }, { key: 'source', match: { value: 'supabase_storage' } }] }, limit: 5, with_payload: true }) }}",
+        "options": {}
+      },
+      "id": "qdrant-cvs",
+      "name": "Qdrant Search — CVS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        688,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OLIVESOFT_QDRANT_URL.replace(/\\/$/, '') + '/collections/olivesoft_knowledge/points/query' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ query: $('Gemini Query Embedding').first().json.embedding.values, filter: { must: [{ key: 'asset_type', match: { value: 'project' } }, { key: 'source', match: { value: 'supabase_storage' } }] }, limit: 5, with_payload: true }) }}",
+        "options": {}
+      },
+      "id": "qdrant-projects",
+      "name": "Qdrant Search — PROJECTS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        912,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OLIVESOFT_QDRANT_URL.replace(/\\/$/, '') + '/collections/olivesoft_knowledge/points/query' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ query: $('Gemini Query Embedding').first().json.embedding.values, filter: { must: [{ key: 'asset_type', match: { value: 'expertise' } }, { key: 'source', match: { value: 'supabase_storage' } }] }, limit: 5, with_payload: true }) }}",
+        "options": {}
+      },
+      "id": "qdrant-stacks",
+      "name": "Qdrant Search — EXPERTISE",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        -128
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const src = $('Build Requirement Queries').first().json;\nconst bundles = [\n  ['cv', $items('Qdrant Search — CVS')],\n  ['project', $items('Qdrant Search — PROJECTS')],\n  ['expertise', $items('Qdrant Search — EXPERTISE')],\n];\nconst byDocument = new Map();\nfor (const [assetType, items] of bundles) {\n  for (const item of items) {\n    for (const point of (item.json.result?.points ?? [])) {\n      const payload = point.payload ?? {};\n      if (payload.source !== 'supabase_storage' || !payload.document_id || !payload.source_path || !payload.source_bucket) continue;\n      const key = assetType + ':' + payload.document_id;\n      const score = Math.round(Number(point.score ?? 0) * 100);\n      if (!byDocument.has(key) || score > byDocument.get(key).score) byDocument.set(key, { lead_id: src.lead_id, asset_type: assetType, asset_ref: payload.document_id, payload, score });\n    }\n  }\n}\nconst matches = [...byDocument.values()].sort((a, b) => b.score - a.score).slice(0, 30);\nreturn [{ json: { matches_json: JSON.stringify({ matches }) } }];"
+      },
+      "id": "fuse-wf3",
+      "name": "Fuse Scores → Matches",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO matches (lead_id, asset_type, asset_ref, payload, score)\nSELECT (m->>'lead_id')::int, m->>'asset_type', m->>'asset_ref', COALESCE(m->'payload','{}'::jsonb), COALESCE((m->>'score')::numeric, 0)\nFROM jsonb_array_elements($1::jsonb->'matches') AS m\nRETURNING id, lead_id;",
+        "options": {
+          "queryReplacement": "={{ $json.matches_json }}"
+        }
+      },
+      "id": "pg-matches-wf3",
+      "name": "Insert Matches",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1600,
+        32
+      ],
+      "onError": "continueErrorOutput",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE leads SET status = 'matched', updated_at = now()\nWHERE id = $1::int\nRETURNING id, status;",
+        "options": {
+          "queryReplacement": "={{ $('Build Requirement Queries').first().json.lead_id }}"
+        }
+      },
+      "id": "pg-status-wf3",
+      "name": "Update Lead Status (matched)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1872,
+        96
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "o098JEjabb1bzglq"
+        },
+        "options": {}
+      },
+      "id": "ewf-wf4",
+      "name": "Run wf4 Proposal Generation",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2128,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const src = $json ?? {};\nlet leadId = '';\ntry { leadId = $('Resolve Lead Id').first().json.lead_id; } catch (e) {}\nif (!leadId) { try { leadId = src.lead_id ?? src.id ?? ''; } catch (e) {} }\nconst errRaw = src.error ?? src.message ?? src;\nconst errText = typeof errRaw === 'string' ? errRaw : (errRaw.message ?? JSON.stringify(errRaw));\nreturn [{ json: { error_json: JSON.stringify({ lead_id: String(leadId ?? ''), error: String(errText).slice(0, 500) }) } }];"
+      },
+      "id": "err-build-wf3",
+      "name": "Build Error Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE leads SET status = 'failed', error = s.p->>'error', updated_at = now()\nFROM (SELECT $1::jsonb AS p) AS s\nWHERE COALESCE(s.p->>'lead_id','') <> '' AND id = (s.p->>'lead_id')::int\nRETURNING id, status;",
+        "options": {
+          "queryReplacement": "={{ $json.error_json }}"
+        }
+      },
+      "id": "err-fail-wf3",
+      "name": "Mark Lead Failed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1216,
+        384
+      ]
+    }
+  ],
+  "connections": {
+    "Build Error Payload": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Mark Lead Failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Build Requirement Queries": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Gemini Query Embedding",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Called by wf2": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Resolve Lead Id",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Fuse Scores → Matches": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Insert Matches",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Insert Matches": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Update Lead Status (matched)",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Build Error Payload",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Load Lead + Prospect": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Build Requirement Queries",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "POST /matching-test (manual)": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Resolve Lead Id",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Qdrant Search — CVS": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Qdrant Search — PROJECTS",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Qdrant Search — PROJECTS": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Qdrant Search — EXPERTISE",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Resolve Lead Id": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Load Lead + Prospect",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Update Lead Status (matched)": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Run wf4 Proposal Generation",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Build Error Payload",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Gemini Query Embedding": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Qdrant Search — CVS",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Build Error Payload",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Qdrant Search — EXPERTISE": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Fuse Scores → Matches",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
