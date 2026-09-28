@@ -21,7 +21,7 @@ RFP intelligence pipeline: detect an IT tender → research its organisation →
 
 ## MVP implementation remaining (2026-09-28)
 
-The October 1 MVP is **not yet verified**. The dashboard is connected to authenticated n8n read and manual intake routes. A manual tender was created and read back with a UUID. CV upload to private Supabase Storage, ingestion into Qdrant, and the saved Knowledge base list have succeeded live for two CVs. A filtered Qdrant read returned an indexed CV point. These checks do not prove the complete tender-to-proposal journey.
+The October 1 MVP is **not yet verified**. The dashboard is connected to authenticated n8n read and manual intake routes. A manual tender was created and read back with a UUID. TED and Tavily discovery branches returned live suggestions in n8n; dashboard discovery and SerpApi fallback still need hosted verification/configuration. CV upload to private Supabase Storage, ingestion into Qdrant, and the saved Knowledge base list have succeeded live for two CVs. A filtered Qdrant read returned an indexed CV point. These checks do not prove the complete tender-to-proposal journey.
 
 Complete the following in order. Keep an item open until its stated live check passes; an exported workflow or a successful isolated node is insufficient.
 
@@ -68,6 +68,7 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ done
 | 10 | `10_error_handler.json` | Dhiya | Execution error → failure record | ⬜ |
 | 11 | `11_rag_evaluation.json` | Nour | Golden queries → metrics | ⬜ |
 | 12 | `12_knowledge_upload.json` | Firas / Nour | Private upload → saved document + ingestion request | 🟨 |
+| 13 | `13_tender_discovery.json` | Dhiya | TED/Tavily search → reviewable tender suggestions | 🟨 |
 
 **Shared sub-workflow envelope:** `{schema_version, job_id, lead_id, operation, input, result, warnings}` — preserve it; return one explicit result object.
 **Contract rules:** stable requirement IDs & `asset_ref`; claim-level evidence (URL, title, timestamp, claim, excerpt); unknown budget/deadline stays `null`; artifact identity = stable provider file ID, never an expiring link; limits: upload 5 MB, top_k 5–20, list 50–100; validate with a reusable validator sub-workflow (don’t assume npm imports work in Code nodes).
@@ -267,3 +268,4 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ done
 
 - 2026-09-23 — plan rewritten post-mentor-review (`plan-n8n.md`); architecture pivoted to all-n8n.
 - 2026-09-28 — Updated MVP remaining work after live CV upload, indexing, document-list, and filtered Qdrant checks; tender-to-proposal release gates remain open.
+- 2026-09-28 — Published TED and Tavily tender discovery in n8n and added a dashboard review path. SerpApi credentials and hosted dashboard smoke check remain open.

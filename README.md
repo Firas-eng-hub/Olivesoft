@@ -4,7 +4,7 @@ OliveSoft is an RFP intelligence project. The target workflow is tender detectio
 
 ## Dashboard demo
 
-The interactive frontend is in [dashboard/](dashboard/README.md). Its live mode connects authenticated tender, overview, and Knowledge base routes to n8n; demo mode still uses synthetic data and sample downloads. Proposal generation and live artifact downloads remain unfinished. See [Truth.md](Truth.md#mvp-implementation-remaining-2026-09-28) for the MVP implementation checklist.
+The interactive frontend is in [dashboard/](dashboard/README.md). Its live mode connects authenticated tender, discovery, overview, and Knowledge base routes to n8n; demo mode still uses synthetic data and sample downloads. TED and Tavily discovery results can be reviewed before manual intake. SerpApi fallback, proposal generation, and live artifact downloads remain unfinished. See [Truth.md](Truth.md#mvp-implementation-remaining-2026-09-28) for the MVP implementation checklist.
 
 ```bash
 cd dashboard

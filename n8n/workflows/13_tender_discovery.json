@@ -1,0 +1,215 @@
+{
+  "name": "tender_discovery",
+  "active": false,
+  "nodes": [
+    {
+      "id": "1fa82431-7ab0-4610-9554-13a656386fc1",
+      "name": "GET /tenders/discover/ted",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "tenders/discover/ted",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode"
+      },
+      "webhookId": "cd582bd6-c3c1-46e7-b0d2-62fc831dd05a"
+    },
+    {
+      "id": "ef1c7a25-7b63-45ed-8c1b-d75b24ff8cba",
+      "name": "TED Search API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ted.europa.eu/v3/notices/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({query:'classification-cpv=72000000 AND notice-type=cn-standard AND publication-date>='+$now.minus({days:14}).toFormat('yyyyMMdd'),fields:['publication-number','notice-title','buyer-name','publication-date','notice-type'],page:1,limit:15,paginationMode:'PAGE_NUMBER'}) }}",
+        "options": {
+          "timeout": 20000
+        }
+      }
+    },
+    {
+      "id": "73b2097d-8951-4a18-88f8-59ac08b02276",
+      "name": "Map TED notices",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const r=$json; if(r.timedOut) throw new Error('TED search timed out'); const take=(v)=>typeof v==='string'?v:(v&&typeof v==='object'?(v.eng??v.ENG??v.en??Object.values(v)[0]):''); const plain=(v)=>Array.isArray(v)?String(v[0]??''):String(v??''); const items=(r.notices??[]).slice(0,15).map(n=>{const id=String(n['publication-number']??'');return {id:'ted:'+id,title:plain(take(n['notice-title']))||id,organization:plain(take(n['buyer-name']))||'Unknown buyer',summary:'Official TED competition notice. Open the source to review the full scope and deadline.',url:'https://ted.europa.eu/en/notice/-/detail/'+id,source:'TED',publishedAt:String(n['publication-date']??'').slice(0,10)};}).filter(n=>n.id!=='ted:'); return [{json:{items,total:r.totalNoticeCount??items.length,source:'ted'}}];"
+      }
+    },
+    {
+      "id": "90d62c1c-2290-4005-9711-452703320443",
+      "name": "Respond TED results",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        672,
+        0
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}"
+      }
+    },
+    {
+      "id": "a754f81f-9a18-44c1-8c81-0ae1ebaf312e",
+      "name": "GET /tenders/discover/tavily",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        224
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "tenders/discover/tavily",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode"
+      },
+      "webhookId": "9e730297-7cbb-449c-ba9d-bb91c859e96b"
+    },
+    {
+      "id": "44438cc8-de38-4f74-a17c-7ebea915f507",
+      "name": "Tavily Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        224
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Tavily-Access-Mode",
+              "value": "keyless"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({query:'software development OR cloud services public tender procurement site:ted.europa.eu OR site:find-tender.service.gov.uk',search_depth:'basic',max_results:10}) }}",
+        "options": {
+          "timeout": 20000
+        }
+      }
+    },
+    {
+      "id": "dcec3442-8119-4a04-9fd9-a721117e96cb",
+      "name": "Map Tavily results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        224
+      ],
+      "parameters": {
+        "jsCode": "const rows=($json.results??[]).filter(x=>/^https:\\/\\//i.test(String(x.url??''))).slice(0,10).map(x=>({id:'tavily:'+String(x.url),title:String(x.title??'Untitled').slice(0,180),organization:'Review source',summary:String(x.content??'').replace(/\\s+/g,' ').slice(0,600),url:String(x.url),source:'Tavily',publishedAt:null})); return [{json:{items:rows,total:rows.length,source:'tavily'}}];"
+      }
+    },
+    {
+      "id": "8f9be381-3ac5-4049-a1cd-7e7cfb50efb9",
+      "name": "Respond Tavily results",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        672,
+        224
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}"
+      }
+    }
+  ],
+  "connections": {
+    "GET /tenders/discover/ted": {
+      "main": [
+        [
+          {
+            "node": "TED Search API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TED Search API": {
+      "main": [
+        [
+          {
+            "node": "Map TED notices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map TED notices": {
+      "main": [
+        [
+          {
+            "node": "Respond TED results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET /tenders/discover/tavily": {
+      "main": [
+        [
+          {
+            "node": "Tavily Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tavily Search": {
+      "main": [
+        [
+          {
+            "node": "Map Tavily results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map Tavily results": {
+      "main": [
+        [
+          {
+            "node": "Respond Tavily results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  }
+}

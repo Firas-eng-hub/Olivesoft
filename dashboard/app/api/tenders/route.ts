@@ -14,9 +14,16 @@ export async function POST(request: Request) {
   const organization = String(input.organization ?? "").trim();
   const summary = String(input.summary ?? "").trim();
   const deadline = String(input.deadline ?? "").trim();
+  const source = String(input.source ?? "manual").trim();
+  const sourceUrl = String(input.sourceUrl ?? "").trim();
   if (title.length < 4 || title.length > 100 || organization.length < 2 || organization.length > 80 || summary.length < 12 || summary.length > 700 || (deadline && !/^\d{4}-\d{2}-\d{2}$/.test(deadline))) return Response.json({ error: "Tender details are invalid." }, { status: 400 });
+  if (!["manual", "ted", "tavily"].includes(source)) return Response.json({ error: "Tender source is invalid." }, { status: 400 });
+  if (sourceUrl) {
+    try { const url = new URL(sourceUrl); if (url.protocol !== "https:" || sourceUrl.length > 1000) throw new Error("Invalid URL"); }
+    catch { return Response.json({ error: "Tender source URL is invalid." }, { status: 400 }); }
+  }
   try {
-    const result = await n8nRequest(config.origin, config.apiKey, "tenders", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ title, organization, summary, deadline, source: "manual" }) });
+    const result = await n8nRequest(config.origin, config.apiKey, "tenders", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ title, organization, summary, deadline, source, source_url: sourceUrl || null }) });
     if (!result || typeof result !== "object" || !("lead_id" in result)) throw new Error("Missing lead ID");
     return Response.json({ leadId: String(result.lead_id) }, { status: 201, headers: { "Cache-Control": "no-store" } });
   } catch {
