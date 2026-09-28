@@ -4,27 +4,26 @@ The **Knowledge base** accepts PDF, DOCX, and TXT files up to 4 MB. The dashboar
 
 The upload workflow is published with the `OLIVESOFT_N8N_UPLOAD_API_KEY` Header Auth credential used by the dashboard. Its live Storage and indexing path still needs an end-to-end test. The checked-in workflow is [12_knowledge_upload.json](../n8n/workflows/12_knowledge_upload.json).
 
-**Current upload blocker (2026-09-27):** The live webhook had been bound to a different Header Auth credential; that binding, raw binary reception, CV category handling, and ingestion path format were corrected. A read-only execution then returned `access to env vars denied` when checking `$env`. The Storage upload and ingestion workflows still read their Supabase URL, bucket, secret key, or Qdrant URL through `$env`, so the dashboard can still receive a 502 until those values are moved into n8n credentials/configuration or node environment access is explicitly enabled. The local ignored `.env` has no Supabase secret key. No successful CV upload has been observed. The dashboard proxy now distinguishes upstream authentication and validation failures in its error message. [n8n documents the environment access setting](https://docs.n8n.io/deploy/host-n8n/configure-n8n/basic-configuration/use-environment-variables/security/); [Supabase requires new secret keys on the `apikey` header](https://supabase.com/docs/guides/getting-started/api-keys).
+**Current status (2026-09-28):** The live webhook uses the dashboard's Header Auth credential, receives raw binary, and accepts CV uploads. The Storage upload and ingestion download nodes use the `OliveSoft Supabase Storage` Header Auth credential (`apikey` header); their URL and bucket are public configuration in the workflow. This removes the blocked `$env` dependency from the Storage path. Both workflows were published after the change. No successful CV upload has been observed yet, so the dashboard 502 is not confirmed resolved. The ingestion Qdrant URL still comes from `$env` and must be configured separately before indexing can succeed. The dashboard proxy distinguishes upstream authentication and validation failures in its error message. [n8n documents the environment access setting](https://docs.n8n.io/deploy/host-n8n/configure-n8n/basic-configuration/use-environment-variables/security/); [Supabase requires new secret keys on the `apikey` header](https://supabase.com/docs/guides/getting-started/api-keys).
 
 ## 1. Supabase setup
 
 1. In the Supabase project, open **Storage → New bucket**. Create `olivesoft-knowledge` (or another name) as a **private** bucket. Set its file size limit to at least 4 MB and allow `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`, and `text/plain` if you enable MIME restrictions.
-2. In **Project Settings → API Keys**, create or copy a server-side **secret key** (`sb_secret_...`). It has broad project access. Keep it only in n8n's server environment or a dedicated n8n credential; never put it in a `NEXT_PUBLIC_` variable, browser code, or Git.
-3. Configure these environment values on the **n8n server**, then restart n8n so expressions can read them:
+2. In **Project Settings → API Keys**, create or copy a server-side **secret key** (`sb_secret_...`). It has broad project access. Set it as the value of an n8n Header Auth credential named `OliveSoft Supabase Storage` with header name `apikey`. Never put it in a `NEXT_PUBLIC_` variable, browser code, workflow export, or Git. Rotate any key shared outside the credential store.
+3. The live workflow uses this public project configuration:
 
    | Name | Value |
    | --- | --- |
-   | `OLIVESOFT_SUPABASE_URL` | Project URL, such as `https://PROJECT_REF.supabase.co` |
-   | `OLIVESOFT_SUPABASE_BUCKET` | Exact private bucket name, such as `olivesoft-knowledge` |
-   | `OLIVESOFT_SUPABASE_SECRET_KEY` | Supabase server-side secret key |
+   | Project URL | `https://okhntgauzbumgidpuyvx.supabase.co` |
+   | Private bucket | `olivesoft-knowledge` |
 
-   The workflow sends that key in the Storage API's `apikey` header. If your n8n deployment restricts `$env` expressions, put the secret in an n8n credential and update the HTTP Request node to use it before publishing. Never paste the key into a node parameter or workflow export.
+   Both Storage HTTP Request nodes send the credential in the Storage API's `apikey` header. Rebind the named credential after importing an export.
 
 The supplied project reference is `okhntgauzbumgidpuyvx`, so its Storage API base URL is `https://okhntgauzbumgidpuyvx.supabase.co`. The local [n8n environment template](../n8n/.env.example) and ignored `n8n/.env` now contain that URL and the supplied pooler settings. **No database password or Supabase secret key was provided**, so both secret fields remain empty. The project reference, database password, and Supabase secret key are three different values.
 
 The supplied legacy Supabase **anon** key is stored only in the ignored local `n8n/.env` as `OLIVESOFT_SUPABASE_ANON_KEY`. The current workflows do not read it. It has the low-privilege `anon` role and cannot replace `OLIVESOFT_SUPABASE_SECRET_KEY` for the private server-side Storage flow without adding an explicit Storage access policy. Supabase recommends new publishable and secret keys for new integrations; see [API key types](https://supabase.com/docs/guides/getting-started/api-keys).
 
-The hosted n8n instance runs on Azure App Service. A repository `.env` file is only a local reference; uploading this repository will not set the hosted n8n environment. In the Azure portal, open **App Services → your n8n app → Settings → Environment variables → App settings**, add `OLIVESOFT_SUPABASE_URL`, `OLIVESOFT_SUPABASE_BUCKET`, `OLIVESOFT_SUPABASE_SECRET_KEY`, and `OLIVESOFT_QDRANT_URL`, then apply the changes. Azure restarts the app when settings change. Confirm that the bucket name matches the private bucket you created. See [Azure App Service app settings](https://learn.microsoft.com/en-us/azure/app-service/configure-common?tabs=portalfli).
+The hosted n8n instance runs on Azure App Service. A repository `.env` file is only a local reference; uploading this repository will not set the hosted n8n environment. The Storage nodes no longer need `OLIVESOFT_SUPABASE_*` environment values. Qdrant indexing still needs a reachable `OLIVESOFT_QDRANT_URL`, and this host currently denies `$env` expressions, so its configuration needs a separate repair. See [Azure App Service app settings](https://learn.microsoft.com/en-us/azure/app-service/configure-common?tabs=portalfli).
 
 ### Supabase Postgres pooler credential in n8n
 
@@ -75,7 +74,7 @@ The published workflows are [knowledge_ingestion](https://dhiya-gvhtdshje3f0ehht
 
 `wf3_rag_matching` now uses the same Gemini model and 768 dimensions. It queries the one Qdrant collection with filters for `cv`, `project`, and `expertise`, only accepts payloads with `source: supabase_storage`, deduplicates by document, and carries `source_bucket`/`source_path` in its match payload. Disconnected Drive/Dropbox nodes were removed. It continues using the project's Supabase Postgres tables for leads and matches.
 
-Add `OLIVESOFT_QDRANT_URL` to the **n8n server** (the full Qdrant base URL, including port if needed). Check the n8n Header Auth credentials on both workflows: Gemini requests need `x-goog-api-key`, and Qdrant requests need `api-key`. The existing generic credentials have similar names; inspect and rebind each node rather than assuming its current binding is correct. Supabase Storage requests read the three `OLIVESOFT_SUPABASE_*` environment values from section 1. Vercel still needs only the three variables in section 3.
+Configure a reachable Qdrant base URL (including port if needed) in the n8n workflow before relying on indexing; `$env.OLIVESOFT_QDRANT_URL` currently fails on this host. Check the n8n Header Auth credentials on both workflows: Gemini requests need `x-goog-api-key`, Qdrant requests need `api-key`, and Supabase Storage needs the `OliveSoft Supabase Storage` `apikey` credential. Vercel still needs only the three variables in section 3.
 
 ## Other live workflows
 
@@ -90,7 +89,7 @@ No other live workflow contains a Drive node. The remaining proposal and artifac
 
 ## 5. Verification before publication
 
-These graph changes are published. Node configuration validation passed, but no live Supabase credential or object was available for an end-to-end run. Before relying on the integration:
+These graph changes are published. Node configuration validation passed and the live Storage nodes are bound to the Supabase credential, but no binary CV upload has been observed. Before relying on the integration:
 
 1. Test TXT, PDF, and DOCX uploads from the dashboard and confirm each original is in the private bucket. Check that `knowledge_ingestion` receives the same bucket/path and writes nonempty chunks to `olivesoft_knowledge`.
 2. Test a malformed path, wrong bucket, empty PDF, bad DOCX, and a Supabase download failure. Confirm failures do not create Qdrant points.
