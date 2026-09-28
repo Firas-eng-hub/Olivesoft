@@ -64,11 +64,17 @@ export async function POST(request: Request) {
       cache: "no-store",
       signal: AbortSignal.timeout(30000),
     });
-    if (!upstream.ok) return failure("Supabase upload failed. Please retry later.", 502);
+    if (!upstream.ok) {
+      console.error("Knowledge upload webhook returned HTTP", upstream.status);
+      if (upstream.status === 400 || upstream.status === 413 || upstream.status === 415) return failure("The upload was rejected. Check the file type, size, and category.", upstream.status);
+      if (upstream.status === 401 || upstream.status === 403) return failure("Upload service authentication is misconfigured.", 502);
+      return failure("Storage upload workflow failed. Please retry later.", 502);
+    }
     const result: unknown = await upstream.json();
     if (typeof result !== "object" || result === null || !("storage_path" in result) || typeof result.storage_path !== "string" || !result.storage_path || !("bucket" in result) || typeof result.bucket !== "string" || !result.bucket) return failure("Supabase did not confirm the upload.", 502);
     return Response.json({ status: "uploaded", storagePath: result.storage_path, bucket: result.bucket, indexing: "pending" }, { status: 201, headers: { "Cache-Control": "no-store" } });
-  } catch {
-    return failure("Supabase upload is unavailable. Please retry later.", 502);
+  } catch (cause) {
+    if (cause instanceof Error && cause.name === "TimeoutError") return failure("Storage upload timed out. Please retry later.", 504);
+    return failure("Storage upload is unavailable. Please retry later.", 502);
   }
 }

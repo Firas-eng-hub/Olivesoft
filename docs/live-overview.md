@@ -17,6 +17,7 @@ The n8n Header Auth credential must use header name `api-key`. The same credenti
 | `GET /api/overview` | `GET /webhook/leads` | Latest 200 leads for overview and pipeline |
 | `GET /api/overview?id=UUID` | `GET /webhook/lead?id=UUID` | Lead details, requirements, and matched document evidence |
 | `POST /api/tenders` | `POST /webhook/tenders` | Manual tender intake |
+| `GET /api/overview` | `GET /webhook/jobs` | Recent durable job records for Activity |
 
 The dashboard requires the team password in `x-olivesoft-upload-password` for all three routes. Its server sends `api-key` to n8n. The browser uses the team password in memory for the current page session. Do not send the n8n key to browser code or prefix it with `NEXT_PUBLIC_`.
 
@@ -27,7 +28,10 @@ The overview cards, monthly chart bars, pipeline stages, and recent tender rows 
 - The dashboard build and type check pass.
 - An n8n manual read of `wf5_api` returned `{ "items": [] }` successfully against the connected Postgres database on 2026-09-27. The database currently had no lead rows in that read.
 - A missing UUID lead returned `{ "error": "lead not found" }` successfully. A real lead detail still needs checking after a lead exists.
-- Manual tender creation has not been tested against live n8n. Its extraction prompt and UUID failure update were corrected. The call from tender detection to prospect research is disabled because the downstream research and matching workflows still contain legacy integer lead casts. A new tender will remain in the detected stage until that UUID/schema repair is complete.
-- Proposal generation, retries, job activity, and artifact downloads still use demo behavior or pending notices in the dashboard. They need authenticated n8n action and job contracts before use with live records.
+- A manual live write on 2026-09-27 created test lead `8f4ee6a1-58ef-4abd-8733-c374ba3503f1` (execution 63). The UUID was returned and the lead was read back through the live detail route (execution 68). The first research attempt failed because the old workflow used columns absent from the deployed schema. A later attempt failed in its retired DuckDuckGo tool; the test lead remains `failed`.
+- Research and matching now use UUID lead IDs and the deployed `prospects`/`matches` column names. Research runs from the authenticated intake handoff and currently records partial results from submitted tender context. The user approved external search, but no external search tool is connected or verified. Matching no longer starts proposal generation automatically. This revised chain has not had a successful end-to-end live run.
+- The authenticated jobs read route returned `{ "items": [] }` in execution 71. Activity displays these persisted jobs, but intake currently does not create a job row, and generation/retry actions are still absent.
+- The old proposal workflow contained placeholder artifact records and a render service URL. It was unpublished. No live proposal, retry, or artifact download should be treated as ready until real PPTX/PDF exports, job actions, and controlled file delivery are implemented and tested.
+- Automatic approval review rejected a further live research execution because the draft search tool would send tender-derived text to DuckDuckGo and write results. That tool and the unauthenticated research test webhook were removed; no further research execution was attempted.
 
-The committed credential-free workflow exports are [tender detection](../n8n/workflows/01_tender_detection.json) and [read API](../n8n/workflows/08_read_api.json). Rebind credentials after import. The live workflow IDs are `hiy8UJ2hy94RQCJo` and `HFwm7nYrcDS4adfZ` respectively.
+The committed credential-free workflow exports are [tender detection](../n8n/workflows/01_tender_detection.json), [prospect research](../n8n/workflows/02_prospect_research.json), [matching](../n8n/workflows/05_requirement_matching.json), and [read API](../n8n/workflows/08_read_api.json). Rebind credentials after import. Their live workflow IDs are `hiy8UJ2hy94RQCJo`, `yCkgzoyxGkFdWFto`, `s3hsG3EMPMUWzBbK`, and `HFwm7nYrcDS4adfZ` respectively.

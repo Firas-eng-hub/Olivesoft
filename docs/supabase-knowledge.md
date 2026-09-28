@@ -2,7 +2,9 @@
 
 The **Knowledge base** accepts PDF, DOCX, and TXT files up to 4 MB. The dashboard server checks a team upload password, validates the file, and sends its bytes to the protected n8n webhook. The [upload workflow draft](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/dvXGNUUukgVpkZgL) writes the original to a **private Supabase Storage bucket** under `cv/`, `expertise/`, or `project/`. A successful upload returns the bucket and object path and queues `knowledge_ingestion` asynchronously. It does **not** mean the file has been indexed for RAG.
 
-The upload workflow is published with the dedicated `OLIVESOFT_N8N_UPLOAD_API_KEY` Header Auth credential. Its live Storage and indexing path still needs an end-to-end test. The checked-in workflow is [12_knowledge_upload.json](../n8n/workflows/12_knowledge_upload.json).
+The upload workflow is published with the `OLIVESOFT_N8N_UPLOAD_API_KEY` Header Auth credential used by the dashboard. Its live Storage and indexing path still needs an end-to-end test. The checked-in workflow is [12_knowledge_upload.json](../n8n/workflows/12_knowledge_upload.json).
+
+**Current upload blocker (2026-09-27):** The live webhook had been bound to a different Header Auth credential; that binding, raw binary reception, CV category handling, and ingestion path format were corrected. A read-only execution then returned `access to env vars denied` when checking `$env`. The Storage upload and ingestion workflows still read their Supabase URL, bucket, secret key, or Qdrant URL through `$env`, so the dashboard can still receive a 502 until those values are moved into n8n credentials/configuration or node environment access is explicitly enabled. The local ignored `.env` has no Supabase secret key. No successful CV upload has been observed. The dashboard proxy now distinguishes upstream authentication and validation failures in its error message. [n8n documents the environment access setting](https://docs.n8n.io/deploy/host-n8n/configure-n8n/basic-configuration/use-environment-variables/security/); [Supabase requires new secret keys on the `apikey` header](https://supabase.com/docs/guides/getting-started/api-keys).
 
 ## 1. Supabase setup
 
@@ -45,7 +47,7 @@ Save and test the credential, then bind it to the Postgres nodes in `wf1_tender_
 
 Open the [upload workflow](https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/workflow/dvXGNUUukgVpkZgL). Its webhook is bound to the dedicated n8n Header Auth credential `OLIVESOFT_N8N_UPLOAD_API_KEY`. Confirm its header name is `api-key` and that its value matches Vercel's server-side variable of the same name. Do not reuse the Qdrant header credential.
 
-Test one TXT upload from the dashboard and verify the object appears in the private bucket. Then test a PDF and DOCX, bad category, oversized file, wrong key, and a failed Supabase request. The production URL is:
+After the Supabase secret is configured in an n8n credential, test one CV upload from the dashboard and verify the object appears in the private bucket. Then test a PDF and DOCX, bad category, oversized file, wrong key, and a failed Supabase request. The production URL is:
 
 `https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/webhook/olivesoft/v1/knowledge/upload`
 
