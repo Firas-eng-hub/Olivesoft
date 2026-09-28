@@ -118,10 +118,6 @@
         "headerParameters": {
           "parameters": [
             {
-              "name": "apikey",
-              "value": "={{ $env.OLIVESOFT_SUPABASE_SECRET_KEY }}"
-            },
-            {
               "name": "Content-Type",
               "value": "={{ $('Validate upload').first().json.mime_type }}"
             },
@@ -138,7 +134,9 @@
         },
         "sendBody": true,
         "sendHeaders": true,
-        "url": "={{ $env.OLIVESOFT_SUPABASE_URL.replace(/\\/$/, '') + '/storage/v1/object/' + encodeURIComponent($env.OLIVESOFT_SUPABASE_BUCKET) + '/' + $('Validate upload').first().json.storage_path.split('/').map(encodeURIComponent).join('/') }}"
+        "url": "={{ 'https://okhntgauzbumgidpuyvx.supabase.co/storage/v1/object/olivesoft-knowledge/' + $('Validate upload').first().json.storage_path.split('/').map(encodeURIComponent).join('/') }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
       }
     },
     {
@@ -152,7 +150,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const stored = $input.first().json;\nif (!stored.Key) throw new Error('Supabase did not confirm the stored object');\nconst registered = $('Register document').first().json;\nif (!registered.id) throw new Error('Document version conflict: doc_id/version already registered');\nconst source = $('Validate upload').first().json;\nreturn [{ json: { bucket: $env.OLIVESOFT_SUPABASE_BUCKET, storage_path: source.storage_path, doc_id: source.doc_id, version: registered.version } }];"
+        "jsCode": "const stored = $input.first().json;\nif (!stored.Key) throw new Error('Supabase did not confirm the stored object');\nconst registered = $('Register document').first().json;\nif (!registered.id) throw new Error('Document version conflict: doc_id/version already registered');\nconst source = $('Validate upload').first().json;\nreturn [{ json: { bucket: 'olivesoft-knowledge', storage_path: source.storage_path, doc_id: source.doc_id, version: registered.version } }];"
       }
     },
     {

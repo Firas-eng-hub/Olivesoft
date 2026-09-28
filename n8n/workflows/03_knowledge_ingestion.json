@@ -554,7 +554,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const input = $('From Supabase upload').first().json;\nconst bucket = String(input.bucket ?? '');\nconst storagePath = String(input.storage_path ?? '');\nif (bucket !== $env.OLIVESOFT_SUPABASE_BUCKET) throw new Error('Unexpected storage bucket');\nif (!/^(cv|expertise|project)\\/[0-9]+\\/[a-zA-Z0-9._ -]+\\.(pdf|docx|txt)$/i.test(storagePath)) throw new Error('Invalid storage path');\nconst parts = storagePath.split('/');\nconst fileName = parts.at(-1);\nreturn [{ json: { bucket, storage_path: storagePath, kind: parts[0], file_name: fileName, extension: fileName.split('.').at(-1).toLowerCase() } }];"
+        "jsCode": "const input = $('From Supabase upload').first().json;\nconst bucket = String(input.bucket ?? '');\nconst storagePath = String(input.storage_path ?? '');\nif (bucket !== 'olivesoft-knowledge') throw new Error('Unexpected storage bucket');\nif (!/^(cv|expertise|project)\\/[0-9]+\\/[a-zA-Z0-9._ -]+\\.(pdf|docx|txt|md)$/i.test(storagePath)) throw new Error('Invalid storage path');\nconst parts = storagePath.split('/');\nconst fileName = parts.at(-1);\nconst docId = String(input.doc_id ?? fileName.replace(/\\.[^.]+$/, ''));\nconst version = Number(input.version ?? 1) || 1;\nreturn [{ json: { bucket, storage_path: storagePath, doc_id: docId, version, kind: parts[0], file_name: fileName, extension: fileName.split('.').at(-1).toLowerCase() } }];"
       }
     },
     {
@@ -568,16 +568,7 @@
       ],
       "parameters": {
         "method": "GET",
-        "url": "={{ $env.OLIVESOFT_SUPABASE_URL.replace(/\\/$/, '') + '/storage/v1/object/authenticated/' + encodeURIComponent($json.bucket) + '/' + $json.storage_path.split('/').map(encodeURIComponent).join('/') }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "apikey",
-              "value": "={{ $env.OLIVESOFT_SUPABASE_SECRET_KEY }}"
-            }
-          ]
-        },
+        "url": "={{ 'https://okhntgauzbumgidpuyvx.supabase.co/storage/v1/object/authenticated/' + encodeURIComponent($json.bucket) + '/' + $json.storage_path.split('/').map(encodeURIComponent).join('/') }}",
         "options": {
           "response": {
             "response": {
@@ -586,7 +577,9 @@
             }
           },
           "timeout": 30000
-        }
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
       }
     },
     {
