@@ -12,7 +12,7 @@
         -1200
       ],
       "parameters": {
-        "content": "## WF3 — RAG Matching\nSupabase Postgres lead context → Gemini embedding (768 dimensions) → Qdrant `olivesoft_knowledge` filtered by CV, project, stack and `supabase_storage` source → evidence-linked matches.\n\nConfigure Postgres, Gemini header `x-goog-api-key`, Qdrant header `api-key`, and n8n `OLIVESOFT_QDRANT_URL`. Only privately stored source bucket/path metadata is returned; use an authenticated signed URL for review.",
+        "content": "## WF3 — RAG Matching\nSupabase Postgres lead context → Gemini embedding (768 dimensions) → Qdrant `olivesoft_knowledge` filtered by CV, project, stack and `supabase_storage` source → evidence-linked matches.\n\nConfigure Postgres, Gemini header `x-goog-api-key`, Qdrant header `api-key`, and the configured Qdrant API endpoint. Only privately stored source bucket/path metadata is returned; use an authenticated signed URL for review.",
         "height": 780,
         "width": 680,
         "color": 3
@@ -106,7 +106,7 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.OLIVESOFT_QDRANT_URL.replace(/\\/$/, '') + '/collections/olivesoft_knowledge/points/query' }}",
+        "url": "={{ 'https://a31223fd-3f11-4075-b365-3deec0138f42.europe-west3-0.gcp.cloud.qdrant.io:6333' + '/collections/olivesoft_knowledge/points/query' }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
@@ -126,7 +126,7 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.OLIVESOFT_QDRANT_URL.replace(/\\/$/, '') + '/collections/olivesoft_knowledge/points/query' }}",
+        "url": "={{ 'https://a31223fd-3f11-4075-b365-3deec0138f42.europe-west3-0.gcp.cloud.qdrant.io:6333' + '/collections/olivesoft_knowledge/points/query' }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
@@ -146,7 +146,7 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.OLIVESOFT_QDRANT_URL.replace(/\\/$/, '') + '/collections/olivesoft_knowledge/points/query' }}",
+        "url": "={{ 'https://a31223fd-3f11-4075-b365-3deec0138f42.europe-west3-0.gcp.cloud.qdrant.io:6333' + '/collections/olivesoft_knowledge/points/query' }}",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,

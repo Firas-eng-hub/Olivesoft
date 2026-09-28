@@ -20,7 +20,7 @@
             {
               "id": "b0000000-0000-4000-8000-000000000001",
               "name": "qdrant_url",
-              "value": "={{ $env.OLIVESOFT_QDRANT_URL }}",
+              "value": "https://a31223fd-3f11-4075-b365-3deec0138f42.europe-west3-0.gcp.cloud.qdrant.io:6333",
               "type": "string"
             },
             {
@@ -122,7 +122,7 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{\"field_name\":\"version\",\"field_schema\":\"keyword\"}",
+        "jsonBody": "{\"field_name\":\"version\",\"field_schema\":\"integer\"}",
         "options": {}
       },
       "id": "1df9fa30-94ae-43d9-b2d1-aa984ec6fd80",
@@ -157,6 +157,26 @@
       ],
       "executeOnce": true,
       "onError": "continueRegularOutput"
+    },
+    {
+      "id": "6f408405-f15a-4a84-8b94-27d6bf322815",
+      "name": "Qdrant : index source",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        0
+      ],
+      "parameters": {
+        "method": "PUT",
+        "url": "https://a31223fd-3f11-4075-b365-3deec0138f42.europe-west3-0.gcp.cloud.qdrant.io:6333/collections/olivesoft_knowledge/index?wait=true",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"field_name\":\"source\",\"field_schema\":\"keyword\"}",
+        "options": {}
+      }
     },
     {
       "parameters": {
@@ -294,7 +314,7 @@
             {
               "id": "b0000000-0000-4000-8000-000000000001",
               "name": "qdrant_url",
-              "value": "={{ $env.OLIVESOFT_QDRANT_URL }}",
+              "value": "https://a31223fd-3f11-4075-b365-3deec0138f42.europe-west3-0.gcp.cloud.qdrant.io:6333",
               "type": "string"
             },
             {
@@ -360,7 +380,7 @@
             {
               "id": "b0000000-0000-4000-8000-000000000001",
               "name": "qdrant_url",
-              "value": "={{ $env.OLIVESOFT_QDRANT_URL }}",
+              "value": "https://a31223fd-3f11-4075-b365-3deec0138f42.europe-west3-0.gcp.cloud.qdrant.io:6333",
               "type": "string"
             },
             {
@@ -725,7 +745,7 @@
       "main": [
         [
           {
-            "node": "Qdrant : vérifier (compter les points)",
+            "node": "Qdrant : index source",
             "type": "main",
             "index": 0
           }
@@ -971,6 +991,17 @@
         [
           {
             "node": "Chunks + IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant : index source": {
+      "main": [
+        [
+          {
+            "node": "Qdrant : vérifier (compter les points)",
             "type": "main",
             "index": 0
           }
