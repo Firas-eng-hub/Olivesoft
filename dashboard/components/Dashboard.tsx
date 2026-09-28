@@ -15,7 +15,7 @@ import Knowledge from "@/components/Knowledge";
 import Discovery, { type DiscoveryItem } from "@/components/Discovery";
 
 type View = "overview" | "discover" | "pipeline" | "lead" | "knowledge" | "proposals" | "activity";
-type TenderInput = { title: string; organization: string; summary: string; deadline: string; source?: "manual" | "ted" | "tavily"; sourceUrl?: string };
+type TenderInput = { title: string; organization: string; summary: string; deadline: string; source?: "manual" | "ted" | "tavily" | "serpapi"; sourceUrl?: string };
 type FilterStage = "all" | LeadStage;
 
 const stageLabels: Record<LeadStage, string> = {
@@ -90,7 +90,7 @@ function StatCard({ icon, label, value, detail, tint, spark, onClick }: { icon: 
 }
 
 function NewTenderModal({ onClose, onCreate, live, discovery }: { onClose: () => void; onCreate: (input: TenderInput) => Promise<void> | void; live: boolean; discovery?: DiscoveryItem | null }) {
-  const [form, setForm] = useState<TenderInput>({ title: discovery?.title.slice(0, 100) ?? "", organization: discovery?.organization === "Review source" ? "" : discovery?.organization.slice(0, 80) ?? "", summary: discovery?.summary.slice(0, 700) ?? "", deadline: "", source: discovery?.source.toLowerCase() as "ted" | "tavily" | undefined, sourceUrl: discovery?.url });
+  const [form, setForm] = useState<TenderInput>({ title: discovery?.title.slice(0, 100) ?? "", organization: discovery?.organization === "Review source" ? "" : discovery?.organization.slice(0, 80) ?? "", summary: discovery?.summary.slice(0, 700) ?? "", deadline: "", source: discovery?.source.toLowerCase() as "ted" | "tavily" | "serpapi" | undefined, sourceUrl: discovery?.url });
   const [submitting, setSubmitting] = useState(false);
   const valid = form.title.trim().length >= 4 && form.organization.trim().length >= 2 && form.summary.trim().length >= 12;
   async function submit(event: FormEvent) { event.preventDefault(); if (!valid || submitting) return; setSubmitting(true); try { await onCreate(form); } finally { setSubmitting(false); } }

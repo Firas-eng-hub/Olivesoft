@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   const source = String(input.source ?? "manual").trim();
   const sourceUrl = String(input.sourceUrl ?? "").trim();
   if (title.length < 4 || title.length > 100 || organization.length < 2 || organization.length > 80 || summary.length < 12 || summary.length > 700 || (deadline && !/^\d{4}-\d{2}-\d{2}$/.test(deadline))) return Response.json({ error: "Tender details are invalid." }, { status: 400 });
-  if (!["manual", "ted", "tavily"].includes(source)) return Response.json({ error: "Tender source is invalid." }, { status: 400 });
+  if (!["manual", "ted", "tavily", "serpapi"].includes(source)) return Response.json({ error: "Tender source is invalid." }, { status: 400 });
   if (sourceUrl) {
     try { const url = new URL(sourceUrl); if (url.protocol !== "https:" || sourceUrl.length > 1000) throw new Error("Invalid URL"); }
     catch { return Response.json({ error: "Tender source URL is invalid." }, { status: 400 }); }

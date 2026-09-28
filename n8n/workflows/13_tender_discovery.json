@@ -95,22 +95,16 @@
       "parameters": {
         "method": "POST",
         "url": "https://api.tavily.com/search",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "X-Tavily-Access-Mode",
-              "value": "keyless"
-            }
-          ]
-        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({query:'software development OR cloud services public tender procurement site:ted.europa.eu OR site:find-tender.service.gov.uk',search_depth:'basic',max_results:10}) }}",
         "options": {
           "timeout": 20000
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "id": "dcec3442-8119-4a04-9fd9-a721117e96cb",
@@ -137,6 +131,55 @@
       "parameters": {
         "respondWith": "json",
         "responseBody": "={{ JSON.stringify($json) }}"
+      }
+    },
+    {
+      "id": "serp-fallback-request",
+      "name": "SerpApi Fallback Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        448,
+        448
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://serpapi.com/search.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "engine",
+              "value": "google"
+            },
+            {
+              "name": "q",
+              "value": "software development cloud services public tender site:ted.europa.eu OR site:find-tender.service.gov.uk"
+            },
+            {
+              "name": "num",
+              "value": "10"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 20000
+        }
+      }
+    },
+    {
+      "id": "serp-fallback-map",
+      "name": "Map SerpApi results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        448
+      ],
+      "parameters": {
+        "jsCode": "const rows=($json.organic_results??[]).filter(x=>/^https:\\/\\//i.test(String(x.link??''))).slice(0,10).map(x=>({id:'serpapi:'+String(x.link),title:String(x.title??'Untitled').slice(0,180),organization:'Review source',summary:String(x.snippet??'').replace(/\\s+/g,' ').slice(0,600),url:String(x.link),source:'SerpApi',publishedAt:null}));return [{json:{items:rows,total:rows.length,source:'serpapi'}}];"
       }
     }
   ],
@@ -193,10 +236,39 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "SerpApi Fallback Search",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
     "Map Tavily results": {
+      "main": [
+        [
+          {
+            "node": "Respond Tavily results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpApi Fallback Search": {
+      "main": [
+        [
+          {
+            "node": "Map SerpApi results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map SerpApi results": {
       "main": [
         [
           {

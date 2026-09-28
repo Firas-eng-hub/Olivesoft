@@ -9,7 +9,7 @@ export type DiscoveryItem = {
   organization: string;
   summary: string;
   url: string;
-  source: "TED" | "Tavily";
+  source: "TED" | "Tavily" | "SerpApi";
   publishedAt: string | null;
 };
 
@@ -19,6 +19,7 @@ export default function Discovery({ password, live, onSelect }: { password: stri
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [scanned, setScanned] = useState(false);
+  const [actualSource, setActualSource] = useState("TED");
 
   async function scan(nextSource: "ted" | "tavily") {
     if (!live || busy) return;
@@ -29,6 +30,7 @@ export default function Discovery({ password, live, onSelect }: { password: stri
       if (!response.ok) throw new Error(result.error || "Tender scan failed.");
       if (!Array.isArray(result.items)) throw new Error("The scan returned an invalid result.");
       setItems(result.items.filter((item: DiscoveryItem) => item && typeof item.title === "string" && /^https:\/\//.test(item.url)));
+      setActualSource(result.source === "serpapi" ? "SerpApi fallback" : nextSource === "ted" ? "TED" : "Tavily");
       setScanned(true);
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Tender scan failed."); }
     finally { setBusy(false); }
@@ -40,7 +42,7 @@ export default function Discovery({ password, live, onSelect }: { password: stri
     {!live && <div className="panel discovery-empty">Live discovery becomes available after connecting the n8n workspace.</div>}
     {busy && <div className="panel discovery-empty">Searching {source === "ted" ? "TED" : "the web"}…</div>}
     {error && <p className="knowledge-form-error" role="alert">{error}</p>}
-    {scanned && <p className="discovery-count">{items.length} results from {source === "ted" ? "TED" : "Tavily"}. Results are suggestions; opening the source is required before intake.</p>}
+    {scanned && <p className="discovery-count">{items.length} results from {actualSource}. Results are suggestions; opening the source is required before intake.</p>}
     <div className="discovery-results">{items.map((item) => <article className="panel discovery-card" key={item.id}><div><span className="eyebrow">{item.source}{item.publishedAt ? ` · ${item.publishedAt}` : ""}</span><h2>{item.title}</h2><p className="discovery-org">{item.organization}</p><p>{item.summary}</p></div><div className="discovery-card-actions"><a className="secondary-button compact" href={item.url} target="_blank" rel="noopener noreferrer">Open source <ArrowUpRight size={15} /></a><button className="primary-button" onClick={() => onSelect(item)}>Review and add <ArrowUpRight size={15} /></button></div></article>)}</div>
   </div>;
 }
