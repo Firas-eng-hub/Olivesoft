@@ -193,6 +193,20 @@
       }
     },
     {
+      "id": "64cfa222-dc42-426f-a9ba-35fb797cd83d",
+      "name": "Restore upload binary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        665,
+        -120
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const upload = $('Validate upload').first();\nif (!upload.binary?.data) throw new Error('Validated upload binary is missing');\nreturn [{ json: $input.first().json, binary: upload.binary }];"
+      }
+    },
+    {
       "id": "7ddf4f06-8bd4-4f45-bf85-24640a13ad35",
       "name": "Register document",
       "type": "n8n-nodes-base.postgres",
@@ -266,7 +280,7 @@
       "main": [
         [
           {
-            "node": "Upload to Supabase Storage",
+            "node": "Restore upload binary",
             "type": "main",
             "index": 0
           }
@@ -300,6 +314,17 @@
         [
           {
             "node": "Valid file?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restore upload binary": {
+      "main": [
+        [
+          {
+            "node": "Upload to Supabase Storage",
             "type": "main",
             "index": 0
           }
