@@ -150,7 +150,7 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const stored = $input.first().json;\nif (!stored.Key) throw new Error('Supabase did not confirm the stored object');\nconst registered = $('Register document').first().json;\nif (!registered.id) throw new Error('Document version conflict: doc_id/version already registered');\nconst source = $('Validate upload').first().json;\nreturn [{ json: { bucket: 'olivesoft-knowledge', storage_path: source.storage_path, doc_id: source.doc_id, version: registered.version } }];"
+        "jsCode": "const stored = $('Upload to Supabase Storage').first().json;\nif (!stored.Key) throw new Error('Supabase did not confirm the stored object');\nconst registered = $('Register document').first().json;\nif (!registered.id) throw new Error('Document version conflict: doc_id/version already registered');\nconst source = $('Validate upload').first().json;\nreturn [{ json: { bucket: 'olivesoft-knowledge', storage_path: source.storage_path, doc_id: source.doc_id, version: registered.version } }];"
       }
     },
     {
