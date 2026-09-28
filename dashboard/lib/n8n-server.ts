@@ -17,6 +17,12 @@ export function authorized(request: Request, expected: string) {
   return actual.length === target.length && timingSafeEqual(actual, target);
 }
 
+export class N8nRequestError extends Error {
+  constructor(public readonly path: string, public readonly status: number) {
+    super(`n8n ${path} returned ${status}`);
+  }
+}
+
 export async function n8nRequest(origin: string, apiKey: string, path: string, init: RequestInit = {}) {
   const response = await fetch(new URL(`/webhook/${path}`, origin), {
     ...init,
@@ -24,6 +30,6 @@ export async function n8nRequest(origin: string, apiKey: string, path: string, i
     cache: "no-store",
     signal: AbortSignal.timeout(20000),
   });
-  if (!response.ok) throw new Error(`n8n returned ${response.status}`);
+  if (!response.ok) throw new N8nRequestError(path, response.status);
   return response.json() as Promise<unknown>;
 }
