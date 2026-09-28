@@ -1,25 +1,45 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
+## Project Structure
 
-This checkout contains only documentation: `README.md` names the project, `Plan.md` defines the target architecture, and `Truth.md` tracks gaps and acceptance gates. There is no source, test suite, or asset directory yet. As implementation lands, place n8n exports in `n8n/workflows/`, migrations in `db/`, and setup guidance in `docs/`. Keep export filenames aligned with the inventory in `Plan.md`.
+- `dashboard/` — the only app code: a Next.js 16 + React 19 demo. Runs in local demo mode with no env vars; live mode when the three Vercel variables below are set.
+- `n8n/workflows/` — credential-free workflow exports, two-digit snake_case names (`05_requirement_matching.json`) matching the inventory in `Plan.md`.
+- `Plan.md` — target architecture, workflow inventory, acceptance criteria. `Truth.md` — single source of truth for progress; update its checklist and append a session-log bullet as verified work lands (never mark done before review).
+- `docs/live-overview.md` and `docs/supabase-knowledge.md` — live integration contracts, credential names, and what has actually passed live checks.
 
-## Build, Test, and Development Commands
+## Commands
 
-No build, test, or local-run command is defined yet. For documentation changes, run `git diff --check` for whitespace and `git status --short` to confirm changed files. When workflows arrive, import them into n8n, rebind credentials, and run their documented fixtures and smoke checks. An exported JSON file does not prove a live run succeeded.
+```bash
+cd dashboard
+npm install
+npm run dev          # binds 0.0.0.0:3000
+npm run typecheck    # tsc --noEmit — the only check; run after every dashboard edit
+npm run build        # typecheck + next build
+```
 
-## Coding Style & Naming Conventions
+No lint, formatter, or test framework exists. For docs-only changes use `git diff --check`. Demo PPTX/PDF fixtures regenerate via `python3 dashboard/scripts/generate_demo_artifacts.py`.
 
-Use concise Markdown headings and relative links. Keep business logic in n8n workflows; `Plan.md` allows short JavaScript Code nodes and SQL. Name exports with two digits and snake_case, such as `05_requirement_matching.json`. Preserve the shared sub-workflow envelope and stable IDs in `Plan.md`. No formatter or linter is configured; follow each file's existing style.
+## Architecture Rules
 
-## Testing Guidelines
-
-There is no testing framework or coverage threshold yet. Add passing and failing fixtures for each workflow, including invalid input, duplicate requests, missing evidence, and retries where relevant. Test migrations against fresh and existing-schema databases. Record live n8n evidence for connectivity, retrieval, and PPTX/PDF gates before marking them complete.
-
-## Commit & Pull Request Guidelines
-
-Git history has one descriptive, imperative-style commit: `Add OliveSoft project plan and review`. Use similarly specific subjects. `Plan.md` calls for PRs from personal branches into `dev`, then reviewed releases into `main`. PRs should link the task or issue, describe contract changes, list validation, and include import details or artifact screenshots when relevant. Follow the plan's review rotation and lead review.
+- All business logic lives in n8n — no FastAPI, no custom Python RAG/rendering backends. Short JS Code nodes and SQL are allowed. The dashboard only displays persisted results and submits explicit actions; never move decisions, scoring, or generation into it.
+- Preserve the shared sub-workflow envelope `{schema_version, job_id, lead_id, operation, input, result, warnings}` and return one explicit result object.
+- Webhook base is `/webhook/olivesoft/v1`; only published production URLs are real endpoints — n8n editor test URLs are not.
+- Do not assume npm imports work inside n8n Code nodes.
+- An exported workflow JSON does not prove a live run. Gate items need recorded execution/artifact evidence before being checked off.
 
 ## Security & Configuration
 
-Keep credentials in n8n credentials or environment configuration, never in exported workflows or fixtures. Document required credential names and rebinding steps without committing secrets. Protect webhook actions and artifact downloads with authentication, and use migrations instead of resetting shared database volumes.
+- Workflow exports must stay credential-free. Secrets live only in n8n credentials or the ignored `n8n/.env`. Document credential names and rebinding steps, never values.
+- Dashboard server-side env vars (set in Vercel, root directory `dashboard`): `OLIVESOFT_UPLOAD_TEAM_PASSWORD`, `OLIVESOFT_N8N_UPLOAD_URL`, `OLIVESOFT_N8N_UPLOAD_API_KEY`. The n8n API key and Supabase secret must never get a `NEXT_PUBLIC_` prefix or reach browser code.
+- The hosted Azure n8n instance denies `$env` expressions, which is why service endpoints are public config in the exports with keys kept in credentials.
+- Use migrations against disposable databases; never reset shared volumes.
+
+## Quirks
+
+- `dashboard/AGENTS.md` is auto-(re)generated by `next dev`. Removing it just recreates an uncommitted change; commit it with your work.
+- Next.js here is newer than training data may suggest — consult `node_modules/next/dist/docs/` before using framework APIs.
+
+## Commit & Pull Request Guidelines
+
+- Imperative, specific subjects (e.g. `Add OliveSoft project plan and review`).
+- PRs from personal branches (`dhiya`, `firas`, `nour`) into `dev`; reviewed releases into `main`. Review rotation: Dhiya reviews Firas, Firas reviews Nour, Nour reviews Dhiya; lead review before release merges. One editor per n8n workflow at a time; export workflow JSON to Git at session end.
