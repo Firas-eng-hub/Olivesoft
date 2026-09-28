@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import {
   Activity, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight, Bell, BookOpen, Check, CheckCheck,
   ChevronDown, ChevronRight, CircleAlert, CircleCheck, Clock3, Command, Download,
   ExternalLink, FileDown, FilePlus2, FileText, Filter, FolderOpen, Gauge, LayoutDashboard,
   Menu, MoreHorizontal, Plus, Radar, RefreshCcw, Search, ShieldCheck, SlidersHorizontal,
-  Sparkles, TrendingUp, X, Zap,
+  Sparkles, TrendingUp, X,
 } from "lucide-react";
 import { createLead } from "@/lib/demo-data";
 import { demoAdapter, resetDemo } from "@/lib/adapter";
@@ -110,6 +110,7 @@ export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [selectedDiscovery, setSelectedDiscovery] = useState<DiscoveryItem | null>(null);
   const [mobileNav, setMobileNav] = useState(false);
+  const sidebarClose = useRef<number | null>(null);
   const [toast, setToast] = useState("");
   const [detailTab, setDetailTab] = useState<"overview" | "requirements" | "evidence">("overview");
   const [integration, setIntegration] = useState<"checking" | "demo" | "locked" | "live">("checking");
@@ -127,6 +128,12 @@ export default function Dashboard() {
   }, []);
   useEffect(() => { if (data && integration === "demo") void demoAdapter.save(data); }, [data, integration]);
   useEffect(() => { if (!toast) return; const timer = window.setTimeout(() => setToast(""), 3500); return () => window.clearTimeout(timer); }, [toast]);
+  useEffect(() => {
+    if (mobileNav) return;
+    const reveal = (event: MouseEvent) => { if (event.clientX <= 8) setMobileNav(true); };
+    window.addEventListener("mousemove", reveal);
+    return () => window.removeEventListener("mousemove", reveal);
+  }, [mobileNav]);
   useEffect(() => {
     if (integration !== "demo" || !data?.jobs.some((job) => job.state === "running" && job.operation === "proposal")) return;
     const timer = window.setInterval(() => setData((current) => {
@@ -181,6 +188,8 @@ export default function Dashboard() {
     try { const result = await liveFetch(); setData(result as DashboardData); setToast("Live tenders refreshed"); }
     catch (cause) { setToast(cause instanceof Error ? cause.message : "Refresh failed."); }
   }
+  function holdSidebar() { if (sidebarClose.current !== null) { window.clearTimeout(sidebarClose.current); sidebarClose.current = null; } }
+  function releaseSidebar() { holdSidebar(); sidebarClose.current = window.setTimeout(() => setMobileNav(false), 300); }
   function navigate(next: View) { setView(next); setMobileNav(false); setSearch(""); setFilter("all"); setMonthFilter(null); setSortByFit(false); }
   function openStage(stage: LeadStage) { navigate("pipeline"); setFilter(stage); }
   function openMonth(month: number) { navigate("pipeline"); setMonthFilter(month); }
@@ -244,28 +253,21 @@ export default function Dashboard() {
   ];
 
   return <div className="app-shell">
-    <aside className={`sidebar ${mobileNav ? "sidebar-open" : ""}`}>
+    <aside className={`sidebar ${mobileNav ? "sidebar-open" : ""}`} onMouseEnter={holdSidebar} onMouseLeave={releaseSidebar}>
       <div className="sidebar-top"><button className="brand" onClick={() => navigate("overview")}><span className="brand-mark"><span /></span><span>Olive<span className="brand-strong">Soft</span><small>INTELLIGENCE</small></span></button><button className="mobile-close icon-button" onClick={() => setMobileNav(false)} aria-label="Close menu"><X size={19} /></button></div>
       <div className="workspace-switch"><span className="workspace-avatar">O</span><span><strong>OliveSoft Studio</strong><small>Team workspace</small></span><ChevronDown size={15} /></div>
       <div className="sidebar-section-label">WORKSPACE</div>
       <nav className="main-nav" aria-label="Main navigation">{navItems.map((item) => <button key={item.id} className={`nav-item ${view === item.id || (view === "lead" && item.id === "pipeline") ? "active" : ""}`} onClick={() => navigate(item.id)}>{item.icon}<span>{item.label}</span>{item.badge && <small>{item.badge}</small>}</button>)}</nav>
-      <div className="sidebar-section-label sidebar-label-second">QUICK ACCESS</div>
-      <button className="nav-item quick-link" onClick={() => { setFilter("matched"); setView("pipeline"); setMobileNav(false); }}><Sparkles size={19} /><span>Ready to propose</span><small>{matchedCount}</small></button>
-      <button className="nav-item quick-link" onClick={() => { setFilter("failed"); setView("pipeline"); setMobileNav(false); }}><CircleAlert size={19} /><span>Needs attention</span><small>{leads.filter((lead) => lead.stage === "failed").length}</small></button>
       <div className="sidebar-spacer" />
-      <div className="sidebar-callout"><span className="callout-icon"><Zap size={18} fill="currentColor" /></span><strong>Make every bid count.</strong><p>Your next opportunity is already in motion.</p><button onClick={() => setShowModal(true)}>Add tender <ArrowUpRight size={15} /></button></div>
-      <div className="sidebar-footer"><div className="footer-avatar">OS</div><div><strong>OliveSoft Team</strong><small>{integration === "live" ? "Live n8n workspace" : "Demo workspace"}</small></div><span className="online-dot" /></div>
     </aside>
     {mobileNav && <button className="mobile-scrim" onClick={() => setMobileNav(false)} aria-label="Close menu" />}
     <div className="main-area"><header className="topbar"><div className="topbar-left"><button className="mobile-menu icon-button" onClick={() => setMobileNav(true)} aria-label="Open menu"><Menu size={21} /></button><span className="breadcrumb">Workspace <ChevronRight size={14} /> <strong>{view === "lead" ? selected?.organization : view === "pipeline" ? "Tender pipeline" : view === "knowledge" ? "Knowledge base" : view[0].toUpperCase() + view.slice(1)}</strong></span></div><div className="topbar-right"><span className="demo-chip"><span /> {integration === "live" ? "LIVE N8N" : "DEMO MODE"}</span><button className="header-search" onClick={() => navigate("pipeline")}><Search size={17} /><span>Search opportunities</span><kbd>⌘ K</kbd></button><button className="top-icon" onClick={() => navigate("activity")} aria-label="Activity"><Bell size={19} /><span /></button><span className="top-avatar">OS</span></div></header>
       <main className="content">
         {view === "overview" && <div className="view-enter">
           <div className="page-heading"><div><div className="overline"><span className="overline-pulse" /> INTELLIGENCE WORKSPACE <span className="overline-slash">/</span> {integration === "live" ? "LIVE OVERVIEW" : "DEMO OVERVIEW"}</div><h1>Command center<span className="heading-dot">.</span></h1><p>A clearer view of every opportunity, from first signal to final proposal.</p></div><div className="overview-heading-actions">{integration === "live" && <button className="secondary-button" onClick={() => void refreshLive()}><RefreshCcw size={16} /> Refresh</button>}<button className="primary-button" onClick={() => setShowModal(true)}><Plus size={18} /> Add new tender</button></div></div>
-          <div className="hero-banner"><div className="hero-copy"><span className="hero-badge"><Sparkles size={13} /> THE OPPORTUNITY ENGINE</span><h2>Turn intelligence into<br /><em>your next big win.</em></h2><p>Discover high-fit tenders, inspect the evidence, and move confidently toward a stronger proposal.</p><button className="hero-button" onClick={() => navigate("pipeline")}>Explore pipeline <ArrowUpRight size={17} /></button></div><div className="hero-visual" aria-hidden="true"><div className="visual-ring ring-a" /><div className="visual-ring ring-b" /><div className="visual-ring ring-c" /><div className="visual-center"><span className="brand-mark"><span /></span></div><div className="orbit-chip orbit-one"><Radar size={15} /> DETECT</div><div className="orbit-chip orbit-two"><ShieldCheck size={15} /> VERIFY</div><div className="orbit-chip orbit-three"><FileText size={15} /> PROPOSE</div><div className="visual-glow" /></div></div>
           <div className="stats-grid"><StatCard icon={<Radar size={21} />} label="Total opportunities" value={String(leads.length).padStart(2, "0")} detail="View all tenders" tint="blue" spark={monthCounts.slice(-8)} onClick={() => navigate("pipeline")} /><StatCard icon={<Gauge size={21} />} label="Average fit score" value={leads.some((lead) => lead.score !== null) ? `${Math.round(avgFit)}%` : "—"} detail="View highest fit" tint="purple" spark={monthCounts.slice(-8)} onClick={() => { navigate("pipeline"); setSortByFit(true); }} /><StatCard icon={<CheckCheck size={21} />} label="Matched opportunities" value={String(matchedCount).padStart(2, "0")} detail="Open matched tenders" tint="green" spark={monthCounts.slice(-8)} onClick={() => openStage("matched")} /><StatCard icon={<FileText size={21} />} label="Proposals ready" value={String(readyCount).padStart(2, "0")} detail="Open ready tenders" tint="orange" spark={monthCounts.slice(-8)} onClick={() => openStage("proposal_ready")} /></div>
           <div className="overview-grid"><div className="panel trend-panel"><SectionTitle eyebrow="PERFORMANCE" title="Opportunity momentum" action={<button className="time-select" onClick={() => navigate("pipeline")}>{currentYear} <ArrowUpRight size={13} /></button>} /><div className="chart-summary"><strong>{monthCounts.reduce((sum, count) => sum + count, 0)}</strong><span><TrendingUp size={15} /> tenders detected this year</span></div><TrendChart counts={monthCounts} onMonth={openMonth} /></div><div className="panel pipeline-panel"><SectionTitle eyebrow="WORKFLOW" title="Your pipeline" action={<button className="text-link" onClick={() => navigate("pipeline")}>View all <ArrowUpRight size={15} /></button>} /><p className="panel-description">A real-time view of where each opportunity stands.</p><PipelineGraphic leads={leads} onStage={openStage} /><div className="pipeline-foot"><span><span className="tiny-dot green" /> {readyCount} proposals ready</span><span><span className="tiny-dot amber" /> {matchedCount} awaiting action</span></div></div></div>
           <div className="panel table-panel"><SectionTitle eyebrow="TOP OPPORTUNITIES" title="Recent tenders" action={<button className="text-link" onClick={() => navigate("pipeline")}>View pipeline <ArrowRight size={15} /></button>} /><LeadTable leads={leads.slice(0, 5)} onOpen={openLead} compact /></div>
-          <button className="knowledge-overview-link" onClick={() => navigate("knowledge")}><span className="knowledge-overview-icon"><BookOpen size={20} /></span><span><strong>Build the OliveSoft knowledge base</strong><small>Prepare CVs, expertise, and project files for upload to private Supabase Storage and future RAG matching.</small></span><ArrowUpRight size={18} /></button>
         </div>}
         {view === "knowledge" && <Knowledge initialPassword={integration === "live" ? workspacePassword : ""} />}
         {view === "discover" && <Discovery password={workspacePassword} live={integration === "live"} onSelect={(item) => { setSelectedDiscovery(item); setShowModal(true); }} />}
