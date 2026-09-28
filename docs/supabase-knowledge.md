@@ -76,7 +76,7 @@ The published workflows are [knowledge_ingestion](https://dhiya-gvhtdshje3f0ehht
 
 `wf3_rag_matching` now uses the same Gemini model and 768 dimensions. It queries the one Qdrant collection with filters for `cv`, `project`, and `expertise`, only accepts payloads with `source: supabase_storage`, deduplicates by document, and carries `source_bucket`/`source_path` in its match payload. Disconnected Drive/Dropbox nodes were removed. It continues using the project's Supabase Postgres tables for leads and matches.
 
-Configure a reachable Qdrant base URL (including port if needed) in the n8n workflow before relying on indexing; `$env.OLIVESOFT_QDRANT_URL` currently fails on this host. Check the n8n Header Auth credentials on both workflows: Gemini requests need `x-goog-api-key`, Qdrant requests need `api-key`, and Supabase Storage needs the `OliveSoft Supabase Storage` `apikey` credential. Vercel still needs only the three variables in section 3.
+Configure a reachable Qdrant HTTPS base URL in the n8n workflow before relying on indexing; `$env.OLIVESOFT_QDRANT_URL` currently fails on this host, and no Qdrant URL is present in the checkout. The Qdrant API key is already stored in the `OliveSoft Qdrant Header Auth` credential and must stay there. The live chunking node now maps uploaded `expertise` documents to the `stack` asset type queried by matching, and uses the file name when extracted PDF text has no heading. Gemini requests need `x-goog-api-key`, Qdrant requests need `api-key`, and Supabase Storage needs the `OliveSoft Supabase Storage` `apikey` credential. Vercel still needs only the three variables in section 3.
 
 ## Other live workflows
 
