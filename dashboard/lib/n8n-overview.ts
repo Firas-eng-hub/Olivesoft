@@ -1,4 +1,4 @@
-import type { DashboardData, Evidence, Lead, LeadStage, RequirementMatch } from "./types";
+import type { DashboardData, Evidence, Job, Lead, LeadStage, RequirementMatch } from "./types";
 
 type RecordValue = Record<string, unknown>;
 
@@ -54,13 +54,13 @@ export function mapLead(value: unknown): Lead {
   });
   const evidence: Evidence[] = array(row.matches).map((item, index) => {
     const match = object(item);
-    const payload = object(match.payload);
-    const assetRef = string(match.asset_ref ?? payload.document_id);
+    const payload = object(match.evidence ?? match.payload);
+    const assetRef = string(match.asset_ref ?? match.document_id ?? payload.document_id);
     return {
       id: String(match.id ?? `match-${index}`),
-      title: string(payload.title, assetRef || "Matched document"),
+      title: string(match.title ?? payload.title, assetRef || "Matched document"),
       source: string(payload.asset_type ?? match.asset_type, "Internal knowledge"),
-      excerpt: string(payload.text, "Matched source document; review before using this claim.").slice(0, 500),
+      excerpt: string(payload.text, "Source excerpt unavailable; review before using this claim.").slice(0, 500),
       retrievedAt: date(row.updated_at) ?? new Date(0).toISOString(),
       assetRef: assetRef || undefined,
     };
@@ -89,8 +89,29 @@ export function mapLead(value: unknown): Lead {
   };
 }
 
-export function mapLeadsResponse(value: unknown): DashboardData {
+export function mapJobsResponse(value: unknown): Job[] {
+  const result = object(value);
+  if (!Array.isArray(result.items)) throw new Error("Unexpected n8n jobs response.");
+  return result.items.map((value) => {
+    const row = object(value);
+    const state = String(row.state);
+    const operation = String(row.operation);
+    const error = object(row.error);
+    return {
+      id: string(row.id),
+      leadId: string(row.lead_id),
+      operation: operation === "proposal" || operation === "retry" ? operation : "intake",
+      state: state === "completed" || state === "succeeded" ? "completed" : state === "failed" ? "failed" : state === "running" ? "running" : "queued",
+      stage: string(row.stage, "Queued"),
+      progress: state === "completed" || state === "succeeded" ? 100 : 0,
+      createdAt: date(row.created_at) ?? new Date(0).toISOString(),
+      error: string(error.message ?? error.detail ?? (typeof row.error === "string" ? row.error : undefined)) || undefined,
+    } as Job;
+  }).filter((job) => job.id);
+}
+
+export function mapLeadsResponse(value: unknown, jobs: Job[] = []): DashboardData {
   const result = object(value);
   if (!Array.isArray(result.items)) throw new Error("Unexpected n8n leads response.");
-  return { leads: result.items.map(mapLead).filter((lead) => lead.id), jobs: [] };
+  return { leads: result.items.map(mapLead).filter((lead) => lead.id), jobs };
 }

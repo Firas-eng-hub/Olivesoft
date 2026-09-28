@@ -1,0 +1,354 @@
+{
+  "name": "wf2_prospect_research",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "WF2 — UUID prospect classification from submitted tender context. Called only by WF1; no public test webhook or external search tool. Persists a partial prospect record in the deployed UUID schema, then starts matching. Rebind Postgres and Z.ai credentials. Public source research needs an approved provider and evidence validation.",
+        "height": 520,
+        "width": 660,
+        "color": 4
+      },
+      "id": "sn-wf2-config",
+      "name": "Config — WF2 Research",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        -464
+      ]
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "ewf-trigger-wf2",
+      "name": "Called by wf1",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -624,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const j = $json;\nconst id = j.lead_id ?? j.id ?? (j.body && (j.body.lead_id ?? j.body.id)) ?? '';\nreturn [{ json: { lead_id: String(id) } }];"
+      },
+      "id": "resolve-lead-wf2",
+      "name": "Resolve Lead Id",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -368,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, title, source, raw_payload, extracted, deadline FROM leads WHERE id = $1::uuid LIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ $json.lead_id }}"
+        }
+      },
+      "id": "pg-load-wf2",
+      "name": "Load Lead",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -96,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Return one JSON prospect card from the provided tender only. Never invent revenue, projects, partners, or source URLs. Set partial=true because public facts were not verified."
+        },
+        "text": "={{ 'Classify only the supplied tender and organisation fields. No web research is available. Set partial=true, leave externally unverifiable facts null or empty, and sources empty. Tender context: ' + JSON.stringify($json) }}"
+      },
+      "id": "agent-wf2",
+      "name": "Prospect Researcher",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        160,
+        112
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "glm-5.3",
+          "mode": "list",
+          "cachedResultName": "glm-5.3"
+        },
+        "options": {}
+      },
+      "id": "lm-wf2",
+      "name": "Z.ai GLM (agent)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"organisation\": null,\n  \"sector\": \"...\",\n  \"revenue_estimate\": null,\n  \"past_projects\": [],\n  \"partners\": [],\n  \"domain_needs\": [],\n  \"partial\": false,\n  \"sources\": []\n}"
+      },
+      "id": "parser-wf2",
+      "name": "Prospect Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        784,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const leadId = $('Resolve Lead Id').first().json.lead_id;\nif (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(leadId)) throw new Error('Invalid UUID lead ID');\nconst out = $json.output ?? $json;\nconst lead = $('Load Lead').first().json;\nconst organization = String(out.organisation ?? out.organization ?? lead.raw_payload?.organization ?? '').trim() || null;\nconst prospect = {\n  lead_id: leadId,\n  sector: typeof out.sector === 'string' && out.sector.trim() ? out.sector.trim() : 'unknown',\n  revenue_estimate: out.revenue_estimate ?? null,\n  past_projects: Array.isArray(out.past_projects) ? out.past_projects : [],\n  partners: Array.isArray(out.partners) ? out.partners : [],\n  domain_needs: Array.isArray(out.domain_needs) ? out.domain_needs : [],\n  partial: true,\n  raw: { ...out, organisation: organization, sources: [] },\n};\nreturn [{ json: { prospect_json: JSON.stringify(prospect) } }];"
+      },
+      "id": "validate-wf2",
+      "name": "Validate Prospect",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH payload AS (SELECT $1::jsonb AS p)\nINSERT INTO prospects (lead_id, org_name, sector, revenue_estimate, projects, partners, needs, evidence, partial, warnings)\nSELECT (p->>'lead_id')::uuid,\n       NULLIF(COALESCE(p->'raw'->>'organisation', p->'raw'->>'organization'),'')::text,\n       p->>'sector',\n       CASE WHEN (p->>'revenue_estimate') ~ '^[0-9]+(\\.[0-9]+)?$' THEN (p->>'revenue_estimate')::numeric ELSE NULL END,\n       COALESCE(p->'past_projects','[]'::jsonb), COALESCE(p->'partners','[]'::jsonb),\n       COALESCE(p->'domain_needs','[]'::jsonb), COALESCE(p->'raw'->'sources','[]'::jsonb),\n       COALESCE((p->>'partial')::boolean,false),\n       CASE WHEN jsonb_array_length(COALESCE(p->'raw'->'sources','[]'::jsonb))=0 THEN '[\"No public sources verified\"]'::jsonb ELSE '[]'::jsonb END\nFROM payload RETURNING id, lead_id;",
+        "options": {
+          "queryReplacement": "={{ $json.prospect_json }}"
+        }
+      },
+      "id": "pg-prospect-wf2",
+      "name": "Insert Prospect",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        688,
+        112
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE leads SET status = 'researched', updated_at = now() WHERE id = $1::uuid RETURNING id, status;",
+        "options": {
+          "queryReplacement": "={{ $json.lead_id }}"
+        }
+      },
+      "id": "pg-status-wf2",
+      "name": "Update Lead Status (researched)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        944,
+        112
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "s3hsG3EMPMUWzBbK"
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "id": "ewf-wf3",
+      "name": "Run wf3 RAG Matching",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const src = $json ?? {};\nlet leadId = '';\ntry { leadId = $('Resolve Lead Id').first().json.lead_id; } catch (e) {}\nif (!leadId) { try { leadId = src.lead_id ?? src.id ?? ''; } catch (e) {} }\nconst errRaw = src.error ?? src.message ?? src;\nconst errText = typeof errRaw === 'string' ? errRaw : (errRaw.message ?? JSON.stringify(errRaw));\nreturn [{ json: { error_json: JSON.stringify({ lead_id: String(leadId ?? ''), error: String(errText).slice(0, 500) }) } }];"
+      },
+      "id": "err-build-wf2",
+      "name": "Build Error Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        688,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE leads SET status = 'failed', updated_at = now()\nWHERE id = NULLIF($1::jsonb->>'lead_id','')::uuid RETURNING id, status;",
+        "options": {
+          "queryReplacement": "={{ $json.error_json }}"
+        }
+      },
+      "id": "err-fail-wf2",
+      "name": "Mark Lead Failed",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        944,
+        464
+      ]
+    }
+  ],
+  "connections": {
+    "Build Error Payload": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Mark Lead Failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Called by wf1": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Resolve Lead Id",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Insert Prospect": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Update Lead Status (researched)",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Build Error Payload",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Prospect Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "index": 0,
+            "node": "Prospect Researcher",
+            "type": "ai_outputParser"
+          }
+        ]
+      ]
+    },
+    "Prospect Researcher": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Validate Prospect",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Build Error Payload",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Resolve Lead Id": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Load Lead",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Update Lead Status (researched)": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Run wf3 RAG Matching",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Build Error Payload",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Validate Prospect": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Insert Prospect",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Z.ai GLM (agent)": {
+      "ai_languageModel": [
+        [
+          {
+            "index": 0,
+            "node": "Prospect Researcher",
+            "type": "ai_languageModel"
+          }
+        ]
+      ]
+    },
+    "Load Lead": {
+      "main": [
+        [
+          {
+            "node": "Prospect Researcher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "timezone": "Africa/Tunis",
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "binaryMode": "separate"
+  }
+}

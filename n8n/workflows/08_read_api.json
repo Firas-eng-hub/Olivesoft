@@ -4,9 +4,9 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## WF5_api — Dashboard read API (read-only)\nPublic URLs once active:\n- `GET /webhook/leads?status=detected` (filter optional)\n- `GET /webhook/lead?id=12` (tender + prospect + matches + artifacts)\n- `GET /webhook/artifact?id=3`\n\n### Configure (owner: Dhiya)\n1. Create credential **Supabase Postgres** — Session pooler host `aws-0-<region>.pooler.supabase.com`, port **5432** (NOT 6543 transaction mode: breaks prepared statements) → attach to the 3 Postgres nodes.\n2. Webhooks are PUBLIC → add a secret query param check (IF node `?key=...`) before queries.\n3. `/webhook/artifact` returns the DB row only — file bytes come from the local render service (RENDER_URL) later.\n4. Schema = `db/init.sql` (FROZEN). Status cycle: detected → researched → matched → proposal_ready.",
-        "height": 900,
-        "width": 640,
+        "content": "WF5 — Authenticated read webhooks: GET /leads, /lead?id=UUID, /jobs, /artifact?id=UUID. Header Auth is required on all routes. Artifact route returns metadata only; controlled file bytes are not implemented. Rebind Postgres and Header Auth credentials after import. The dashboard proxies reads through its server and never sends the n8n key to the browser.",
+        "height": 520,
+        "width": 660,
         "color": 4
       },
       "id": "sn-wf5-config",
@@ -111,7 +111,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT l.id, l.title, l.source, l.raw_payload, l.extracted, l.relevance_score, l.status, l.deadline, l.created_at, l.updated_at,\n  p.sector,\n  (SELECT json_agg(m) FROM matches m WHERE m.lead_id = l.id) AS matches,\n  (SELECT json_agg(a) FROM artifacts a WHERE a.lead_id = l.id) AS artifacts\nFROM leads l\nLEFT JOIN LATERAL (\n  SELECT pr.sector FROM prospects pr WHERE pr.lead_id = l.id ORDER BY pr.id DESC LIMIT 1\n) p ON true\nWHERE l.id = $1::uuid;",
+        "query": "SELECT l.id,l.title,l.source,l.raw_payload,l.extracted,l.relevance_score,l.status,l.deadline,l.created_at,l.updated_at,p.sector,\n (SELECT json_agg(m ORDER BY m.score DESC) FROM matches m WHERE m.lead_id=l.id) AS matches,\n (SELECT json_agg(json_build_object('id',a.id,'kind',a.kind,'mime_type',a.mime_type,'size_bytes',a.size_bytes,'version',a.version,'created_at',a.created_at)) FROM artifacts a WHERE a.lead_id=l.id AND a.size_bytes>0) AS artifacts\nFROM leads l LEFT JOIN LATERAL (SELECT pr.sector FROM prospects pr WHERE pr.lead_id=l.id ORDER BY pr.created_at DESC LIMIT 1) p ON true WHERE l.id=$1::uuid;",
         "options": {
           "queryReplacement": "={{ $json.lead_id }}"
         }
@@ -185,7 +185,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT id, lead_id, kind, path, filename, created_at\nFROM artifacts\nWHERE id = $1::int;",
+        "query": "SELECT id, job_id, lead_id, kind, mime_type, size_bytes, version, created_at FROM artifacts WHERE id = $1::uuid;",
         "options": {
           "queryReplacement": "={{ $json.artifact_id }}"
         }
@@ -224,6 +224,76 @@
         432,
         320
       ]
+    },
+    {
+      "id": "wh-jobs-v1",
+      "name": "GET /jobs",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -600,
+        850
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "jobs",
+        "responseMode": "responseNode",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "webhookId": "a807383a-2311-483c-bb06-4915f7394303"
+    },
+    {
+      "id": "pg-jobs-v1",
+      "name": "List Jobs",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -350,
+        850
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, lead_id, operation, state, stage, attempts, error, created_at, updated_at FROM jobs ORDER BY created_at DESC LIMIT 100;",
+        "options": {}
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "id": "code-jobs-v1",
+      "name": "Wrap Jobs Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -100,
+        850
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { items: $input.all().map(i => i.json).filter(row => row.id != null) } }];"
+      }
+    },
+    {
+      "id": "respond-jobs-v1",
+      "name": "Respond Jobs",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        150,
+        850
+      ],
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      }
     }
   ],
   "connections": {
@@ -342,6 +412,39 @@
         [
           {
             "node": "Respond Artifact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET /jobs": {
+      "main": [
+        [
+          {
+            "node": "List Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Jobs": {
+      "main": [
+        [
+          {
+            "node": "Wrap Jobs Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wrap Jobs Response": {
+      "main": [
+        [
+          {
+            "node": "Respond Jobs",
             "type": "main",
             "index": 0
           }
