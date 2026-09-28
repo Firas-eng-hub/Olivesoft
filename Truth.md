@@ -19,6 +19,23 @@ RFP intelligence pipeline: detect an IT tender → research its organisation →
 
 ---
 
+## MVP implementation remaining (2026-09-28)
+
+The October 1 MVP is **not yet verified**. The dashboard is connected to authenticated n8n read and manual intake routes. A manual tender was created and read back with a UUID. CV upload to private Supabase Storage, ingestion into Qdrant, and the saved Knowledge base list have succeeded live for two CVs. A filtered Qdrant read returned an indexed CV point. These checks do not prove the complete tender-to-proposal journey.
+
+Complete the following in order. Keep an item open until its stated live check passes; an exported workflow or a successful isolated node is insufficient.
+
+1. **Make manual tender intake durable and replay-safe (Dhiya).** Persist a job before acknowledging intake; add an idempotency key and database uniqueness so repeated or concurrent submissions return the same logical lead/job. Record stage, attempts, errors, and a checkpoint. Reject invalid and unauthorized requests with useful responses. **Pass:** valid, invalid, duplicate, and concurrent requests produce the expected lead/job records and no duplicate logical tender.
+2. **Finish prospect research (Firas).** Connect a supported external search/fetch provider, resolve ambiguous organisation names, bound calls and timeouts, and save claim-level citations. Keep unknown facts null and allow a documented partial result when no useful source is found. The user authorized external tender/organisation search, but no provider has passed a live run. **Pass:** a new UUID lead advances from `detected` to `researched`; five organisation cases, including ambiguous and no-result cases, have supported claims and sensible failures.
+3. **Complete and measure matching (Nour).** Run the published matching workflow on a researched UUID lead against the indexed CVs. Add project and expertise/stack fixtures, persist requirement-level judgments, evidence and coverage, and test re-indexing and no-match behavior. The Qdrant endpoint and required `source` filter index are configured; an actual lead-to-match run is still unverified. **Pass:** one lead reaches `matched` without manual database edits; relevant documents appear in the top five for at least 8 of 10 labelled positive FR/EN queries, while no-match cases create no invented support.
+4. **Generate real proposal files (Firas).** Create the approved Google Slides template, copy it per generation version, populate it from the validated tender, cited prospect, and selected evidence, then export real PPTX and PDF files to private storage. Persist stable file IDs and verify both file contents before setting `proposal_ready`. The existing proposal workflow has placeholder rendering and is unpublished. **Pass:** open an editable PPTX and readable PDF for a matched lead; no unresolved tags, unsupported team/reference claims, or duplicate artifact bundle on retry.
+5. **Connect actions, retries, and downloads (Dhiya).** Add authenticated generate/retry endpoints and durable job runner with lease/checkpoint recovery. Show job progress and failure in Activity; provide authenticated artifact lookup and controlled downloads. The current jobs read route works, but intake does not populate jobs and generate/retry/download actions are absent. **Pass:** request generation, poll to completion, download both files, retry a failed stage, and resume after interruption without duplicate leads or artifacts; unauthorized requests fail.
+6. **Run the full release gate (all).** Rebind credentials after clean import, exercise the dashboard flow from new tender through research, matching, proposal request and both downloads, and record n8n execution IDs and artifact checks. Include invalid input, duplicate/replay, missing evidence, provider failure and export failure. Keep `proposal_ready` unavailable if either export fails. **Pass:** Gate A connectivity and actual PPTX/PDF opening, plus Gate C complete user journey, are recorded with live evidence.
+
+Keep scheduled tender discovery, more feeds, OCR, extra dashboard polish, and broader corpus evaluation behind this core path unless the official brief makes one mandatory. The existing [live overview](docs/live-overview.md) and [Knowledge base notes](docs/supabase-knowledge.md) contain the individual checks completed so far.
+
+---
+
 ## 2. Team & Ownership
 
 | Member | Branch | Primary responsibility | Supporting | Handoff deliverable |
@@ -39,17 +56,18 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ done
 | # | Workflow export | Owner | Input → output | Status |
 | --- | --- | --- | --- | --- |
 | 00 | `00_intake.json` | Dhiya | Input + idempotency key → job ID (202) | ⬜ |
-| 01 | `01_tender_detection.json` | Dhiya | Source input → tender + lead ID | ⬜ |
-| 02 | `02_prospect_research.json` | Firas | Lead + organisation → prospect with citations | ⬜ |
-| 03 | `03_knowledge_ingestion.json` | Nour | Document + metadata → index report | ⬜ |
+| 01 | `01_tender_detection.json` | Dhiya | Source input → tender + lead ID | 🟨 |
+| 02 | `02_prospect_research.json` | Firas | Lead + organisation → prospect with citations | 🟨 |
+| 03 | `03_knowledge_ingestion.json` | Nour | Document + metadata → index report | 🟨 |
 | 04 | `04_rag_search.json` | Nour | Requirements + filters → evidence | ⬜ |
-| 05 | `05_requirement_matching.json` | Nour | Lead → matches + coverage | ⬜ |
+| 05 | `05_requirement_matching.json` | Nour | Lead → matches + coverage | 🟨 |
 | 06 | `06_proposal_generation.json` | Firas | Lead + parameters → artifact manifest | ⬜ |
 | 07 | `07_job_runner.json` | Dhiya | Queued job → completed/failed job | ⬜ |
-| 08 | `08_read_api.json` | Dhiya | Queries → leads/jobs/artifacts | ⬜ |
+| 08 | `08_read_api.json` | Dhiya | Queries → leads/jobs/artifacts | 🟨 |
 | 09 | `09_actions.json` | Dhiya | Generate/retry → job ID | ⬜ |
 | 10 | `10_error_handler.json` | Dhiya | Execution error → failure record | ⬜ |
 | 11 | `11_rag_evaluation.json` | Nour | Golden queries → metrics | ⬜ |
+| 12 | `12_knowledge_upload.json` | Firas / Nour | Private upload → saved document + ingestion request | 🟨 |
 
 **Shared sub-workflow envelope:** `{schema_version, job_id, lead_id, operation, input, result, warnings}` — preserve it; return one explicit result object.
 **Contract rules:** stable requirement IDs & `asset_ref`; claim-level evidence (URL, title, timestamp, claim, excerpt); unknown budget/deadline stays `null`; artifact identity = stable provider file ID, never an expiring link; limits: upload 5 MB, top_k 5–20, list 50–100; validate with a reusable validator sub-workflow (don’t assume npm imports work in Code nodes).
@@ -248,3 +266,4 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ done
 ### Session Log
 
 - 2026-09-23 — plan rewritten post-mentor-review (`plan-n8n.md`); architecture pivoted to all-n8n.
+- 2026-09-28 — Updated MVP remaining work after live CV upload, indexing, document-list, and filtered Qdrant checks; tender-to-proposal release gates remain open.
