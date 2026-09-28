@@ -18,6 +18,7 @@ The n8n Header Auth credential must use header name `api-key`. The same credenti
 | `GET /api/overview?id=UUID` | `GET /webhook/lead?id=UUID` | Lead details, requirements, and matched document evidence |
 | `POST /api/tenders` | `POST /webhook/tenders` | Manual tender intake |
 | `GET /api/overview` | `GET /webhook/jobs` | Recent durable job records for Activity |
+| `GET /api/knowledge/documents` | `GET /webhook/knowledge/documents` | Latest saved version of each uploaded knowledge document |
 
 The dashboard requires the team password in `x-olivesoft-upload-password` for all three routes. Its server sends `api-key` to n8n. The browser uses the team password in memory for the current page session. Do not send the n8n key to browser code or prefix it with `NEXT_PUBLIC_`.
 

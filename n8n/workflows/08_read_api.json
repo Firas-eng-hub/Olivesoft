@@ -4,7 +4,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "WF5 — Authenticated read webhooks: GET /leads, /lead?id=UUID, /jobs, /artifact?id=UUID. Header Auth is required on all routes. Artifact route returns metadata only; controlled file bytes are not implemented. Rebind Postgres and Header Auth credentials after import. The dashboard proxies reads through its server and never sends the n8n key to the browser.",
+        "content": "WF5 — Authenticated read webhooks: GET /leads, /lead?id=UUID, /jobs, /artifact?id=UUID, /knowledge/documents. Header Auth is required on all routes. Artifact route returns metadata only; controlled file bytes are not implemented. Rebind Postgres and Header Auth credentials after import. The dashboard proxies reads through its server and never sends the n8n key to the browser.",
         "height": 520,
         "width": 660,
         "color": 4
@@ -294,6 +294,76 @@
           }
         }
       }
+    },
+    {
+      "id": "caf437d7-c5f3-4a0d-9544-1f3da3327e8b",
+      "name": "GET /knowledge/documents",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -600,
+        1100
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "knowledge/documents",
+        "responseMode": "responseNode",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "webhookId": "8ec23caa-8fc7-430e-b92c-00dc02119c42"
+    },
+    {
+      "id": "a47aa569-b7c0-4993-a4f3-2b96406808c5",
+      "name": "List Knowledge Documents",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -350,
+        1100
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, doc_id, asset_type, title, version, state, metadata->>'storage_path' AS storage_path, created_at\nFROM (\n  SELECT DISTINCT ON (doc_id) id, doc_id, asset_type, title, version, state, metadata, created_at\n  FROM public.knowledge_documents\n  ORDER BY doc_id, version DESC\n) latest\nORDER BY created_at DESC\nLIMIT 200;",
+        "options": {}
+      }
+    },
+    {
+      "id": "fb2857bd-4384-4856-ae7f-47dfcddbe465",
+      "name": "Wrap Knowledge Documents",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -100,
+        1100
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return [{ json: { items: $input.all().map(item => item.json).filter(row => row.id != null) } }];"
+      }
+    },
+    {
+      "id": "4e4d846f-ed42-4201-baba-52250bc1dfc3",
+      "name": "Respond Knowledge Documents",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        150,
+        1100
+      ],
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      }
     }
   ],
   "connections": {
@@ -445,6 +515,39 @@
         [
           {
             "node": "Respond Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET /knowledge/documents": {
+      "main": [
+        [
+          {
+            "node": "List Knowledge Documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Knowledge Documents": {
+      "main": [
+        [
+          {
+            "node": "Wrap Knowledge Documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wrap Knowledge Documents": {
+      "main": [
+        [
+          {
+            "node": "Respond Knowledge Documents",
             "type": "main",
             "index": 0
           }

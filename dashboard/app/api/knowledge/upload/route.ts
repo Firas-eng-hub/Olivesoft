@@ -72,7 +72,7 @@ export async function POST(request: Request) {
     }
     const result: unknown = await upstream.json();
     if (typeof result !== "object" || result === null || !("storage_path" in result) || typeof result.storage_path !== "string" || !result.storage_path || !("bucket" in result) || typeof result.bucket !== "string" || !result.bucket) return failure("Supabase did not confirm the upload.", 502);
-    return Response.json({ status: "uploaded", storagePath: result.storage_path, bucket: result.bucket, indexing: "pending" }, { status: 201, headers: { "Cache-Control": "no-store" } });
+    return Response.json({ status: "uploaded", docId: "doc_id" in result ? String(result.doc_id) : "", version: "version" in result ? Number(result.version) : 0, storagePath: result.storage_path, bucket: result.bucket, indexing: "pending" }, { status: 201, headers: { "Cache-Control": "no-store" } });
   } catch (cause) {
     if (cause instanceof Error && cause.name === "TimeoutError") return failure("Storage upload timed out. Please retry later.", 504);
     return failure("Storage upload is unavailable. Please retry later.", 502);
