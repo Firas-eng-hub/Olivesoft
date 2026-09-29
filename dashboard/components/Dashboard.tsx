@@ -131,7 +131,6 @@ export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [selectedDiscovery, setSelectedDiscovery] = useState<DiscoveryItem | null>(null);
   const [mobileNav, setMobileNav] = useState(false);
-  const sidebarClose = useRef<number | null>(null);
   const [toast, setToast] = useState("");
   const [focusSearch, setFocusSearch] = useState(false);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -151,12 +150,6 @@ export default function Dashboard() {
   }, []);
   useEffect(() => { if (data && integration === "demo") void demoAdapter.save(data); }, [data, integration]);
   useEffect(() => { if (!toast) return; const timer = window.setTimeout(() => setToast(""), 3500); return () => window.clearTimeout(timer); }, [toast]);
-  useEffect(() => {
-    if (mobileNav) return;
-    const reveal = (event: MouseEvent) => { if (event.clientX <= 8) setMobileNav(true); };
-    window.addEventListener("mousemove", reveal);
-    return () => window.removeEventListener("mousemove", reveal);
-  }, [mobileNav]);
   useEffect(() => {
     if (integration !== "demo" || !data?.jobs.some((job) => job.state === "running" && job.operation === "proposal")) return;
     const timer = window.setInterval(() => setData((current) => {
@@ -211,8 +204,6 @@ export default function Dashboard() {
     try { const result = await liveFetch(); setData(result as DashboardData); setToast("Live tenders refreshed"); }
     catch (cause) { setToast(cause instanceof Error ? cause.message : "Refresh failed."); }
   }
-  function holdSidebar() { if (sidebarClose.current !== null) { window.clearTimeout(sidebarClose.current); sidebarClose.current = null; } }
-  function releaseSidebar() { holdSidebar(); sidebarClose.current = window.setTimeout(() => setMobileNav(false), 300); }
   function navigate(next: View) { setView(next); setMobileNav(false); setSearch(""); setFilter("all"); setMonthFilter(null); setSortByFit(false); }
   const navigateRef = useRef(navigate);
   navigateRef.current = navigate;
@@ -286,7 +277,7 @@ export default function Dashboard() {
   ];
 
   return <div className="app-shell">
-    <aside className={`sidebar ${mobileNav ? "sidebar-open" : ""}`} onMouseEnter={holdSidebar} onMouseLeave={releaseSidebar}>
+    <aside className={`sidebar ${mobileNav ? "sidebar-open" : ""}`}>
       <div className="sidebar-top"><button className="brand" onClick={() => navigate("overview")}><span className="brand-mark"><span /></span><span>Olive<span className="brand-strong">Soft</span><small>INTELLIGENCE</small></span></button><button className="mobile-close icon-button" onClick={() => setMobileNav(false)} aria-label="Close menu"><X size={19} /></button></div>
       <div className="sidebar-section-label">WORKSPACE</div>
       <nav className="main-nav" aria-label="Main navigation">{navItems.map((item) => <button key={item.id} className={`nav-item ${view === item.id || (view === "lead" && item.id === "pipeline") ? "active" : ""}`} onClick={() => navigate(item.id)}>{item.icon}<span>{item.label}</span>{item.badge && <small>{item.badge}</small>}</button>)}</nav>
