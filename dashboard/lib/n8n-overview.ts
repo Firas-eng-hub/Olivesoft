@@ -52,6 +52,10 @@ export function mapLead(value: unknown): Lead {
       note: "Review the matched source documents for support.",
     };
   });
+  const judgments = new Map(array(row.judgments).map((item) => {
+    const judgment = object(item);
+    return [string(judgment.requirement_id), judgment] as const;
+  }));
   const evidence: Evidence[] = array(row.matches).map((item, index) => {
     const match = object(item);
     const payload = object(match.evidence ?? match.payload);
@@ -65,7 +69,32 @@ export function mapLead(value: unknown): Lead {
       assetRef: assetRef || undefined,
     };
   });
+  for (const [index, item] of array(row.research_evidence).entries()) {
+    const citation = object(item);
+    const url = string(citation.url);
+    if (!url || !string(citation.excerpt)) continue;
+    try { if (new URL(url).protocol !== "https:") continue; } catch { continue; }
+    evidence.push({
+      id: `research-${index}`,
+      title: string(citation.title, "Public source"),
+      source: "Public research",
+      url,
+      excerpt: string(citation.excerpt).slice(0, 500),
+      retrievedAt: date(citation.retrieved_at) ?? new Date(0).toISOString(),
+    });
+  }
   const organization = string(extracted.organization ?? extracted.buyer ?? extracted.client ?? raw.organization, "Organization pending");
+  for (const requirement of requirements) {
+    const judgment = judgments.get(requirement.id);
+    if (!judgment) continue;
+    const value = String(judgment.status);
+    if (["supported", "partial", "unsupported", "unknown"].includes(value)) requirement.status = value as RequirementMatch["status"];
+    requirement.evidenceIds = array(judgment.evidence_match_ids).map(String);
+    requirement.note = string(judgment.note, requirement.note);
+  }
+  const coverage = requirements.length && judgments.size === requirements.length
+    ? Math.round(100 * requirements.reduce((sum, requirement) => sum + (requirement.status === "supported" ? 1 : requirement.status === "partial" ? 0.5 : 0), 0) / requirements.length)
+    : null;
   const tags = array(extracted.tags).filter((item): item is string => typeof item === "string").slice(0, 8);
   const status = stage(row.status);
   return {
@@ -77,13 +106,17 @@ export function mapLead(value: unknown): Lead {
     summary: string(extracted.summary ?? raw.summary, "Tender details are being processed."),
     stage: status,
     score: score(row.relevance_score),
-    coverage: null,
+    coverage,
     deadline: date(row.deadline),
     detectedAt: date(row.created_at) ?? new Date(0).toISOString(),
     tags,
     requirements,
     evidence,
-    artifacts: [],
+    artifacts: array(row.artifacts).map((value) => {
+      const artifact = object(value);
+      const kind = string(artifact.kind);
+      return { id: string(artifact.id), kind: kind as "pdf" | "pptx", name: `${organization}_Proposal.${kind}`, demo: false };
+    }).filter((artifact) => artifact.id && (artifact.kind === "pdf" || artifact.kind === "pptx")),
     priority: "Medium",
     source,
   };

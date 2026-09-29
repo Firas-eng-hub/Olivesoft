@@ -1,0 +1,375 @@
+{
+  "name": "06_proposal_generation",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "WF6 — explicit proposal job only. Renderer is a separate Vercel project; replace its HTTPS URL. Bind Postgres, renderer Header Auth (Authorization: Bearer), and private Supabase Storage credentials. Import migration 006 first. No success state until both storage objects exist and finalize_proposal_bundle commits."
+      },
+      "id": "971c94a2-4e07-49d0-a16d-0c373cafb8ef",
+      "name": "Proposal contract",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -550,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "cdb804da-41f4-4f84-ba70-0db2062c0990",
+      "name": "Called by job runner",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -500,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$json;const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;if(!uuid.test(e.job_id)||!uuid.test(e.lead_id)||!uuid.test(e.lease_token))throw Error('Invalid proposal job envelope');return [{json:{schema_version:1,job_id:e.job_id,lead_id:e.lead_id,lease_token:e.lease_token,operation:'proposal',input:{},result:null,warnings:[]}}];"
+      },
+      "id": "4e667daf-fd5b-4e95-b4a2-f458d37c9b5d",
+      "name": "Validate proposal job",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -260,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT j.id AS job_id,j.lead_id,l.title,l.raw_payload->>'organization' AS organization,l.extracted->>'summary' AS summary,l.deadline,\n(SELECT json_agg(json_build_object('id',r.requirement_id,'label',r.label,'status',r.status,'evidence',\n (SELECT coalesce(json_agg(json_build_object('title',m.title,'source_path',m.evidence->>'source_path','quote',r.evidence_quote)),'[]'::json) FROM public.matches m WHERE m.id=ANY(r.evidence_match_ids))) ORDER BY r.requirement_id) FROM public.requirement_judgments r WHERE r.lead_id=j.lead_id) AS requirements,\np.evidence AS public_sources\nFROM public.pipeline_jobs j JOIN public.leads l ON l.id=j.lead_id\nLEFT JOIN LATERAL (SELECT evidence FROM public.prospects pr WHERE pr.lead_id=j.lead_id ORDER BY pr.created_at DESC LIMIT 1) p ON true\nWHERE j.id=$1::uuid AND j.lead_id=$2::uuid AND j.operation='proposal' AND j.state='running' AND j.lease_token=$3::uuid AND j.lease_until>now() AND l.status='matched';",
+        "options": {
+          "queryReplacement": "={{ $json.job_id }},={{ $json.lead_id }},={{ $json.lease_token }}"
+        }
+      },
+      "id": "33de70df-74a0-4f34-a80a-53c57c112f59",
+      "name": "Load proposal evidence",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -20,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO public.pipeline_artifact_bundles(job_id,lead_id,version,template_instance_id,state) VALUES($1::uuid,$2::uuid,1,'olivesoft-native-v1','exporting') ON CONFLICT(job_id) DO UPDATE SET state='exporting',updated_at=now() RETURNING job_id,lead_id,version;",
+        "options": {
+          "queryReplacement": "={{ $json.job_id }},={{ $json.lead_id }}"
+        }
+      },
+      "id": "6fa28e2f-f1af-44a7-a8a3-9306a27c0341",
+      "name": "Reserve stable bundle",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        220,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const c=$('Load proposal evidence').first().json;const s=Array.isArray(c.public_sources)?c.public_sources:[];const claims=s.filter(x=>typeof x.url==='string'&&x.url.startsWith('https://')&&typeof x.excerpt==='string'&&x.excerpt.trim().length>30).slice(0,5).map(x=>({url:x.url,excerpt:x.excerpt,claim:x.excerpt.trim().slice(0,Math.min(120,x.excerpt.trim().length))}));const requirements=Array.isArray(c.requirements)?c.requirements:[];if(!requirements.length)throw Error('No persisted requirement matrix');return [{json:{job_id:c.job_id,lead_id:c.lead_id,proposal:{title:c.title,organization:c.organization,summary:c.summary,deadline:c.deadline,requirements,research_claims:claims}}}];"
+      },
+      "id": "0200a0f5-9603-4567-835c-6db59fab1aaf",
+      "name": "Build cited render payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://REPLACE_WITH_RENDERER_VERCEL_HOST/api/render",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "5270368a-2f07-462c-896c-bf856677053d",
+      "name": "Render PPTX and PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        700,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$json;if(r.job_id!==$('Build cited render payload').first().json.job_id||!Array.isArray(r.files)||r.files.length!==2)throw Error('Renderer returned incomplete bundle');const kinds=new Set();return await Promise.all(r.files.map(async f=>{if(!['pptx','pdf'].includes(f.kind)||kinds.has(f.kind)||!Number.isInteger(f.size_bytes)||f.size_bytes<100||f.size_bytes>2097152||!/^[0-9a-f]{64}$/.test(f.sha256)||typeof f.base64!=='string')throw Error('Invalid rendered file');kinds.add(f.kind);const bytes=Buffer.from(f.base64,'base64');if(bytes.length!==f.size_bytes||(f.kind==='pdf'&&bytes.subarray(0,4).toString()!=='%PDF')||(f.kind==='pptx'&&bytes.subarray(0,2).toString()!=='PK'))throw Error('Rendered file bytes failed validation');const path=`${r.lead_id}/${r.job_id}/proposal.${f.kind}`;const binary=await this.helpers.prepareBinaryData(bytes,`proposal.${f.kind}`,f.mime_type);return {json:{job_id:r.job_id,lead_id:r.lead_id,kind:f.kind,mime_type:f.mime_type,size_bytes:f.size_bytes,sha256:f.sha256,storage_bucket:'olivesoft-proposals',storage_path:path},binary:{data:binary}}}));"
+      },
+      "id": "15e8d4fe-94b3-49ff-9029-1d69fc82b731",
+      "name": "Prepare binary files",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        940,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "contentType": "binaryData",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "={{ $json.mime_type }}"
+            },
+            {
+              "name": "x-upsert",
+              "value": "true"
+            }
+          ]
+        },
+        "inputDataFieldName": "data",
+        "method": "POST",
+        "options": {
+          "timeout": 60000
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "url": "={{ 'https://okhntgauzbumgidpuyvx.supabase.co/storage/v1/object/' + $json.storage_bucket + '/' + $json.storage_path.split('/').map(encodeURIComponent).join('/') }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "id": "fddc340c-27b8-4571-b3fd-9f08ee49e19a",
+      "name": "Upload private artifact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1180,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const f=$('Prepare binary files').item.json;if(!$json.Key)throw Error('Storage did not confirm artifact');return {json:{...f,provider_file_id:String($json.Key)}};"
+      },
+      "id": "9914763c-efdd-4de4-bd96-b2d88a2f4cb1",
+      "name": "Check storage response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1420,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH p AS (SELECT $1::jsonb j) INSERT INTO public.pipeline_artifacts(job_id,lead_id,kind,mime_type,size_bytes,storage_bucket,storage_path,provider_file_id,sha256,verified_at) SELECT (j->>'job_id')::uuid,(j->>'lead_id')::uuid,j->>'kind',j->>'mime_type',(j->>'size_bytes')::bigint,j->>'storage_bucket',j->>'storage_path',j->>'provider_file_id',j->>'sha256',now() FROM p ON CONFLICT(job_id,kind) DO UPDATE SET mime_type=excluded.mime_type,size_bytes=excluded.size_bytes,storage_bucket=excluded.storage_bucket,storage_path=excluded.storage_path,provider_file_id=excluded.provider_file_id,sha256=excluded.sha256,verified_at=now() RETURNING id,kind;",
+        "options": {
+          "queryReplacement": "={{ JSON.stringify($json) }}"
+        }
+      },
+      "id": "f5fe5bf0-327b-4718-9acc-abd4b6f6e90c",
+      "name": "Persist verified artifact",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        1660,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows=$input.all().map(x=>x.json);if(rows.length!==2||new Set(rows.map(x=>x.kind)).size!==2||!rows.every(x=>x.id))throw Error('Both artifact rows are required');return [{json:{job_id:$('Validate proposal job').first().json.job_id,lead_id:$('Validate proposal job').first().json.lead_id,lease_token:$('Validate proposal job').first().json.lease_token,artifact_ids:rows.map(x=>x.id)}}];"
+      },
+      "id": "ac81a128-d33d-4d59-8986-f64e2dff7fe7",
+      "name": "Require both rows",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1900,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT public.finalize_proposal_bundle($1::uuid,$2::uuid) AS ready;",
+        "options": {
+          "queryReplacement": "={{ $json.job_id }},={{ $json.lease_token }}"
+        }
+      },
+      "id": "6b413a5d-b5de-46d9-a7b6-66154cbabad4",
+      "name": "Finalize verified bundle",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        2140,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "if($json.ready!==true)throw Error('Proposal finalization refused');const p=$('Require both rows').first().json;return [{json:{schema_version:1,job_id:p.job_id,lead_id:p.lead_id,operation:'proposal',input:{},result:{stage:'proposal_ready',artifact_ids:p.artifact_ids},warnings:[]}}];"
+      },
+      "id": "72a838f7-3f10-487d-97ec-cfb3fff62a18",
+      "name": "Return proposal envelope",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2380,
+        20
+      ]
+    }
+  ],
+  "connections": {
+    "Called by job runner": {
+      "main": [
+        [
+          {
+            "node": "Validate proposal job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate proposal job": {
+      "main": [
+        [
+          {
+            "node": "Load proposal evidence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load proposal evidence": {
+      "main": [
+        [
+          {
+            "node": "Reserve stable bundle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reserve stable bundle": {
+      "main": [
+        [
+          {
+            "node": "Build cited render payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build cited render payload": {
+      "main": [
+        [
+          {
+            "node": "Render PPTX and PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render PPTX and PDF": {
+      "main": [
+        [
+          {
+            "node": "Prepare binary files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare binary files": {
+      "main": [
+        [
+          {
+            "node": "Upload private artifact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload private artifact": {
+      "main": [
+        [
+          {
+            "node": "Check storage response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check storage response": {
+      "main": [
+        [
+          {
+            "node": "Persist verified artifact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist verified artifact": {
+      "main": [
+        [
+          {
+            "node": "Require both rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Require both rows": {
+      "main": [
+        [
+          {
+            "node": "Finalize verified bundle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finalize verified bundle": {
+      "main": [
+        [
+          {
+            "node": "Return proposal envelope",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "tags": []
+}

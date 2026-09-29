@@ -1,7 +1,7 @@
 # OliveSoft — Missing Work and Implementation Plan
 
 Review date: **2026-09-25**  
-Target: **all business logic in n8n**, PostgreSQL for state, Qdrant for retrieval, Google Slides/Drive for proposals. Short JavaScript Code nodes and SQL are allowed. FastAPI, SQLAlchemy, and custom Python RAG/rendering backends are excluded from the target architecture.
+Target: **all business logic in n8n**, PostgreSQL for state, Qdrant for retrieval, a renderer approved for proposals (Google Drive/Slides ruled out by the user). Short JavaScript Code nodes and SQL are allowed. FastAPI, SQLAlchemy, and custom Python RAG/rendering backends are excluded from the target architecture.
 
 Deadlines from the supplied project plan: MVP **October 1, 2026**, submission **October 19**, final package **November 1**. Dhiya must confirm these against the official brief.
 
@@ -15,7 +15,7 @@ This backlog is based on the preceding static review of [dhiyaeddineelgabsi/oliv
 |---|---|---|
 | n8n exports | `00_test.json`, `02_prospect_research.json`, `04_proposal_generation.json` exist on `dev` | Implement the missing inventory below and migrate proposal generation |
 | Research | Workflow, JS, SQL, prompt, and fixture tests exist; documentation describes Wikipedia-only research | Add bounded agent search/fetch, shared contracts, and verify deployed execution |
-| Proposals | n8n calls a FastAPI renderer using local PPTX/PDF files | Move generation orchestration and persistence into n8n; use Slides/Drive exports |
+| Proposals | n8n calls a FastAPI renderer using local PPTX/PDF files | Move generation orchestration and persistence into n8n; use verified PPTX/PDF exports in private storage |
 | Jobs | `generation_jobs` and proposal actions exist in the API | Add general intake/action jobs, idempotency, checkpoints, leases, recovery, and runner |
 | Retrieval | Python RAG modules and evaluation files exist on `nour`; corresponding n8n exports are absent from `dev` | Implement ingestion, retrieval, matching, and evaluation in n8n |
 | Access | Public generation, status, lead detail, and artifact routes lack authentication in the inspected API | Replace with authenticated n8n routes and controlled downloads |
@@ -29,7 +29,7 @@ Existing fixture tests and exports are useful starting points. Their presence do
 
 | Priority | Outcome | Owner |
 |---|---|---|
-| P0 | Confirm provider access, hosted connectivity, and a real Slides export | Dhiya / Firas / Nour |
+| P0 | Confirm provider access, hosted connectivity, and a real PPTX/PDF export | Dhiya / Firas / Nour |
 | P0 | Freeze shared contracts and apply safe database migrations | Dhiya, reviewed by Firas and Nour |
 | P0 | Accept a tender durably and run detection → research → matching | Dhiya with Firas and Nour |
 | P0 | Produce measured retrieval and evidence-linked requirement coverage | Nour |
@@ -52,7 +52,7 @@ Use the supplied filenames consistently in exports, documentation, imports, and 
 | `03_knowledge_ingestion.json` | Nour | Supabase Storage draft; PDF/DOCX/TXT extraction and Qdrant indexing, live gate pending |
 | `04_rag_search.json` | Nour | Missing; requirement search with filters, document deduplication, and evidence |
 | `05_requirement_matching.json` | Nour | Supabase-sourced Qdrant draft; support judgments and coverage still pending live gate |
-| `06_proposal_generation.json` | Firas | Replace/adapt current `04_proposal_generation.json`; remove API renderer dependency |
+| `06_proposal_generation.json` | Firas | Replace/adapt current `04_proposal_generation.json`; use the Vercel PptxGenJS/pdf-lib formatter with n8n-owned content and persistence |
 | `07_job_runner.json` | Dhiya | Missing; atomic claiming, stage execution, checkpointing, retries, recovery |
 | `08_read_api.json` | Dhiya | Missing; authenticated paginated leads, details, jobs, and artifact lookup |
 | `09_actions.json` | Dhiya | Missing; explicit generation/retry actions with preconditions and idempotency |
@@ -78,8 +78,8 @@ Use the supplied filenames consistently in exports, documentation, imports, and 
 
 - [ ] Prove structured chat access, supported search/fetch, quotas, and per-call costs from n8n.
 - [ ] Verify automation credentials independently; do not assume coding-plan credentials cover this usage.
-- [ ] Create an approved Google Slides template and private Drive output folder.
-- [ ] Prove copy → replace placeholders → export PPTX/PDF → open both files.
+- [ ] Choose an approved proposal template and private output store; Google Drive/Slides are ruled out.
+- [ ] Prove template population → export PPTX/PDF → open both files.
 - [ ] Document OAuth scopes, template version, folder permissions, and regeneration procedure.
 
 ### Nour
@@ -106,7 +106,7 @@ Owner: **Dhiya**, with all owners validating their handoff payloads.
 - [ ] Enforce database uniqueness for job idempotency and tender source/external ID, with normalized content hash fallback.
 - [ ] Add knowledge document/source/hash/version metadata and ingestion state.
 - [ ] Extend artifacts with job/version, kind, MIME, stable provider file ID, and uniqueness on job + kind.
-- [ ] Persist the Slides template-copy ID before population/export so retries reuse it.
+- [ ] Persist the selected renderer template identity before population/export so retries reuse it.
 - [ ] Persist each stage output and its status update in one database transaction; separate Postgres nodes do not automatically share transactions.
 - [ ] Test migrations against a disposable database and an existing-schema fixture. Do not reset shared volumes.
 - [ ] Remove the destructive reinitialization instruction from `db/init.sql`; provide explicit migration commands instead.
@@ -175,13 +175,13 @@ Owner: **Nour**. Port the required behavior from the Python work into n8n; Pytho
 
 Owner: **Firas**, with **Nour** reviewing grounding and **Dhiya** providing actions/downloads.
 
-- [ ] Replace API rendering calls in the existing proposal workflow with n8n → Slides/Drive operations.
+- [ ] Replace API rendering calls in the existing proposal workflow with n8n orchestration of the approved renderer and private storage.
 - [ ] Assemble context only from validated tender, cited prospect, selected matches, coverage, and request parameters.
 - [ ] Generate English structured content for seven to nine slides: cover, executive summary, requirements, approach, team, references, delivery assumptions, commercial assumptions, next steps.
 - [ ] Do not require fabricated sector/team/reference data to pass generation preconditions. Report missing evidence and apply the agreed review policy.
 - [ ] Label matched staff as candidates subject to availability; forbid invented rates, budgets, certifications, and outcomes.
 - [ ] Enforce text limits, retain evidence, flag business gaps, and require review for weak coverage.
-- [ ] Copy the approved Slides template once per generation version; persist and reuse its file ID on retries.
+- [ ] Instantiate the approved template once per generation version; persist and reuse its identity on retries.
 - [ ] Populate the copy, export both PPTX and PDF, and persist private stable provider IDs and MIME metadata.
 - [ ] Make repeated generation requests reuse the same logical job and prevent duplicate artifact bundles.
 - [ ] Mark `proposal_ready` only after both nonempty exports have been verified. Either export failing leaves the bundle incomplete.
@@ -215,10 +215,10 @@ Owner: **Firas**, with **Nour** reviewing grounding and **Dhiya** providing acti
 | 1 | Provider/connectivity proof, contracts, migrations | Gate A evidence and migration checks |
 | 2 | Durable intake/runner, research adaptation, ingestion/retrieval | Valid job/lead IDs, cited research, indexed versioned corpus |
 | 3 | Matching and initial evaluation | A lead reaches `matched`; hit@5 ≥8/10; persisted matrix |
-| 4 | Slides generation, authenticated actions/downloads | Both real exports and complete Gate C journey |
+| 4 | Proposal generation, authenticated actions/downloads | Both real exports and complete Gate C journey |
 | 5 | Failure/concurrency tests, docs, clean import, demo | Repeatable recovery and release evidence |
 
-Start Slides export feasibility during order 1; do not wait for matching to discover rendering access problems. Keep dashboard polish, extra feeds, OCR, local models, and slide editing behind the core gates. Protect evidence, validation, and replay safety if the schedule slips.
+Start renderer export feasibility during order 1; do not wait for matching to discover rendering access problems. Keep dashboard polish, extra feeds, OCR, local models, and slide editing behind the core gates. Protect evidence, validation, and replay safety if the schedule slips.
 
 ## 12. Required verification before completion
 

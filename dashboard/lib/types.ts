@@ -25,7 +25,7 @@ export interface Artifact {
   id: string;
   kind: "pptx" | "pdf";
   name: string;
-  demo: true;
+  demo: boolean;
 }
 
 export interface Job {

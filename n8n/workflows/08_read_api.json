@@ -111,7 +111,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT l.id,l.title,l.source,l.raw_payload,l.extracted,l.relevance_score,l.status,l.deadline,l.created_at,l.updated_at,p.sector,\n (SELECT json_agg(m ORDER BY m.score DESC) FROM matches m WHERE m.lead_id=l.id) AS matches,\n (SELECT json_agg(json_build_object('id',a.id,'kind',a.kind,'mime_type',a.mime_type,'size_bytes',a.size_bytes,'version',a.version,'created_at',a.created_at)) FROM artifacts a WHERE a.lead_id=l.id AND a.size_bytes>0) AS artifacts\nFROM leads l LEFT JOIN LATERAL (SELECT pr.sector FROM prospects pr WHERE pr.lead_id=l.id ORDER BY pr.created_at DESC LIMIT 1) p ON true WHERE l.id=$1::uuid;",
+        "query": "SELECT l.id,l.title,l.source,l.raw_payload,l.extracted,l.relevance_score,l.status,l.deadline,l.created_at,l.updated_at,p.sector,p.evidence AS research_evidence,\n (SELECT json_agg(m ORDER BY m.score DESC) FROM matches m WHERE m.lead_id=l.id) AS matches,\n (SELECT json_agg(j ORDER BY j.requirement_id) FROM public.requirement_judgments j WHERE j.lead_id=l.id) AS judgments,\n (SELECT json_agg(json_build_object('id',a.id,'kind',a.kind,'mime_type',a.mime_type,'size_bytes',a.size_bytes,'created_at',a.created_at))\n  FROM public.pipeline_artifacts a JOIN public.pipeline_artifact_bundles b ON b.job_id=a.job_id\n  WHERE a.lead_id=l.id AND b.state='ready' AND a.verified_at IS NOT NULL) AS artifacts\n FROM leads l LEFT JOIN LATERAL (SELECT pr.sector,pr.evidence FROM prospects pr WHERE pr.lead_id=l.id ORDER BY pr.created_at DESC LIMIT 1) p ON true WHERE l.id=$1::uuid;",
         "options": {
           "queryReplacement": "={{ $json.lead_id }}"
         }
@@ -185,7 +185,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT id, job_id, lead_id, kind, mime_type, size_bytes, version, created_at FROM artifacts WHERE id = $1::uuid;",
+        "query": "SELECT a.id,a.job_id,a.lead_id,a.kind,a.mime_type,a.size_bytes,b.version,a.created_at FROM public.pipeline_artifacts a JOIN public.pipeline_artifact_bundles b ON b.job_id=a.job_id WHERE a.id=$1::uuid AND b.state='ready' AND a.verified_at IS NOT NULL;",
         "options": {
           "queryReplacement": "={{ $json.artifact_id }}"
         }
@@ -254,7 +254,7 @@
       ],
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT id, lead_id, operation, state, stage, attempts, error, created_at, updated_at FROM jobs ORDER BY created_at DESC LIMIT 100;",
+        "query": "SELECT id, lead_id, operation, state, stage, attempts, error, created_at, updated_at FROM public.pipeline_jobs ORDER BY created_at DESC LIMIT 100;",
         "options": {}
       },
       "alwaysOutputData": true
@@ -362,6 +362,154 @@
               }
             ]
           }
+        }
+      }
+    },
+    {
+      "id": "wh-artifact-download",
+      "name": "GET /artifact/download",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -600,
+        1200
+      ],
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "artifact/download",
+        "responseMode": "responseNode",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "webhookId": "05dc87f6-54b4-469a-a9bb-753a33e1d795"
+    },
+    {
+      "id": "code-download-id",
+      "name": "Resolve download ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -370,
+        1200
+      ],
+      "parameters": {
+        "jsCode": "const id=String($json.query?.id??''); return [{json:{id:/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)?id:null}}];"
+      }
+    },
+    {
+      "id": "pg-download",
+      "name": "Lookup ready artifact",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -140,
+        1200
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH request AS (SELECT NULLIF($1,'')::uuid id) SELECT a.id,a.kind,a.mime_type,a.size_bytes,a.storage_bucket,a.storage_path FROM request LEFT JOIN LATERAL (SELECT a.* FROM public.pipeline_artifacts a JOIN public.pipeline_artifact_bundles b ON b.job_id=a.job_id WHERE a.id=request.id AND a.verified_at IS NOT NULL AND b.state='ready') a ON true;",
+        "options": {
+          "queryReplacement": "={{ $json.id || \"\" }}"
+        }
+      }
+    },
+    {
+      "id": "if-download-found",
+      "name": "Artifact found?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        90,
+        1200
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f61ac486-6562-423a-801c-a43e9e422e83",
+              "leftValue": "={{ $json.id != null }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "http-sign",
+      "name": "Sign private object",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        1100
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://okhntgauzbumgidpuyvx.supabase.co/storage/v1/object/sign/' + encodeURIComponent($json.storage_bucket) + '/' + $json.storage_path.split('/').map(encodeURIComponent).join('/') }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({expiresIn:60}) }}",
+        "options": {
+          "timeout": 20000
+        }
+      }
+    },
+    {
+      "id": "code-sign-wrap",
+      "name": "Wrap signed artifact",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        550,
+        1100
+      ],
+      "parameters": {
+        "jsCode": "const a=$('Lookup ready artifact').first().json; const s=$json.signedURL??$json.signedUrl; if(!s||typeof s!=='string')throw Error('Storage did not return a signed URL'); return [{json:{id:a.id,kind:a.kind,mime_type:a.mime_type,size_bytes:a.size_bytes,signed_url:s}}];"
+      }
+    },
+    {
+      "id": "resp-signed",
+      "name": "Respond signed artifact",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        780,
+        1100
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "resp-download-missing",
+      "name": "Respond missing artifact",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        1350
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({code:\"ARTIFACT_NOT_FOUND\",message:\"Artifact is not ready.\"}) }}",
+        "options": {
+          "responseCode": 404
         }
       }
     }
@@ -548,6 +696,79 @@
         [
           {
             "node": "Respond Knowledge Documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET /artifact/download": {
+      "main": [
+        [
+          {
+            "node": "Resolve download ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve download ID": {
+      "main": [
+        [
+          {
+            "node": "Lookup ready artifact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup ready artifact": {
+      "main": [
+        [
+          {
+            "node": "Artifact found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Artifact found?": {
+      "main": [
+        [
+          {
+            "node": "Sign private object",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond missing artifact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sign private object": {
+      "main": [
+        [
+          {
+            "node": "Wrap signed artifact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wrap signed artifact": {
+      "main": [
+        [
+          {
+            "node": "Respond signed artifact",
             "type": "main",
             "index": 0
           }
