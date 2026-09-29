@@ -1,0 +1,670 @@
+{
+  "name": "07_job_runner",
+  "nodes": [
+    {
+      "id": "note-runner",
+      "name": "Runner contract",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        -350
+      ],
+      "parameters": {
+        "content": "Polls one durable intake/retry job each minute. Claims with SKIP LOCKED and lease token. A stale worker cannot checkpoint. Research currently invokes matching; both must be verified live before publication. Proposal jobs require a separate export branch.\nProposal jobs call 06_proposal_generation; replace its placeholder ID after import. The proposal sub-workflow finalizes its own bundle and job in one database transaction.\nResearch and matching are separate checkpoints. Retry resumes from researched or matched lead state.",
+        "height": 260,
+        "width": 620
+      }
+    },
+    {
+      "id": "timer-runner",
+      "name": "Every minute",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -850,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pg-claim",
+      "name": "Claim job",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -620,
+        0
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM public.claim_pipeline_job() WHERE operation IN ('intake','retry');",
+        "options": {}
+      }
+    },
+    {
+      "id": "pg-preflight",
+      "name": "Inspect lead before resume",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -460,
+        0
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id,status FROM public.leads WHERE id=$1::uuid",
+        "options": {
+          "queryReplacement": "={{ $('Claim job').first().json.lead_id }}"
+        }
+      }
+    },
+    {
+      "id": "if-preflight",
+      "name": "Already matched?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -260,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "795ecb9a-adfa-485d-b747-05a07834f8a7",
+              "leftValue": "={{ $json.status }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "matched"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "ewf-research",
+      "name": "Run research",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -350,
+        0
+      ],
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "yCkgzoyxGkFdWFto"
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "pg-status",
+      "name": "Check lead stage",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -80,
+        -100
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, status FROM public.leads WHERE id=$1::uuid",
+        "options": {
+          "queryReplacement": "={{ $('Claim job').first().json.lead_id }}"
+        }
+      }
+    },
+    {
+      "id": "if-matched",
+      "name": "Matched?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        170,
+        -100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "795ecb9a-adfa-485d-b747-05a07834f8a7",
+              "leftValue": "={{ $json.status }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "matched"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "pg-complete",
+      "name": "Checkpoint matched",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        440,
+        -200
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT public.complete_pipeline_stage(($1::jsonb->>'job_id')::uuid,($1::jsonb->>'lease_token')::uuid,'matching',$1::jsonb->'result','matched',true) AS committed",
+        "options": {
+          "queryReplacement": "={{ JSON.stringify({job_id:$('Claim job').first().json.id,lease_token:$('Claim job').first().json.lease_token,result:{lead_id:$json.id,status:$json.status}}) }}"
+        }
+      }
+    },
+    {
+      "id": "pg-retry",
+      "name": "Record failure and retry",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        440,
+        80
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH p AS (SELECT $1::jsonb j) UPDATE public.pipeline_jobs q SET state=CASE WHEN attempts>=3 THEN 'failed' ELSE 'queued' END,stage='stage_failed',error=jsonb_build_object('message',p.j->>'reason'),next_retry_at=now()+make_interval(mins=>power(2,LEAST(attempts,3))::int),lease_until=NULL,lease_token=NULL,updated_at=now() FROM p WHERE q.id=(p.j->>'job_id')::uuid AND q.lease_token=(p.j->>'lease_token')::uuid RETURNING q.id,q.state,q.attempts",
+        "options": {
+          "queryReplacement": "={{ JSON.stringify({job_id:$('Claim job').first().json.id,lease_token:$('Claim job').first().json.lease_token,reason:$json.status ? 'Lead ended at '+$json.status : 'Research or matching failed'}) }}"
+        }
+      }
+    },
+    {
+      "id": "229b86ad-6e04-44b8-acca-a1ff49e0951d",
+      "name": "Proposal job?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        260
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ffa7314a-618b-4bbe-886d-ea9f26f6e381",
+              "leftValue": "={{ $json.operation }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "proposal"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "e9b4eb32-3f47-422f-bd9e-56d3480723b8",
+      "name": "Prepare proposal request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -260,
+        450
+      ],
+      "parameters": {
+        "jsCode": "const j=$json;return [{json:{schema_version:1,job_id:j.id,lead_id:j.lead_id,lease_token:j.lease_token,operation:'proposal',input:{},result:null,warnings:[]}}];"
+      }
+    },
+    {
+      "id": "3025b88e-057d-46c7-800e-1c11d164ee4c",
+      "name": "Run proposal generation",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -20,
+        450
+      ],
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "REPLACE_WITH_06_PROPOSAL_GENERATION_ID"
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "4824e646-9f31-40fd-a5e9-5b9603c42efe",
+      "name": "Already researched?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -100,
+        260
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2036caf7-5f09-4592-9f6f-dc5bb9492991",
+              "leftValue": "={{ $json.status }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "researched"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "53e9b6b6-01c6-43f7-b738-2c4e81035702",
+      "name": "Prepare research request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        100,
+        480
+      ],
+      "parameters": {
+        "jsCode": "const j=$('Claim job').first().json;return [{json:{schema_version:1,job_id:j.id,lead_id:j.lead_id,operation:'prospect_research',input:{},result:null,warnings:[]}}];"
+      }
+    },
+    {
+      "id": "410635b0-1e73-41cc-9fbc-71461d0ca258",
+      "name": "Check research stage",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        480,
+        480
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id,status FROM public.leads WHERE id=$1::uuid",
+        "options": {
+          "queryReplacement": "={{ $('Claim job').first().json.lead_id }}"
+        }
+      }
+    },
+    {
+      "id": "dac9cfad-9c45-4965-9b13-d1533f6bc05f",
+      "name": "Researched?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        700,
+        480
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0c3ef5fe-683d-454d-83bd-af08d44cba3c",
+              "leftValue": "={{ $json.status }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "rightValue": "researched"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "4202c388-322a-4dec-9a2e-12115b9156f0",
+      "name": "Checkpoint research",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        920,
+        480
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT public.complete_pipeline_stage(($1::jsonb->>'job_id')::uuid,($1::jsonb->>'lease_token')::uuid,'research',$1::jsonb->'result','matching',false) AS committed",
+        "options": {
+          "queryReplacement": "={{ JSON.stringify({job_id:$('Claim job').first().json.id,lease_token:$('Claim job').first().json.lease_token,result:{lead_id:$('Claim job').first().json.lead_id,status:'researched'}}) }}"
+        }
+      }
+    },
+    {
+      "id": "0fa2bf5d-e7b2-4626-994e-07d95aa2ff18",
+      "name": "Prepare matching request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        480
+      ],
+      "parameters": {
+        "jsCode": "if($json.committed===false)throw Error('Research checkpoint rejected');const j=$('Claim job').first().json;return [{json:{schema_version:1,job_id:j.id,lead_id:j.lead_id,operation:'requirement_matching',input:{},result:null,warnings:[]}}];"
+      }
+    },
+    {
+      "id": "581e986c-eed1-4085-b521-83c61f226870",
+      "name": "Run matching",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1360,
+        480
+      ],
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "s3hsG3EMPMUWzBbK"
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "connections": {
+    "Every minute": {
+      "main": [
+        [
+          {
+            "node": "Claim job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claim job": {
+      "main": [
+        [
+          {
+            "node": "Proposal job?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check lead stage": {
+      "main": [
+        [
+          {
+            "node": "Matched?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Matched?": {
+      "main": [
+        [
+          {
+            "node": "Checkpoint matched",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record failure and retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inspect lead before resume": {
+      "main": [
+        [
+          {
+            "node": "Already matched?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Already matched?": {
+      "main": [
+        [
+          {
+            "node": "Checkpoint matched",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Already researched?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Proposal job?": {
+      "main": [
+        [
+          {
+            "node": "Prepare proposal request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Inspect lead before resume",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare proposal request": {
+      "main": [
+        [
+          {
+            "node": "Run proposal generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run proposal generation": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Record failure and retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Already researched?": {
+      "main": [
+        [
+          {
+            "node": "Checkpoint research",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare research request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare research request": {
+      "main": [
+        [
+          {
+            "node": "Run research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check research stage": {
+      "main": [
+        [
+          {
+            "node": "Researched?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Researched?": {
+      "main": [
+        [
+          {
+            "node": "Checkpoint research",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record failure and retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Checkpoint research": {
+      "main": [
+        [
+          {
+            "node": "Prepare matching request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare matching request": {
+      "main": [
+        [
+          {
+            "node": "Run matching",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run matching": {
+      "main": [
+        [
+          {
+            "node": "Check lead stage",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record failure and retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run research": {
+      "main": [
+        [
+          {
+            "node": "Check research stage",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record failure and retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Africa/Tunis"
+  },
+  "active": false,
+  "pinData": {},
+  "versionId": "e1bd0752-6cdf-451c-bc7f-2cc8cd96fbea"
+}

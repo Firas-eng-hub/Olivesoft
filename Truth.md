@@ -12,7 +12,7 @@
 RFP intelligence pipeline: detect an IT tender → research its organisation → match requirements against internal CVs/projects/stacks → generate an evidence-backed commercial proposal with editable PPTX/PDF downloads.
 
 - **State:** PostgreSQL (business data) · **Retrieval:** Qdrant + hosted multilingual embeddings
-- **Documents:** Google Slides template + Drive exports (PPTX/PDF)
+- **Documents:** Approved alternative template + private PPTX/PDF exports (Google Drive/Slides ruled out)
 - **Interface:** n8n Forms first, thin Next.js dashboard later
 - **Language rule:** deliverables in English · retrieval tested in FR and EN
 - Pipeline status cycle: `detected → researched → matched → proposal_ready` (+ `failed`)
@@ -28,7 +28,7 @@ Complete the following in order. Keep an item open until its stated live check p
 1. **Make manual tender intake durable and replay-safe (Dhiya).** Persist a job before acknowledging intake; add an idempotency key and database uniqueness so repeated or concurrent submissions return the same logical lead/job. Record stage, attempts, errors, and a checkpoint. Reject invalid and unauthorized requests with useful responses. **Pass:** valid, invalid, duplicate, and concurrent requests produce the expected lead/job records and no duplicate logical tender.
 2. **Finish prospect research (Firas).** Connect a supported external search/fetch provider, resolve ambiguous organisation names, bound calls and timeouts, and save claim-level citations. Keep unknown facts null and allow a documented partial result when no useful source is found. The user authorized external tender/organisation search, but no provider has passed a live run. **Pass:** a new UUID lead advances from `detected` to `researched`; five organisation cases, including ambiguous and no-result cases, have supported claims and sensible failures.
 3. **Complete and measure matching (Nour).** Run the published matching workflow on a researched UUID lead against the indexed CVs. Add project and expertise/stack fixtures, persist requirement-level judgments, evidence and coverage, and test re-indexing and no-match behavior. The Qdrant endpoint and required `source` filter index are configured; an actual lead-to-match run is still unverified. **Pass:** one lead reaches `matched` without manual database edits; relevant documents appear in the top five for at least 8 of 10 labelled positive FR/EN queries, while no-match cases create no invented support.
-4. **Generate real proposal files (Firas).** Create the approved Google Slides template, copy it per generation version, populate it from the validated tender, cited prospect, and selected evidence, then export real PPTX and PDF files to private storage. Persist stable file IDs and verify both file contents before setting `proposal_ready`. The existing proposal workflow has placeholder rendering and is unpublished. **Pass:** open an editable PPTX and readable PDF for a matched lead; no unresolved tags, unsupported team/reference claims, or duplicate artifact bundle on retry.
+4. **Generate real proposal files (Firas).** Create an approved proposal template, instantiate it per generation version, populate it from the validated tender, cited prospect, and selected evidence, then export real PPTX and PDF files to private storage. Persist stable file IDs and verify both file contents before setting `proposal_ready`. The existing proposal workflow has placeholder rendering and is unpublished. **Pass:** open an editable PPTX and readable PDF for a matched lead; no unresolved tags, unsupported team/reference claims, or duplicate artifact bundle on retry.
 5. **Connect actions, retries, and downloads (Dhiya).** Add authenticated generate/retry endpoints and durable job runner with lease/checkpoint recovery. Show job progress and failure in Activity; provide authenticated artifact lookup and controlled downloads. The current jobs read route works, but intake does not populate jobs and generate/retry/download actions are absent. **Pass:** request generation, poll to completion, download both files, retry a failed stage, and resume after interruption without duplicate leads or artifacts; unauthorized requests fail.
 6. **Run the full release gate (all).** Rebind credentials after clean import, exercise the dashboard flow from new tender through research, matching, proposal request and both downloads, and record n8n execution IDs and artifact checks. Include invalid input, duplicate/replay, missing evidence, provider failure and export failure. Keep `proposal_ready` unavailable if either export fails. **Pass:** Gate A connectivity and actual PPTX/PDF opening, plus Gate C complete user journey, are recorded with live evidence.
 
@@ -41,7 +41,7 @@ Keep scheduled tender discovery, more feeds, OCR, extra dashboard polish, and br
 | Member | Branch | Primary responsibility | Supporting | Handoff deliverable |
 | --- | --- | --- | --- | --- |
 | **Dhiya** (lead) | `dhiya` | Intake, detection, state, jobs, orchestration, read/action webhooks, deployment | Integration, smoke checks, architecture, release | Valid tender + durable lead/job IDs |
-| **Firas** | `firas` | Prospect research, proposal content, Slides template/export, artifact delivery | Research fixtures, demo narrative, proposal UI later | Cited prospect record + verified artifact manifest |
+| **Firas** | `firas` | Prospect research, proposal content, proposal template/export, artifact delivery | Research fixtures, demo narrative, proposal UI later | Cited prospect record + verified artifact manifest |
 | **Nour** | `nour` | Internal fixtures, ingestion, embeddings, Qdrant, retrieval, requirement matching, benchmark | Evidence review, matches UI later | Versioned corpus + evidence-linked matches + coverage |
 
 **Review rotation:** Dhiya reviews Firas · Firas reviews Nour · Nour reviews Dhiya. Lead review required before release merges. Everyone must be able to run the full demo.
@@ -55,18 +55,18 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ done
 
 | # | Workflow export | Owner | Input → output | Status |
 | --- | --- | --- | --- | --- |
-| 00 | `00_intake.json` | Dhiya | Input + idempotency key → job ID (202) | ⬜ |
+| 00 | `00_intake.json` | Dhiya | Input + idempotency key → job ID (202) | 🟨 |
 | 01 | `01_tender_detection.json` | Dhiya | Source input → tender + lead ID | 🟨 |
 | 02 | `02_prospect_research.json` | Firas | Lead + organisation → prospect with citations | 🟨 |
 | 03 | `03_knowledge_ingestion.json` | Nour | Document + metadata → index report | 🟨 |
-| 04 | `04_rag_search.json` | Nour | Requirements + filters → evidence | ⬜ |
+| 04 | `04_rag_search.json` | Nour | Requirements + filters → evidence | 🟨 |
 | 05 | `05_requirement_matching.json` | Nour | Lead → matches + coverage | 🟨 |
-| 06 | `06_proposal_generation.json` | Firas | Lead + parameters → artifact manifest | ⬜ |
-| 07 | `07_job_runner.json` | Dhiya | Queued job → completed/failed job | ⬜ |
+| 06 | `06_proposal_generation.json` | Firas | Lead + parameters → artifact manifest | 🟨 |
+| 07 | `07_job_runner.json` | Dhiya | Queued job → completed/failed job | 🟨 |
 | 08 | `08_read_api.json` | Dhiya | Queries → leads/jobs/artifacts | 🟨 |
-| 09 | `09_actions.json` | Dhiya | Generate/retry → job ID | ⬜ |
-| 10 | `10_error_handler.json` | Dhiya | Execution error → failure record | ⬜ |
-| 11 | `11_rag_evaluation.json` | Nour | Golden queries → metrics | ⬜ |
+| 09 | `09_actions.json` | Dhiya | Generate/retry → job ID | 🟨 |
+| 10 | `10_error_handler.json` | Dhiya | Execution error → failure record | 🟨 |
+| 11 | `11_rag_evaluation.json` | Nour | Golden queries → metrics | 🟨 |
 | 12 | `12_knowledge_upload.json` | Firas / Nour | Private upload → saved document + ingestion request | 🟨 |
 | 13 | `13_tender_discovery.json` | Dhiya | TED/Tavily search → reviewable tender suggestions | 🟨 |
 
@@ -90,7 +90,7 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ done
 
 - [ ]  Prove structured chat from n8n (model access, quotas, cost) — coding-plan credentials are NOT assumed to cover embeddings/automation
 - [ ]  Prove search + source retrieval with a supported provider
-- [ ]  Create a small Slides template: copy → replace placeholder → export PPTX/PDF → open both
+- [ ]  Create a small approved template: instantiate → replace placeholder → export PPTX/PDF → open both
 - [ ]  Record OAuth scopes, account access, private output-folder config (if blocked: timebox another hosted renderer — do NOT silently build a custom backend)
 
 ### Nour
@@ -157,7 +157,7 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ done
 - [ ]  Generate structured content for 7–9 slides: cover, executive summary, requirements, approach, team, references, delivery assumptions, commercial assumptions, next steps
 - [ ]  Matched staff = candidates subject to availability — no invented rates/budgets/certifications/outcomes
 - [ ]  Enforce slide text limits; retain evidence; flag business gaps; review weak-coverage proposals
-- [ ]  Copy approved Slides template per generation version → populate via API → export PPTX/PDF → persist private stable file IDs
+- [ ]  Instantiate approved template per generation version → populate via API → export PPTX/PDF → persist private stable file IDs
 - [ ]  Save template-copy ID before continuing (retries reuse it); keep versioned artifacts
 - [ ]  Check nonempty files/MIME; open PPTX in PowerPoint; inspect PDF pages, long titles, bullets, multilingual text
 
@@ -233,7 +233,7 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ done
 | Risk | Response | Owner |
 | --- | --- | --- |
 | Missing provider access/quotas | Day-one proof, fallback provider, documented costs | Firas / Nour |
-| Slides export blocked | Early copy/edit/export test; timebox another hosted renderer | Firas |
+| Renderer export blocked | Early populate/export test; timebox another hosted renderer | Firas |
 | n8n sharing restrictions | Separate dev instances + controlled integration importer | Dhiya |
 | Services only on a laptop | Fix reachable deployment before dependent work | Dhiya |
 | Dense retrieval misses exact terms | Evaluate → lexical fusion/rerank; report real improvement | Nour |
@@ -268,4 +268,17 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ done
 
 - 2026-09-23 — plan rewritten post-mentor-review (`plan-n8n.md`); architecture pivoted to all-n8n.
 - 2026-09-28 — Updated MVP remaining work after live CV upload, indexing, document-list, and filtered Qdrant checks; tender-to-proposal release gates remain open.
+- 2026-09-29 — Baseline manual n8n execution 193 rejected a synthetic tender with 422 because the published intake requires explicit requirements. Executions 194 → 195 → 196 created lead `d29d2eb0-f781-4db4-aab8-45d50ebd035a` and advanced it to `matched`. Research was partial with no public citations; matching saved document scores, not requirement judgments. Drafted additive migration `006_pipeline_jobs.sql`, credential-free intake/runner/search/retry exports, a bounded search/citation validator, conservative requirement rows, authenticated download contract, and dashboard async intake/retry support. Migration application, workflow import/publication, disposable-database checks, search citations, measured RAG, real proposal exports, and peer review remain open; no release checklist item was marked done.
 - 2026-09-28 — Published TED and Tavily tender discovery in n8n and added a dashboard review path. SerpApi fallback was later bound and passed a forced Tavily failure test; hosted dashboard smoke check remains open.
+
+- 2026-09-29 — Continued draft work: linked per-requirement RAG search and quoted LLM judgments to a transactional matrix writer; added a ten-query FR/EN retrieval benchmark export. Static JSON/JavaScript checks and dashboard typecheck pass. The user ruled out Google Drive/Slides and identified Supabase as the intended disposable database location; database access, live import, benchmark evidence, renderer selection, and peer review remain open. No release checklist item was marked done.
+
+- 2026-09-29 — Continued implementation in this session: added a Vercel proposal renderer using PptxGenJS and pdf-lib, explicit generate action, proposal runner branch, separate research/matching checkpoints, error handler, and persisted RAG benchmark metrics. Migration 006 passed in a disposable PostgreSQL 16 database with intake replay, prospect replay, fencing, quoted requirement judgments, proposal replay, and two-artifact finalization assertions. A read-only Supabase schema check matched the required leads/prospects/matches columns. Local renderer tests opened PPTX/PDF output and rejected unsupported claims. None of these new exports is deployed; Supabase migration, Vercel renderer deployment, production webhook runs, retrieval threshold, downloads, end-to-end journey, and peer review remain open.
+
+- 2026-09-29 — Imported the reusable `04_rag_search` as an unpublished Azure n8n draft (`xQWRueCw6zpLkfCT`). Manual execution 249 ran ten labelled FR/EN project queries with throttled embedding/Qdrant requests: expected documents ranked first in all ten (hit@5 10/10). This satisfies the retrieval metric only; no-match judgments, new-lead matching, persisted evaluation, proposal exports, full journey, and peer review remain open.
+
+- 2026-09-29 — Applied migration 006 to Supabase in one transaction after disposable PostgreSQL tests and read-only schema comparison; readback found eight tables and eight functions. Imported `00_intake` as an unpublished n8n draft (`HLRFqAAfEMRXhFbw`). Manual executions 250–253 covered invalid input, a new queued UUID lead/job, identical replay returning the same IDs, and conflicting replay. Production authentication and `202`/`409` HTTP delivery still require published webhook checks. Vercel renderer deployment and peer review remain open; no release checklist item was marked done.
+
+- 2026-09-29 — Published reusable `04_rag_search`; imported `11_rag_evaluation` as a draft (`HEZQc2ELKZTASdGb`). Execution 254 persisted ten labelled FR/EN queries at 10/10 hit@5 (evaluation run `ee2f3f5d-96f1-4854-88db-9befda2dfc4b`). Imported and published shared `10_error_handler` (`3qyIiBfrSWIGE0PD`), which is not yet linked or failure-tested. Matching judgments and the full journey remain open; no release checklist item was marked done.
+
+- 2026-09-29 — Imported `02_prospect_research` as an unpublished draft (`qcN9uUV2kKWmfsO7`). Its new no-result branch avoided unsupported external claims on lead `bf42ab26-d132-4517-91cb-fe5d0be3d249`: integrated execution 261 persisted a partial prospect with null sector/revenue, empty projects/partners/citations, and moved the lead to `researched`. Execution 257 found the GLM provider usage limit, which prevents a cited-source test until the provider resets. Matching, proposal exports, downloads, and peer review remain open.

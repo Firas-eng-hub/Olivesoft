@@ -8,7 +8,7 @@ export function n8nConfig() {
   let parsed: URL;
   try { parsed = new URL(uploadUrl); } catch { return null; }
   if (parsed.protocol !== "https:" || !parsed.pathname.endsWith("/webhook/olivesoft/v1/knowledge/upload")) return null;
-  return { origin: parsed.origin, apiKey, teamPassword };
+  return { origin: parsed.origin, apiKey, teamPassword, asyncIntake: process.env.OLIVESOFT_N8N_ASYNC_INTAKE === "1" };
 }
 
 export function authorized(request: Request, expected: string) {

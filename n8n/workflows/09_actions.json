@@ -1,0 +1,497 @@
+{
+  "name": "09_actions",
+  "nodes": [
+    {
+      "id": "note-actions",
+      "name": "Retry action contract",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -700,
+        -290
+      ],
+      "parameters": {
+        "content": "Authenticated POST /webhook/olivesoft/v1/actions/retry. Requires migration 006. Rebind Postgres account and OLIVESOFT_N8N_UPLOAD_API_KEY. Proposal generation must remain disabled until verified exports exist.",
+        "height": 220,
+        "width": 550
+      }
+    },
+    {
+      "id": "wh-retry",
+      "name": "POST /actions/retry",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -600,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "olivesoft/v1/actions/retry",
+        "responseMode": "responseNode",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "webhookId": "be3910be-3003-4cfd-b6f3-fc15d54e4a1e"
+    },
+    {
+      "id": "code-retry",
+      "name": "Validate retry action",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -370,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const b=$json.body??$json;const id=String(b.lead_id??''),key=String(b.idempotency_key??'');return [{json:{valid:/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)&&key.length>=8&&key.length<=200,lead_id:id,idempotency_key:key}}];"
+      }
+    },
+    {
+      "id": "if-retry-valid",
+      "name": "Valid retry?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -150,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1bef5a63-2418-4a39-85a0-066a39e068ab",
+              "leftValue": "={{ $json.valid }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "pg-retry-action",
+      "name": "Queue retry transaction",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        100,
+        -100
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT job_id,state,conflict FROM public.queue_pipeline_retry('team',$1::jsonb->>'idempotency_key',($1::jsonb->>'lead_id')::uuid);",
+        "options": {
+          "queryReplacement": "={{ JSON.stringify($json) }}"
+        }
+      }
+    },
+    {
+      "id": "if-retry-conflict",
+      "name": "Retry conflict?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        320,
+        -100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1b8f135f-affc-4b85-9ab1-5565ebd35f0d",
+              "leftValue": "={{ $json.conflict }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "resp-retry",
+      "name": "Respond retry queued",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        550,
+        -180
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({job_id:$json.job_id,status:$json.state}) }}",
+        "options": {
+          "responseCode": 202
+        }
+      }
+    },
+    {
+      "id": "resp-retry-conflict",
+      "name": "Respond retry conflict",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        550,
+        0
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({code:\"RETRY_CONFLICT\",message:\"Lead is not failed or the request key belongs to another lead.\",job_id:$json.job_id}) }}",
+        "options": {
+          "responseCode": 409
+        }
+      }
+    },
+    {
+      "id": "resp-retry-invalid",
+      "name": "Respond invalid retry",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        130
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({code:\"INVALID_RETRY\",message:\"A lead UUID and idempotency key are required.\",job_id:null}) }}",
+        "options": {
+          "responseCode": 400
+        }
+      }
+    },
+    {
+      "id": "4fbf48c5-6708-4218-b4b1-ca38722552f0",
+      "name": "POST /actions/generate",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -600,
+        540
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "olivesoft/v1/actions/generate",
+        "responseMode": "responseNode",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "webhookId": "147a4c7d-41e5-407e-9d21-273f324068b4"
+    },
+    {
+      "id": "023b72e2-1fe8-4084-8246-c8de3d6807de",
+      "name": "Validate generation action",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -370,
+        540
+      ],
+      "parameters": {
+        "jsCode": "const b=$json.body??$json;const id=String(b.lead_id??''),key=String(b.idempotency_key??'');return [{json:{valid:/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)&&key.length>=8&&key.length<=200,lead_id:id,idempotency_key:key}}];"
+      }
+    },
+    {
+      "id": "72d8cd33-d49e-4674-acf8-7598cedb50ba",
+      "name": "Valid generation?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -150,
+        540
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1bef5a63-2418-4a39-85a0-066a39e068ab",
+              "leftValue": "={{ $json.valid }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "36fa3c56-aae1-4022-a804-1ee617fed9cb",
+      "name": "Queue generation transaction",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        100,
+        440
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT job_id,state,conflict FROM public.queue_pipeline_proposal('team',$1::jsonb->>'idempotency_key',($1::jsonb->>'lead_id')::uuid);",
+        "options": {
+          "queryReplacement": "={{ JSON.stringify($json) }}"
+        }
+      }
+    },
+    {
+      "id": "3660341c-9ce7-4958-9516-6c7d2a896ac2",
+      "name": "Generation conflict?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        320,
+        440
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1b8f135f-affc-4b85-9ab1-5565ebd35f0d",
+              "leftValue": "={{ $json.conflict }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "d693a074-c510-4eec-86cd-ab46c1604719",
+      "name": "Respond generation queued",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        550,
+        360
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({job_id:$json.job_id,status:$json.state}) }}",
+        "options": {
+          "responseCode": 202
+        }
+      }
+    },
+    {
+      "id": "9e249f6c-1943-4dab-ac83-633cff1bf53c",
+      "name": "Respond generation conflict",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        550,
+        540
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({code:\"GENERATION_CONFLICT\",message:\"Lead is not matched, lacks judgments, or the request key belongs to another lead.\",job_id:$json.job_id}) }}",
+        "options": {
+          "responseCode": 409
+        }
+      }
+    },
+    {
+      "id": "e4d89aec-11c8-4c50-b158-f65052db39e6",
+      "name": "Respond invalid generation",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        670
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({code:\"INVALID_GENERATION\",message:\"A lead UUID and idempotency key are required.\",job_id:null}) }}",
+        "options": {
+          "responseCode": 400
+        }
+      }
+    }
+  ],
+  "connections": {
+    "POST /actions/retry": {
+      "main": [
+        [
+          {
+            "node": "Validate retry action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate retry action": {
+      "main": [
+        [
+          {
+            "node": "Valid retry?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid retry?": {
+      "main": [
+        [
+          {
+            "node": "Queue retry transaction",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond invalid retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue retry transaction": {
+      "main": [
+        [
+          {
+            "node": "Retry conflict?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry conflict?": {
+      "main": [
+        [
+          {
+            "node": "Respond retry conflict",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond retry queued",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST /actions/generate": {
+      "main": [
+        [
+          {
+            "node": "Validate generation action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate generation action": {
+      "main": [
+        [
+          {
+            "node": "Valid generation?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid generation?": {
+      "main": [
+        [
+          {
+            "node": "Queue generation transaction",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond invalid generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue generation transaction": {
+      "main": [
+        [
+          {
+            "node": "Generation conflict?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generation conflict?": {
+      "main": [
+        [
+          {
+            "node": "Respond generation conflict",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond generation queued",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Africa/Tunis"
+  },
+  "active": false,
+  "pinData": {},
+  "versionId": "de46832a-ae64-44c5-b6ad-74f003c22b47"
+}

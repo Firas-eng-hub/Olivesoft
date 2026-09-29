@@ -1,0 +1,5 @@
+{
+  "version": 2,
+  "functions": {"api/render.js": {"maxDuration": 60, "includeFiles": "fonts/**"}},
+  "headers": [{"source": "/api/render", "headers": [{"key": "Cache-Control", "value": "no-store"}, {"key": "X-Content-Type-Options", "value": "nosniff"}]}]
+}
