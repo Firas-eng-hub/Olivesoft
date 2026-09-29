@@ -1,0 +1,17 @@
+{
+  "name": "10_error_handler",
+  "active": false,
+  "nodes": [
+    {"parameters": {"content": "Shared n8n error workflow. Import migration 006 and bind Postgres. Publish this workflow before assigning its ID as settings.errorWorkflow on pipeline workflows. The runner also records job retry failures itself; this handler records n8n execution errors for diagnosis."}, "id": "error-note", "name": "Error handler contract", "type": "n8n-nodes-base.stickyNote", "typeVersion": 1, "position": [-440,-210]},
+    {"parameters": {}, "id": "error-trigger", "name": "Error Trigger", "type": "n8n-nodes-base.errorTrigger", "typeVersion": 1, "position": [-390,20]},
+    {"parameters": {"jsCode": "const e=$json??{};const x=e.execution??{};const w=e.workflow??{};const err=x.error??e.error??{};return [{json:{execution_id:x.id??null,workflow_id:w.id??null,workflow_name:w.name??null,last_node:x.lastNodeExecuted??null,message:String(err.message??e.message??'Unknown n8n execution failure').slice(0,1000)}}];"}, "id": "error-normalize", "name": "Normalize execution failure", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [-150,20]},
+    {"parameters": {"operation": "executeQuery", "query": "WITH p AS (SELECT $1::jsonb j) INSERT INTO public.pipeline_errors(execution_id,workflow_id,workflow_name,last_node,message) SELECT j->>'execution_id',j->>'workflow_id',j->>'workflow_name',j->>'last_node',j->>'message' FROM p RETURNING id,created_at;", "options": {"queryReplacement": "={{ JSON.stringify($json) }}"}}, "id": "error-persist", "name": "Record execution failure", "type": "n8n-nodes-base.postgres", "typeVersion": 2.5, "position": [90,20]}
+  ],
+  "connections": {
+    "Error Trigger": {"main": [[{"node": "Normalize execution failure", "type": "main", "index": 0}]]},
+    "Normalize execution failure": {"main": [[{"node": "Record execution failure", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "pinData": {},
+  "tags": []
+}

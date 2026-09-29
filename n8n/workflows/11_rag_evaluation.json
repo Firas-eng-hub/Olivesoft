@@ -1,0 +1,168 @@
+{
+  "name": "11_rag_evaluation",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Manual retrieval benchmark. Import and bind the published 04_rag_search workflow ID. Run after indexing the labelled internal project documents. Record the n8n execution ID and hit@5 before accepting Gate B."
+      },
+      "id": "evaluation-note",
+      "name": "Evaluation contract",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        -220
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "evaluation-trigger",
+      "name": "Run labelled queries",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const pairs=[\n['Find GCP Snowflake Terraform Airflow warehouse work','corpus/project/1/projet_13.txt'],\n['Trouver un entrepôt analytique GCP Snowflake Terraform Airflow','corpus/project/1/projet_13.txt'],\n['Salesforce Lightning customer portal implementation','corpus/project/1/projet_12.txt'],\n['Portail client Salesforce Lightning','corpus/project/1/projet_12.txt'],\n['Azure HR data centralization across subsidiaries','corpus/project/1/projet_15.txt'],\n['Centralisation des données RH des filiales sur Azure','corpus/project/1/projet_15.txt'],\n['Azure Kubernetes Snowflake predictive maintenance','corpus/project/1/projet_14.txt'],\n['Maintenance prédictive avec Azure Kubernetes et Snowflake','corpus/project/1/projet_14.txt'],\n['Talend Kafka Airflow retail data integration','corpus/project/1/projet_01.txt'],\n['Intégration des données retail avec Talend Kafka Airflow','corpus/project/1/projet_01.txt']];\nreturn pairs.map(([query,expected],i)=>({json:{schema_version:1,job_id:null,lead_id:null,operation:'rag_search',context:{query_id:'Q-'+String(i+1).padStart(2,'0'),expected_document_id:expected,language:i%2?'fr':'en'},input:{query,top_k:5,asset_type:'project'},result:null,warnings:[]}}));"
+      },
+      "id": "evaluation-cases",
+      "name": "Build labelled FR EN queries",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -180,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "xQWRueCw6zpLkfCT"
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "evaluation-search",
+      "name": "Search each query",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows=$input.all().map(i=>i.json);if(rows.length!==10)throw Error('Incomplete labelled benchmark');const results=rows.map(r=>{const expected=String(r.context?.expected_document_id??'');const ids=(r.result?.documents??[]).map(d=>String(d.document_id));return {query_id:r.context?.query_id,language:r.context?.language,expected_document_id:expected,returned_document_ids:ids,hit_at_5:ids.includes(expected)}});const hits=results.filter(r=>r.hit_at_5).length;return [{json:{schema_version:1,job_id:null,lead_id:null,operation:'rag_evaluation',input:{labelled_queries:10,execution_id:$execution.id},result:{hits,hit_at_5:hits/10,gate_passed:hits>=8,queries:results},warnings:hits>=8?[]:['Retrieval Gate B is below 8/10']}}];"
+      },
+      "id": "evaluation-aggregate",
+      "name": "Score hit at five",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        340,
+        40
+      ]
+    },
+    {
+      "id": "a0e12d25-6922-4710-ac84-e15688ef76df",
+      "name": "Persist benchmark metrics",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        600,
+        40
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH p AS (SELECT $1::jsonb j) INSERT INTO public.rag_evaluation_runs(execution_id,labelled_queries,hits,hit_at_5,results) SELECT j->'input'->>'execution_id',(j->'input'->>'labelled_queries')::integer,(j->'result'->>'hits')::integer,(j->'result'->>'hit_at_5')::numeric,j->'result'->'queries' FROM p RETURNING id;",
+        "options": {
+          "queryReplacement": "={{ JSON.stringify($json) }}"
+        }
+      }
+    },
+    {
+      "id": "2cd80047-791c-4626-a2d9-587d6ae94c7f",
+      "name": "Return benchmark envelope",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        840,
+        40
+      ],
+      "parameters": {
+        "jsCode": "const e=$('Score hit at five').first().json;return [{json:{...e,result:{...e.result,evaluation_run_id:$json.id}}}];"
+      }
+    }
+  ],
+  "connections": {
+    "Run labelled queries": {
+      "main": [
+        [
+          {
+            "node": "Build labelled FR EN queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build labelled FR EN queries": {
+      "main": [
+        [
+          {
+            "node": "Search each query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search each query": {
+      "main": [
+        [
+          {
+            "node": "Score hit at five",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score hit at five": {
+      "main": [
+        [
+          {
+            "node": "Persist benchmark metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist benchmark metrics": {
+      "main": [
+        [
+          {
+            "node": "Return benchmark envelope",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "tags": []
+}

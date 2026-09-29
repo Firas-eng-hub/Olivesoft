@@ -1,0 +1,222 @@
+{
+  "name": "04_rag_search",
+  "nodes": [
+    {
+      "id": "note-rag",
+      "name": "RAG search contract",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -700,
+        -280
+      ],
+      "parameters": {
+        "content": "Reusable requirement retrieval. Rebind Gemini x-goog-api-key and OliveSoft Qdrant Header Auth after import. One result envelope; no judgment inferred from similarity.",
+        "height": 220,
+        "width": 520
+      }
+    },
+    {
+      "id": "trig-rag",
+      "name": "Called by matching",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -640,
+        0
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      }
+    },
+    {
+      "id": "code-rag-input",
+      "name": "Validate search envelope",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -420,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const e=$json; const input=e.input??{}; const query=String(input.query??'').trim(); const top_k=Number(input.top_k??5); const asset_type=input.asset_type??null;\nif(query.length<4||query.length>1000||!Number.isInteger(top_k)||top_k<5||top_k>20||asset_type!==null&&!['cv','project','stack'].includes(asset_type))throw Error('Invalid RAG search input');\nreturn {json:{schema_version:1,job_id:e.job_id??null,lead_id:e.lead_id??null,operation:'rag_search',context:e.context??null,input:{query,top_k,asset_type},result:null,warnings:[]}};",
+        "mode": "runOnceForEachItem"
+      }
+    },
+    {
+      "id": "http-rag-embed",
+      "name": "Embed query",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -180,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-2:embedContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ content: { parts: [{ text: $json.input.query }] }, embedContentConfig: { outputDimensionality: 768, taskType: 'RETRIEVAL_QUERY' } }) }}",
+        "options": {
+          "timeout": 15000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1200
+            }
+          }
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "id": "http-rag-qdrant",
+      "name": "Query Qdrant",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        60,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://a31223fd-3f11-4075-b365-3deec0138f42.europe-west3-0.gcp.cloud.qdrant.io:6333/collections/olivesoft_knowledge/points/query",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ query: $('Embed query').item.json.embedding.values, filter: { must: [{ key: 'source', match: { value: 'supabase_storage' } }].concat($('Validate search envelope').item.json.input.asset_type ? [{ key: 'asset_type', match: { value: $('Validate search envelope').item.json.input.asset_type } }] : []) }, limit: $('Validate search envelope').item.json.input.top_k * 3, with_payload: true }) }}",
+        "options": {
+          "timeout": 15000,
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1200
+            }
+          }
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "id": "code-rag-result",
+      "name": "Return document results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const envelope=$('Validate search envelope').item.json; const points=$json.result?.points??[]; const docs=new Map();\nfor(const point of points){const p=point.payload??{};if(p.source!=='supabase_storage'||!p.document_id||!p.source_bucket||!p.source_path)continue;\nconst id=String(p.asset_type??'')+':'+p.document_id; const score=Number(point.score??0); const previous=docs.get(id);\nif(!previous||score>previous.score)docs.set(id,{document_id:p.document_id,asset_type:p.asset_type,title:p.title??p.document_id,source_bucket:p.source_bucket,source_path:p.source_path,section:p.sections?.[0]??null,excerpt:String(p.text??'').slice(0,1000),score});}\nconst documents=[...docs.values()].sort((a,b)=>b.score-a.score).slice(0,envelope.input.top_k);\nreturn {json:{...envelope,result:{documents},warnings:documents.length?[]:['No indexed document matched the filters']}};",
+        "mode": "runOnceForEachItem"
+      }
+    },
+    {
+      "id": "930da8b9-1d7b-4049-ba46-51be25b1cd58",
+      "name": "Manual retrieval check",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "f9c3bf92-c742-4c09-83a9-dc59766eb754",
+      "name": "Sample project query",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const pairs=[\n['Find GCP Snowflake Terraform Airflow warehouse work','corpus/project/1/projet_13.txt'],\n['Trouver un entrepôt analytique GCP Snowflake Terraform Airflow','corpus/project/1/projet_13.txt'],\n['Salesforce Lightning customer portal implementation','corpus/project/1/projet_12.txt'],\n['Portail client Salesforce Lightning','corpus/project/1/projet_12.txt'],\n['Azure HR data centralization across subsidiaries','corpus/project/1/projet_15.txt'],\n['Centralisation des données RH des filiales sur Azure','corpus/project/1/projet_15.txt'],\n['Azure Kubernetes Snowflake predictive maintenance','corpus/project/1/projet_14.txt'],\n['Maintenance prédictive avec Azure Kubernetes et Snowflake','corpus/project/1/projet_14.txt'],\n['Talend Kafka Airflow retail data integration','corpus/project/1/projet_01.txt'],\n['Intégration des données retail avec Talend Kafka Airflow','corpus/project/1/projet_01.txt']];\nreturn pairs.map(([query,expected],i)=>({json:{schema_version:1,job_id:null,lead_id:null,operation:'rag_search',context:{query_id:'Q-'+String(i+1).padStart(2,'0'),expected_document_id:expected,language:i%2?'fr':'en'},input:{query,top_k:5,asset_type:'project'},result:null,warnings:[]}}));"
+      }
+    }
+  ],
+  "connections": {
+    "Called by matching": {
+      "main": [
+        [
+          {
+            "node": "Validate search envelope",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate search envelope": {
+      "main": [
+        [
+          {
+            "node": "Embed query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embed query": {
+      "main": [
+        [
+          {
+            "node": "Query Qdrant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Qdrant": {
+      "main": [
+        [
+          {
+            "node": "Return document results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual retrieval check": {
+      "main": [
+        [
+          {
+            "node": "Sample project query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sample project query": {
+      "main": [
+        [
+          {
+            "node": "Validate search envelope",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Africa/Tunis"
+  },
+  "active": false,
+  "pinData": {},
+  "versionId": "8e9873b6-7d83-4a96-a587-daa96f5987f7"
+}

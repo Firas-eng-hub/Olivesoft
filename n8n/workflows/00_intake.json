@@ -1,0 +1,263 @@
+{
+  "name": "00_intake",
+  "nodes": [
+    {
+      "id": "note-intake",
+      "name": "Contract — durable intake",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        -300
+      ],
+      "parameters": {
+        "content": "POST /webhook/olivesoft/v1/intake. Header Auth credential: OLIVESOFT_N8N_UPLOAD_API_KEY. Apply db/migrations/006_pipeline_jobs.sql and rebind Postgres before publishing. No success response precedes transaction commit.",
+        "height": 220,
+        "width": 560
+      }
+    },
+    {
+      "id": "wh-intake",
+      "name": "POST /olivesoft/v1/intake",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -700,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "olivesoft/v1/intake",
+        "responseMode": "responseNode",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "webhookId": "581da0c8-9f78-4142-accb-eedaedd804c6"
+    },
+    {
+      "id": "code-validate",
+      "name": "Validate intake",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const b=$json.body??$json; if(!b||typeof b!=='object'||Array.isArray(b))return [{json:{valid:false,code:'INVALID_TENDER',message:'Tender must be an object.'}}]; const key=String(b.idempotency_key??'');\nconst title=String(b.title??'').trim(), organization=String(b.organization??'').trim(), summary=String(b.summary??'').trim();\nconst requirements=Array.isArray(b.requirements)?b.requirements.map(x=>String(x).trim()):[];\nconst deadline=b.deadline?String(b.deadline):null, source=String(b.source??'manual');\nlet source_url=b.source_url??null;\nif(source_url){try{const u=new URL(String(source_url));if(u.protocol!=='https:'||String(source_url).length>1000)throw Error();source_url=u.toString()}catch{return [{json:{valid:false,code:'INVALID_SOURCE_URL',message:'Source URL must be public HTTPS.'}}]}}\nif(requirements.length<1||requirements.length>50||requirements.some(x=>x.length<4||x.length>500)||key.length<8||key.length>200||title.length<4||title.length>100||organization.length<2||organization.length>80||summary.length<12||summary.length>700||!['manual','ted','tavily','serpapi'].includes(source)||deadline&&!/^\\d{4}-\\d{2}-\\d{2}$/.test(deadline))return [{json:{valid:false,code:'INVALID_TENDER',message:'Tender fields or idempotency key are invalid.'}}];\nreturn [{json:{valid:true,request_json:JSON.stringify({idempotency_key:key,input:{title,organization,summary,requirements,deadline,source,source_url}})}}];"
+      }
+    },
+    {
+      "id": "if-valid",
+      "name": "Valid tender?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -250,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b18647ae-52b3-41e4-a60c-68667c9cf386",
+              "leftValue": "={{ $json.valid }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "pg-queue",
+      "name": "Queue intake transaction",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        -100
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT job_id, lead_id, status, conflict FROM public.queue_tender_intake('team', $1::jsonb->>'idempotency_key', $1::jsonb->'input');",
+        "options": {
+          "queryReplacement": "={{ $json.request_json }}"
+        }
+      }
+    },
+    {
+      "id": "if-conflict",
+      "name": "Idempotency conflict?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        230,
+        -100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2271ea07-2642-4319-b27d-5140c82166de",
+              "leftValue": "={{ $json.conflict }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "resp-accepted",
+      "name": "Respond 202 queued",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        470,
+        -200
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({job_id:$json.job_id,lead_id:$json.lead_id,status:$json.status}) }}",
+        "options": {
+          "responseCode": 202
+        }
+      }
+    },
+    {
+      "id": "resp-conflict",
+      "name": "Respond 409 conflict",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        470,
+        -20
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({code:\"IDEMPOTENCY_CONFLICT\",message:\"Key was already used with different tender data.\",job_id:$json.job_id}) }}",
+        "options": {
+          "responseCode": 409
+        }
+      }
+    },
+    {
+      "id": "resp-invalid",
+      "name": "Respond 400 invalid",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        140
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({code:$json.code,message:$json.message,job_id:null}) }}",
+        "options": {
+          "responseCode": 400
+        }
+      }
+    }
+  ],
+  "connections": {
+    "POST /olivesoft/v1/intake": {
+      "main": [
+        [
+          {
+            "node": "Validate intake",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate intake": {
+      "main": [
+        [
+          {
+            "node": "Valid tender?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid tender?": {
+      "main": [
+        [
+          {
+            "node": "Queue intake transaction",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 400 invalid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue intake transaction": {
+      "main": [
+        [
+          {
+            "node": "Idempotency conflict?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Idempotency conflict?": {
+      "main": [
+        [
+          {
+            "node": "Respond 409 conflict",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 202 queued",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Africa/Tunis"
+  },
+  "active": false,
+  "pinData": {},
+  "versionId": "4262fa06-1aaa-4b4d-b00a-12ad2187f998"
+}
