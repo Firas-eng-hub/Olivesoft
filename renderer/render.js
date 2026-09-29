@@ -1,5 +1,8 @@
-import pptxgen from 'pptxgenjs';
+import { createRequire } from 'node:module';
 import { createHash } from 'node:crypto';
+
+const require = createRequire(import.meta.url);
+const pptxgen = require('pptxgenjs');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const TAG = /\{\{|\}\}|\[\[|\]\]|<%|%>/;

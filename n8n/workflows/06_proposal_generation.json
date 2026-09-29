@@ -91,7 +91,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://REPLACE_WITH_RENDERER_VERCEL_HOST/api/render",
+        "url": "https://olivesoft-og6r.vercel.app/api/render",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
