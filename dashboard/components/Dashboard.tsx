@@ -255,7 +255,6 @@ export default function Dashboard() {
   return <div className="app-shell">
     <aside className={`sidebar ${mobileNav ? "sidebar-open" : ""}`} onMouseEnter={holdSidebar} onMouseLeave={releaseSidebar}>
       <div className="sidebar-top"><button className="brand" onClick={() => navigate("overview")}><span className="brand-mark"><span /></span><span>Olive<span className="brand-strong">Soft</span><small>INTELLIGENCE</small></span></button><button className="mobile-close icon-button" onClick={() => setMobileNav(false)} aria-label="Close menu"><X size={19} /></button></div>
-      <div className="workspace-switch"><span className="workspace-avatar">O</span><span><strong>OliveSoft Studio</strong><small>Team workspace</small></span></div>
       <div className="sidebar-section-label">WORKSPACE</div>
       <nav className="main-nav" aria-label="Main navigation">{navItems.map((item) => <button key={item.id} className={`nav-item ${view === item.id || (view === "lead" && item.id === "pipeline") ? "active" : ""}`} onClick={() => navigate(item.id)}>{item.icon}<span>{item.label}</span>{item.badge && <small>{item.badge}</small>}</button>)}</nav>
       <div className="sidebar-spacer" />
