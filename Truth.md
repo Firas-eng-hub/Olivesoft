@@ -269,3 +269,5 @@ Status legend: ⬜ not started · 🟨 in progress · ✅ done
 - 2026-09-23 — plan rewritten post-mentor-review (`plan-n8n.md`); architecture pivoted to all-n8n.
 - 2026-09-28 — Updated MVP remaining work after live CV upload, indexing, document-list, and filtered Qdrant checks; tender-to-proposal release gates remain open.
 - 2026-09-28 — Published TED and Tavily tender discovery in n8n and added a dashboard review path. SerpApi fallback was later bound and passed a forced Tavily failure test; hosted dashboard smoke check remains open.
+
+**Known accessibility debt (dashboard UI, 2026-09-29):** the following muted text colors fall below WCAG AA contrast versus their panel backgrounds (computed ratios in parentheses) - `#606a7e` (3.23), `#647087` (3.37), `#67728a` (3.39), `#667186` (3.58), `#626e86` (3.69), `#616d82` (3.73), `#67758a` (3.76), `#6f7b90` (3.94), `#69758b` (3.96), `#6e798d` (4.00), `#717e92` (4.08), `#758095` (4.11) - accepted by owner - theme frozen. Typography floor applied instead: no rendered text below 11px uppercase / 12px sentence case.
