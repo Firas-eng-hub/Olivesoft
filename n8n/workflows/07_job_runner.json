@@ -265,7 +265,7 @@
         "workflowId": {
           "__rl": true,
           "mode": "id",
-          "value": "REPLACE_WITH_06_PROPOSAL_GENERATION_ID"
+          "value": "WZmKWIoyOeqKEdbn"
         },
         "options": {
           "waitForSubWorkflow": true
