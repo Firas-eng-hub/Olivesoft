@@ -4,49 +4,65 @@
       "id": "Q01",
       "language": "fr",
       "type": "exact",
-      "query": "consultant MuleSoft intégration API REST",
+      "query": "consultant MuleSoft intégration API",
       "must_appear": [
         "C01"
       ],
       "also_relevant": [
-        "P14",
-        "C05",
-        "C17"
+        "C19",
+        "P01",
+        "C15"
       ]
     },
     {
       "id": "Q02",
       "language": "fr",
       "type": "exact",
-      "query": "data warehouse Snowflake dbt modélisation",
+      "query": "ingénieur Snowflake data plateforme cloud",
       "must_appear": [
-        "C03"
+        "C08"
       ],
       "also_relevant": [
+        "C10",
         "P05",
-        "C13"
+        "P13"
       ]
     },
     {
       "id": "Q03",
       "language": "fr",
       "type": "paraphrase",
-      "query": "tableaux de bord décisionnels ventes multicanal Power BI",
+      "query": "tableaux de bord décisionnels pilotage Power BI",
       "must_appear": [
-        "C02"
+        "C05"
       ],
       "also_relevant": [
-        "P06",
-        "C12"
+        "C07",
+        "C06",
+        "P03"
       ]
     },
     {
       "id": "Q04",
       "language": "fr",
+      "type": "exact",
+      "query": "architecte Salesforce Commerce Cloud",
+      "must_appear": [
+        "C15"
+      ],
+      "also_relevant": [
+        "P06",
+        "P02",
+        "C18"
+      ]
+    },
+    {
+      "id": "Q05",
+      "language": "fr",
       "type": "paraphrase",
       "query": "assistant IA conversationnel sur base documentaire interne",
       "must_appear": [
-        "C04"
+        "C11"
       ],
       "also_relevant": [
         "P15",
@@ -54,78 +70,66 @@
       ]
     },
     {
-      "id": "Q05",
-      "language": "fr",
-      "type": "exact",
-      "query": "automatisation de flux n8n connecteurs API",
-      "must_appear": [
-        "C11"
-      ],
-      "also_relevant": [
-        "P07"
-      ]
-    },
-    {
       "id": "Q06",
       "language": "en",
-      "type": "cross_lingual",
-      "query": "Salesforce Marketing Cloud campaign personalization journey builder",
+      "type": "exact",
+      "query": "Databricks machine learning pipeline MLOps",
       "must_appear": [
-        "C10"
+        "C12"
       ],
       "also_relevant": [
+        "C09",
         "P09"
       ]
     },
     {
       "id": "Q07",
       "language": "en",
-      "type": "exact",
-      "query": "GCP BigQuery data pipeline Airflow dbt",
+      "type": "cross_lingual",
+      "query": "Salesforce Marketing Cloud campaign automation",
       "must_appear": [
-        "C08"
+        "C17"
       ],
       "also_relevant": [
-        "P10",
-        "P01"
+        "P07"
       ]
     },
     {
       "id": "Q08",
       "language": "en",
       "type": "paraphrase",
-      "query": "demand forecasting machine learning production monitoring",
+      "query": "legacy ETL migration to cloud data warehouse",
       "must_appear": [
-        "C09"
+        "P13"
       ],
       "also_relevant": [
-        "P03"
+        "C02",
+        "C10"
       ]
     },
     {
       "id": "Q09",
       "language": "en",
-      "type": "cross_lingual",
-      "query": "enterprise data governance and platform architecture",
+      "type": "exact",
+      "query": "Boomi Workato integration consultant",
       "must_appear": [
-        "C17"
+        "C03"
       ],
       "also_relevant": [
-        "C03",
-        "P10"
+        "P11",
+        "P14"
       ]
     },
     {
       "id": "Q10",
       "language": "en",
-      "type": "paraphrase",
-      "query": "legacy ETL migration and data quality banking",
+      "type": "cross_lingual",
+      "query": "computer vision anomaly detection",
       "must_appear": [
-        "C16"
+        "C13"
       ],
       "also_relevant": [
-        "P11",
-        "C06"
+        "P10"
       ]
     }
   ],
@@ -134,21 +138,22 @@
       "id": "NM01",
       "language": "fr",
       "query": "développeur senior React interface web single page",
-      "expected_doc_ids": []
+      "expected_doc_ids": [],
+      "note": "No web development capability in the corpus."
     },
     {
       "id": "NM02",
-      "language": "fr",
-      "query": "consultant migration SAP S/4HANA modules FI/CO",
+      "language": "en",
+      "query": "Kubernetes service mesh platform engineer Istio",
       "expected_doc_ids": [],
-      "note": "Deliberate near-miss: SAP SuccessFactors appears in P02; S/4HANA FI/CO must not be endorsed."
+      "note": "Docker and Terraform exist; Kubernetes, service mesh and Istio do not."
     },
     {
       "id": "NM03",
-      "language": "en",
-      "query": "Kubernetes service mesh Istio platform engineer",
+      "language": "fr",
+      "query": "consultant migration SAP S/4HANA modules FI/CO",
       "expected_doc_ids": [],
-      "note": "Docker exists on C04/C14; Kubernetes and service mesh do not."
+      "note": "No SAP anywhere in the corpus."
     }
   ],
   "gate": "hit@5 >= 8/10 positives (a query hits when a must_appear doc is in the top 5); no-match queries must return no endorsed document."

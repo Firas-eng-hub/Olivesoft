@@ -14,74 +14,76 @@
       "text": "Data warehouse Snowflake avec transformations dbt",
       "expected_class": "supported",
       "supporting_docs": [
-        "C03",
-        "C13",
-        "C17",
-        "P05"
+        "C08",
+        "C10",
+        "P05",
+        "P13"
       ]
     },
     {
       "id": "R2",
       "text": "Dashboards Power BI avec sécurité par ligne (RLS)",
-      "expected_class": "supported",
+      "expected_class": "partial",
       "supporting_docs": [
-        "C02",
-        "P06"
-      ]
+        "C05",
+        "C07",
+        "P08"
+      ],
+      "note": "Power BI delivery evidenced; row-level security not explicitly evidenced."
     },
     {
       "id": "R3",
-      "text": "Migration des flux SSIS legacy vers ELT moderne",
+      "text": "Migration des flux SSIS legacy vers ELT cloud",
       "expected_class": "supported",
       "supporting_docs": [
-        "C06",
-        "C16",
-        "C18",
-        "P11"
+        "C02",
+        "C04",
+        "C10",
+        "P08",
+        "P13"
       ]
     },
     {
       "id": "R4",
-      "text": "Gouvernance des données et catalogue de KPI",
+      "text": "Harmonisation Tableau et Qlik Sense",
       "expected_class": "supported",
       "supporting_docs": [
-        "C03",
-        "C07",
-        "C17",
-        "C19"
+        "C05",
+        "C06",
+        "P05",
+        "P12"
       ]
     },
     {
       "id": "R5",
-      "text": "Machine learning prédictif intégré à la BI",
-      "expected_class": "partial",
+      "text": "Gouvernance des données et catalogue de KPI",
+      "expected_class": "supported",
       "supporting_docs": [
-        "C09",
-        "P03"
-      ],
-      "note": "Forecasting exists; BI-integrated ML is indirect."
+        "C05",
+        "C08",
+        "C19",
+        "C20"
+      ]
     },
     {
       "id": "R6",
-      "text": "Dataviz Looker Studio pour réseau multi-boutiques",
+      "text": "Narration automatique de rapports par LLM",
       "expected_class": "partial",
       "supporting_docs": [
-        "C07",
-        "C12",
-        "P13"
+        "C11",
+        "P15"
       ],
-      "note": "Junior/adjacent profiles."
+      "note": "RAG/GenAI capability exists; automated report narration is adjacent."
     },
     {
       "id": "R7",
-      "text": "Fine-tuning de LLM on-premise pour narration automatique",
+      "text": "Fine-tuning de LLM on-premise",
       "expected_class": "unsupported",
-      "supporting_docs": [],
-      "note": "RAG capability exists (C04) but fine-tuning is not evidenced."
+      "supporting_docs": []
     },
     {
       "id": "R8",
-      "text": "Développement d'un portail web React",
+      "text": "Portail web React",
       "expected_class": "unsupported",
       "supporting_docs": []
     }

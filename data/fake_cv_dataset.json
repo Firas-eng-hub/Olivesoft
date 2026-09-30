@@ -1,0 +1,2460 @@
+{
+  "meta": {
+    "purpose": "Synthetic test data. Every name, email, phone, client, school and handle is fictional.",
+    "company_profile": "Fictional data and integration consulting firm (integration, BI, data platforms, AI, Salesforce) with sites in Paris, Sfax and Dubai.",
+    "language": "mixed",
+    "counts": {
+      "cvs": 20,
+      "cvs_fr": 10,
+      "cvs_en": 10,
+      "projects": 15,
+      "stack_capabilities": 6,
+      "files_total": 41
+    },
+    "cv_structure_order": [
+      "header",
+      "summary",
+      "skills",
+      "languages",
+      "projects_experience",
+      "leadership_volunteering",
+      "education",
+      "certifications"
+    ],
+    "rules": [
+      "Skills in each CV must come from the stacks catalogue.",
+      "Each CV project_id must exist in projects and bullets must match that project stack.",
+      "Seniority matches years_experience: junior 0-2, mid 3-7, senior 8+.",
+      "Never use real people, real schools or real client names."
+    ],
+    "render": {
+      "pdf": "A4, 1 page per CV, sections in cv_structure_order, name and tagline on top, contact line under it, skills as 'Category  values' rows, bullets starting with action verbs.",
+      "pptx": "1 title slide, 1 slide per CV (header, summary, skills, top 2 projects), 1 slide per project, 1 closing slide with the stacks catalogue.",
+      "json": "Use as is."
+    },
+    "language_rules": {
+      "cvs": "Per-CV field output_language: 'fr' for 10 CVs, 'en' for 10. Content is written in English in the JSON; render the 'fr' ones in French (tech terms, person names, client names, school names unchanged). Use document_title as the document title.",
+      "projects": "English",
+      "stack_capabilities": "English"
+    },
+    "file_naming": "{ID}_{slug}_{lang}_v1.pdf ; slug = document title (CVs), title (projects), stack title (STK) lowercased, no accents, hyphens, max 48 chars ; lang = output_language for CVs, 'en' for projects and stacks",
+    "document_titles": {
+      "cv": "CV {id} - {document_title}",
+      "project": "Project {id} - {title}",
+      "stack": "Capability stack {id} - {title}"
+    },
+    "id_note": "IDs in this file are authoritative and may differ from previous sample files."
+  },
+  "stacks": {
+    "Integration & Orchestration": [
+      "MuleSoft",
+      "Talend",
+      "Boomi",
+      "Workato",
+      "n8n",
+      "SSIS",
+      "Apache Kafka",
+      "Airflow",
+      "REST/SOAP APIs"
+    ],
+    "Data & Cloud": [
+      "Snowflake",
+      "BigQuery",
+      "GCP",
+      "Azure",
+      "Azure Data Factory",
+      "Databricks",
+      "Delta Lake",
+      "dbt",
+      "SQL Server",
+      "PostgreSQL",
+      "Terraform",
+      "Docker",
+      "SQL",
+      "Git"
+    ],
+    "BI & Analytics": [
+      "Power BI",
+      "DAX",
+      "Tableau",
+      "Qlik Sense",
+      "Looker Studio",
+      "Dimensional modelling"
+    ],
+    "AI / ML & LLM": [
+      "Python",
+      "PyTorch",
+      "scikit-learn",
+      "XGBoost",
+      "MLflow",
+      "NLP",
+      "LLM",
+      "RAG",
+      "Vector DB",
+      "Elasticsearch",
+      "OpenCV",
+      "Anomaly detection",
+      "PySpark"
+    ],
+    "CRM & Salesforce": [
+      "Sales Cloud",
+      "Service Cloud",
+      "Commerce Cloud",
+      "Marketing Cloud",
+      "Apex",
+      "LWC",
+      "Flow",
+      "SOQL",
+      "AMPscript",
+      "CRM Analytics"
+    ],
+    "Management & Architecture": [
+      "TOGAF",
+      "Agile/Scrum",
+      "Jira",
+      "Enterprise architecture",
+      "Data governance",
+      "Risk management"
+    ]
+  },
+  "projects": [
+    {
+      "id": "P01",
+      "title": "Real-time Centralised HRIS",
+      "client": "Multinational industrial group A",
+      "sector": "HR / Industry",
+      "duration_months": 14,
+      "stack": [
+        "MuleSoft",
+        "Talend",
+        "REST/SOAP APIs"
+      ],
+      "description": "Bidirectional real-time integration between the HRIS, talent platform and local payroll systems across 8 countries.",
+      "result": "Sync errors down 60%",
+      "context": "Group with subsidiaries in 8 countries ran separate HR and payroll tools fed by manual nightly exports.",
+      "challenges": "Heterogeneous payroll formats, real-time latency targets and country-specific privacy rules.",
+      "solution": "API-led integration layer with a canonical employee model, event-driven sync and automated error replay.",
+      "deliverables": [
+        "Integration architecture document",
+        "8 country payroll connectors",
+        "Monitoring dashboard and runbook"
+      ]
+    },
+    {
+      "id": "P02",
+      "title": "Unified CRM and Customer 360",
+      "client": "Retail and e-commerce brand B",
+      "sector": "Retail / E-commerce",
+      "duration_months": 12,
+      "stack": [
+        "GCP",
+        "BigQuery",
+        "Sales Cloud",
+        "Talend"
+      ],
+      "description": "Consolidation of ERP, e-commerce, marketing and support data into a single enriched warehouse.",
+      "result": "Campaign conversion up 25%",
+      "context": "Brand sold through stores, web and marketplaces with customer data scattered across ERP, e-commerce, marketing and support tools.",
+      "challenges": "Duplicate customers, inconsistent identifiers and no shared view for sales and marketing.",
+      "solution": "Unified BigQuery warehouse with matching rules, enriched customer profiles and a two-way sync with Sales Cloud.",
+      "deliverables": [
+        "Customer 360 data model",
+        "ETL pipelines",
+        "Sales Cloud integration",
+        "Customer KPI dashboards"
+      ]
+    },
+    {
+      "id": "P03",
+      "title": "AI Demand Forecasting Dashboards",
+      "client": "Industrial raw materials supplier C",
+      "sector": "Industry",
+      "duration_months": 10,
+      "stack": [
+        "Azure",
+        "Databricks",
+        "Power BI",
+        "Python"
+      ],
+      "description": "Demand forecasting and stock optimisation models connected to the ERP with live dashboards.",
+      "result": "Stock-outs down 30%",
+      "context": "Supplier of industrial raw materials planning stock from spreadsheets and monthly ERP exports.",
+      "challenges": "Volatile demand, long lead times and limited trust in manual forecasts.",
+      "solution": "Forecasting models per product family trained in Databricks, scheduled into Power BI with stock coverage alerts.",
+      "deliverables": [
+        "Forecasting pipeline",
+        "Power BI forecast and stock dashboards",
+        "Model monitoring procedure"
+      ]
+    },
+    {
+      "id": "P04",
+      "title": "Intelligent Trademark Registration Platform",
+      "client": "Government agency D",
+      "sector": "Public sector",
+      "duration_months": 16,
+      "stack": [
+        "Python",
+        "NLP",
+        "LLM",
+        "RAG",
+        "Elasticsearch",
+        "Azure"
+      ],
+      "description": "Guided-filing chatbot and a crawler detecting similar trademarks and patents.",
+      "result": "Processing time down 40%",
+      "context": "Government agency handling a growing volume of trademark and patent applications with long manual checks.",
+      "challenges": "Complex registry rules, multilingual documents and strict hosting constraints.",
+      "solution": "RAG chatbot grounded on registry rules plus a crawler using embedding and keyword search to flag similar marks.",
+      "deliverables": [
+        "Guided-filing chatbot",
+        "Similarity crawler and index",
+        "Azure reference architecture",
+        "Evaluation report"
+      ]
+    },
+    {
+      "id": "P05",
+      "title": "Fashion Supply Chain Visibility",
+      "client": "Fashion house E",
+      "sector": "Fashion / Luxury",
+      "duration_months": 9,
+      "stack": [
+        "Apache Kafka",
+        "Snowflake",
+        "Tableau",
+        "SQL"
+      ],
+      "description": "Event streams between production, warehouses and boutiques with stock tracking dashboards.",
+      "result": "Near real-time stock visibility",
+      "context": "Fashion house with stock spread across factories, warehouses and boutiques, reported with daily delay.",
+      "challenges": "Fragmented stock events and no consistent definition of available stock.",
+      "solution": "Kafka event streams into a Snowflake model with shared stock definitions and Tableau monitoring.",
+      "deliverables": [
+        "Event catalogue and data contracts",
+        "Snowflake stock model",
+        "Tableau stock dashboards"
+      ]
+    },
+    {
+      "id": "P06",
+      "title": "Commerce Cloud and ERP Integration",
+      "client": "Luxury house F",
+      "sector": "Fashion / Luxury",
+      "duration_months": 11,
+      "stack": [
+        "Commerce Cloud",
+        "MuleSoft",
+        "Apex",
+        "Flow"
+      ],
+      "description": "Connection of online store, ERP and logistics with omnichannel orders and returns.",
+      "result": "Order processing time down 35%",
+      "context": "Luxury house launching an omnichannel online store connected to legacy ERP and logistics systems.",
+      "challenges": "Order status consistency, returns handling and peak-season load.",
+      "solution": "MuleSoft integration layer with idempotent order flows, retry patterns and Commerce Cloud customisations.",
+      "deliverables": [
+        "Integration architecture",
+        "Order and returns APIs",
+        "Commerce Cloud configuration",
+        "Monitoring and alerting setup"
+      ]
+    },
+    {
+      "id": "P07",
+      "title": "Multi-brand Marketing Automation",
+      "client": "Ready-to-wear group G",
+      "sector": "Fashion",
+      "duration_months": 8,
+      "stack": [
+        "Marketing Cloud",
+        "Snowflake",
+        "n8n",
+        "SQL"
+      ],
+      "description": "Segmentation, automated customer journeys and audience feeds from the data platform.",
+      "result": "Open rate up 18%",
+      "context": "Ready-to-wear group running separate newsletters and campaigns for five brands.",
+      "challenges": "Inconsistent segments across brands and manual audience exports.",
+      "solution": "Shared segmentation in Snowflake, automated audience feeds through n8n and Journey Builder journeys per brand.",
+      "deliverables": [
+        "Segmentation model",
+        "Automated audience feeds",
+        "Journey Builder flows",
+        "Campaign performance report"
+      ]
+    },
+    {
+      "id": "P08",
+      "title": "Regulatory Reporting Data Warehouse",
+      "client": "Retail bank H",
+      "sector": "Banking",
+      "duration_months": 18,
+      "stack": [
+        "SSIS",
+        "SQL Server",
+        "Azure",
+        "Power BI"
+      ],
+      "description": "ETL chains and dimensional model for regulatory reporting and financial steering.",
+      "result": "Reporting close time down 50%",
+      "context": "Retail bank producing regulatory and finance reports through manual, spreadsheet-based consolidation.",
+      "challenges": "Strict audit requirements, long close cycles and inconsistent KPI definitions.",
+      "solution": "SSIS load chains into a dimensional SQL Server model with a governed Power BI semantic layer.",
+      "deliverables": [
+        "Dimensional data model",
+        "SSIS load chains",
+        "KPI catalogue",
+        "Power BI reporting pack"
+      ]
+    },
+    {
+      "id": "P09",
+      "title": "Customer Churn Prediction",
+      "client": "Telecom operator I",
+      "sector": "Telecom",
+      "duration_months": 7,
+      "stack": [
+        "Databricks",
+        "Python",
+        "GCP",
+        "MLflow"
+      ],
+      "description": "Churn scoring model, feature pipeline and production deployment with drift monitoring.",
+      "result": "Target retention up 12%",
+      "context": "Telecom operator losing subscribers without a reliable early-warning signal.",
+      "challenges": "Imbalanced data, changing customer behaviour and the need for actionable scores.",
+      "solution": "Feature pipeline and XGBoost churn model tracked in MLflow, deployed with drift monitoring.",
+      "deliverables": [
+        "Feature pipeline",
+        "Churn scoring model",
+        "Monitoring dashboard",
+        "Model documentation"
+      ]
+    },
+    {
+      "id": "P10",
+      "title": "Toll Flow Anomaly Detection",
+      "client": "Motorway operator J",
+      "sector": "Transport / Infrastructure",
+      "duration_months": 10,
+      "stack": [
+        "Apache Kafka",
+        "Databricks",
+        "Python",
+        "OpenCV"
+      ],
+      "description": "Anomaly detection on transaction streams and lane image classification.",
+      "result": "Anomalies detected 3x faster",
+      "context": "Motorway operator collecting high-volume transaction and lane image data with delayed incident detection.",
+      "challenges": "Real-time volumes, noisy images and false-alert fatigue.",
+      "solution": "Kafka to Databricks streaming ingestion with statistical anomaly detection and a PyTorch lane image classifier.",
+      "deliverables": [
+        "Streaming ingestion pipeline",
+        "Anomaly detection service",
+        "Lane image classifier",
+        "Alert tuning guide"
+      ]
+    },
+    {
+      "id": "P11",
+      "title": "Stock and Customer Service on Salesforce",
+      "client": "Sporting goods retailer K",
+      "sector": "Retail",
+      "duration_months": 9,
+      "stack": [
+        "Service Cloud",
+        "Boomi",
+        "Apex",
+        "LWC"
+      ],
+      "description": "Store stock tracking, customer tickets and ERP synchronisation.",
+      "result": "Ticket resolution time down 28%",
+      "context": "Sporting goods retailer handling store stock questions and customer tickets across separate tools.",
+      "challenges": "Stock data delays and tickets lacking store context.",
+      "solution": "Service Cloud case handling with Apex and LWC screens showing store stock, synced with the ERP via Boomi.",
+      "deliverables": [
+        "Service Cloud configuration",
+        "Boomi ERP synchronisation",
+        "Lightning stock screens",
+        "Support dashboards"
+      ]
+    },
+    {
+      "id": "P12",
+      "title": "Energy Operations Steering",
+      "client": "Energy company L",
+      "sector": "Energy",
+      "duration_months": 8,
+      "stack": [
+        "Qlik Sense",
+        "Azure",
+        "SQL",
+        "Python"
+      ],
+      "description": "Operations dashboards, performance indicators and threshold alerts.",
+      "result": "Monthly reporting 90% automated",
+      "context": "Energy company tracking operations performance through manually assembled monthly reports.",
+      "challenges": "Heterogeneous data sources and late detection of performance drifts.",
+      "solution": "Qlik Sense dashboards on a governed Azure data layer with threshold-based alerts and scripted loads.",
+      "deliverables": [
+        "Qlik Sense dashboards",
+        "Automated data loads",
+        "Threshold alerting rules"
+      ]
+    },
+    {
+      "id": "P13",
+      "title": "ETL to Cloud ELT Migration",
+      "client": "E-commerce marketplace M",
+      "sector": "E-commerce",
+      "duration_months": 6,
+      "stack": [
+        "Talend",
+        "Snowflake",
+        "dbt",
+        "Airflow"
+      ],
+      "description": "Legacy pipelines rebuilt as a cloud ELT architecture with data quality checks.",
+      "result": "Data operating costs down 30%",
+      "context": "Marketplace running legacy ETL jobs with rising costs and fragile nightly batches.",
+      "challenges": "Job dependencies, limited testing and slow recovery after failures.",
+      "solution": "Migration to Snowflake ELT with dbt models, automated tests and Airflow orchestration.",
+      "deliverables": [
+        "Migrated ELT pipelines",
+        "dbt models and tests",
+        "Airflow DAGs",
+        "Cost and run report"
+      ]
+    },
+    {
+      "id": "P14",
+      "title": "Back-office Workflow Automation",
+      "client": "Insurer N",
+      "sector": "Insurance",
+      "duration_months": 5,
+      "stack": [
+        "Workato",
+        "n8n",
+        "REST/SOAP APIs",
+        "Python"
+      ],
+      "description": "Automation of onboarding, reminders and reconciliations through integration orchestrators.",
+      "result": "1,200 hours saved per year",
+      "context": "Insurer processing onboarding, reminders and reconciliations through manual back-office tasks.",
+      "challenges": "Many small systems, exceptions handled by email and unclear process ownership.",
+      "solution": "Workato and n8n workflows with API connectors, exception queues and ownership rules per process.",
+      "deliverables": [
+        "Prioritised automation backlog",
+        "Automated workflows",
+        "Exception handling runbook"
+      ]
+    },
+    {
+      "id": "P15",
+      "title": "GenAI Customer Support Assistant",
+      "client": "Omnichannel retailer O",
+      "sector": "Retail",
+      "duration_months": 6,
+      "stack": [
+        "LLM",
+        "RAG",
+        "Vector DB",
+        "Service Cloud",
+        "GCP"
+      ],
+      "description": "Internal assistant for support agents with an indexed knowledge base and sourced answers.",
+      "result": "Agent response time down 35%",
+      "context": "Omnichannel retailer whose support agents searched several knowledge sources to answer customers.",
+      "challenges": "Outdated articles, inconsistent answers and the need to cite sources.",
+      "solution": "RAG assistant over an indexed knowledge base, embedded in Service Cloud with sourced answers and fallback rules.",
+      "deliverables": [
+        "Indexed knowledge base",
+        "RAG assistant",
+        "Service Cloud component",
+        "Feedback and evaluation loop"
+      ]
+    }
+  ],
+  "cvs": [
+    {
+      "id": "C01",
+      "seniority": "senior",
+      "years_experience": 11,
+      "site": "Paris",
+      "header": {
+        "name": "Karim Belhadj",
+        "tagline": "Senior Data Integration Engineer · API & ETL Architecture",
+        "email": "karim.belhadj@example.com",
+        "phone": "+33 0 00 00 00 01",
+        "location": "Paris, France",
+        "github": "github.com/k-belhadj-demo",
+        "linkedin": "linkedin.com/in/k-belhadj-demo"
+      },
+      "summary": "Senior integration engineer with 11 years designing enterprise ETL and API landscapes for retail, luxury and industrial clients. Leads integration squads and owns delivery from design to run.",
+      "skills": {
+        "Integration & Orchestration": [
+          "MuleSoft",
+          "Talend",
+          "Boomi",
+          "SSIS",
+          "REST/SOAP APIs"
+        ],
+        "Data & Cloud": [
+          "SQL",
+          "Azure",
+          "Docker",
+          "Git"
+        ],
+        "Management & Architecture": [
+          "Data governance",
+          "Agile/Scrum"
+        ]
+      },
+      "languages": [
+        "French — Native",
+        "English — Fluent",
+        "Arabic — Native"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P01",
+          "title": "Real-time Centralised HRIS",
+          "context": "Consulting mission · Lead integration engineer",
+          "period": "2023–2024",
+          "bullets": [
+            "Led a 5-person squad building bidirectional HRIS-to-payroll flows for 8 countries using MuleSoft and Talend.",
+            "Introduced contract-first API design and automated error replay, cutting sync errors by 60%."
+          ],
+          "stack": [
+            "MuleSoft",
+            "Talend",
+            "REST/SOAP APIs"
+          ]
+        },
+        {
+          "project_id": "P06",
+          "title": "Commerce Cloud and ERP Integration",
+          "context": "Consulting mission · Integration architect",
+          "period": "2021–2022",
+          "bullets": [
+            "Designed the MuleSoft layer linking storefront, ERP and logistics for omnichannel orders and returns.",
+            "Defined retry, idempotency and monitoring patterns reused across the client's integration programme."
+          ],
+          "stack": [
+            "Commerce Cloud",
+            "MuleSoft",
+            "Apex",
+            "Flow"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Integration Guild (fictional)",
+          "role": "Internal guild lead",
+          "period": "2022 – Present",
+          "bullets": [
+            "Runs quarterly integration pattern reviews and mentors 6 engineers."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "National Engineering School (generic)",
+          "degree": "Engineering Degree in Computer Science",
+          "period": "2012 – 2015"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "MuleSoft Certified Developer",
+          "issuer": "MuleSoft",
+          "date": "Mar 2022"
+        },
+        {
+          "name": "Talend Data Integration Certified Developer",
+          "issuer": "Talend",
+          "date": "Jun 2020"
+        }
+      ],
+      "output_language": "fr",
+      "document_title": "Consultant senior intégration MuleSoft"
+    },
+    {
+      "id": "C02",
+      "seniority": "mid",
+      "years_experience": 6,
+      "site": "Sfax",
+      "header": {
+        "name": "Sarra Mezghani",
+        "tagline": "Data Integration Engineer · Talend & Cloud Pipelines",
+        "email": "sarra.mezghani@example.com",
+        "phone": "+216 00 000 002",
+        "location": "Sfax, Tunisia",
+        "github": "github.com/s-mezghani-demo",
+        "linkedin": "linkedin.com/in/s-mezghani-demo"
+      },
+      "summary": "Integration engineer with 6 years building Talend pipelines and API flows for CRM and e-commerce programmes. Comfortable moving legacy ETL to cloud ELT.",
+      "skills": {
+        "Integration & Orchestration": [
+          "Talend",
+          "MuleSoft",
+          "Airflow",
+          "REST/SOAP APIs"
+        ],
+        "Data & Cloud": [
+          "BigQuery",
+          "Snowflake",
+          "dbt",
+          "SQL",
+          "Git"
+        ],
+        "AI / ML & LLM": [
+          "Python"
+        ]
+      },
+      "languages": [
+        "French — Fluent",
+        "English — Fluent",
+        "Arabic — Native"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P02",
+          "title": "Unified CRM and Customer 360",
+          "context": "Consulting mission · ETL developer",
+          "period": "2022–2023",
+          "bullets": [
+            "Built Talend jobs loading ERP, e-commerce and marketing sources into BigQuery.",
+            "Added reconciliation checks that flagged duplicate customers before CRM load."
+          ],
+          "stack": [
+            "GCP",
+            "BigQuery",
+            "Sales Cloud",
+            "Talend"
+          ]
+        },
+        {
+          "project_id": "P13",
+          "title": "ETL to Cloud ELT Migration",
+          "context": "Consulting mission · Pipeline developer",
+          "period": "2024",
+          "bullets": [
+            "Migrated 40 legacy Talend jobs to Snowflake with dbt models orchestrated in Airflow.",
+            "Implemented automated data quality tests, reducing data operating costs by 30%."
+          ],
+          "stack": [
+            "Talend",
+            "Snowflake",
+            "dbt",
+            "Airflow"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Sfax Data Meetup (fictional)",
+          "role": "Volunteer speaker",
+          "period": "2023 – Present",
+          "bullets": [
+            "Presented talks on ELT migration patterns to 60+ attendees."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "National Engineering School (generic)",
+          "degree": "Engineering Degree in Software Engineering",
+          "period": "2015 – 2018"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Talend Data Integration Certified Developer",
+          "issuer": "Talend",
+          "date": "Nov 2021"
+        }
+      ],
+      "output_language": "fr",
+      "document_title": "Ingénieure intégration de données Talend"
+    },
+    {
+      "id": "C03",
+      "seniority": "mid",
+      "years_experience": 7,
+      "site": "Paris",
+      "header": {
+        "name": "Mathieu Vasseur",
+        "tagline": "Integration Consultant · Boomi, Workato & Process Automation",
+        "email": "mathieu.vasseur@example.com",
+        "phone": "+33 0 00 00 00 03",
+        "location": "Paris, France",
+        "github": "github.com/m-vasseur-demo",
+        "linkedin": "linkedin.com/in/m-vasseur-demo"
+      },
+      "summary": "Integration consultant with 7 years translating business processes into Boomi and Workato automations. Strong with stakeholders and requirement workshops.",
+      "skills": {
+        "Integration & Orchestration": [
+          "Boomi",
+          "Workato",
+          "n8n",
+          "REST/SOAP APIs"
+        ],
+        "CRM & Salesforce": [
+          "Service Cloud",
+          "SOQL"
+        ],
+        "Data & Cloud": [
+          "SQL",
+          "Git"
+        ]
+      },
+      "languages": [
+        "French — Native",
+        "English — Fluent"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P11",
+          "title": "Stock and Customer Service on Salesforce",
+          "context": "Consulting mission · Integration consultant",
+          "period": "2022–2023",
+          "bullets": [
+            "Built Boomi processes syncing store stock and ERP orders with Service Cloud.",
+            "Documented interface contracts that reduced ticket escalations between teams."
+          ],
+          "stack": [
+            "Service Cloud",
+            "Boomi",
+            "Apex",
+            "LWC"
+          ]
+        },
+        {
+          "project_id": "P14",
+          "title": "Back-office Workflow Automation",
+          "context": "Consulting mission · Automation consultant",
+          "period": "2024",
+          "bullets": [
+            "Automated onboarding, reminders and reconciliations with Workato and n8n.",
+            "Identified 12 manual workflows and delivered 1,200 saved hours per year."
+          ],
+          "stack": [
+            "Workato",
+            "n8n",
+            "REST/SOAP APIs",
+            "Python"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Process Automation Community (fictional)",
+          "role": "Workshop facilitator",
+          "period": "2023 – Present",
+          "bullets": [
+            "Organises monthly no-code automation workshops for junior consultants."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "Business and Information Systems School (generic)",
+          "degree": "Master in Information Systems",
+          "period": "2017 – 2019"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Boomi Associate Developer",
+          "issuer": "Boomi",
+          "date": "Feb 2021"
+        }
+      ],
+      "output_language": "fr",
+      "document_title": "Consultant intégration Boomi et Workato"
+    },
+    {
+      "id": "C04",
+      "seniority": "junior",
+      "years_experience": 2,
+      "site": "Sfax",
+      "header": {
+        "name": "Yassine Gharbi",
+        "tagline": "Junior Integration Developer · SSIS & APIs",
+        "email": "yassine.gharbi@example.com",
+        "phone": "+216 00 000 004",
+        "location": "Sfax, Tunisia",
+        "github": "github.com/y-gharbi-demo",
+        "linkedin": "linkedin.com/in/y-gharbi-demo"
+      },
+      "summary": "Junior developer with 2 years on SSIS flows and REST APIs, now ramping up on MuleSoft. Reliable on testing and documentation.",
+      "skills": {
+        "Integration & Orchestration": [
+          "SSIS",
+          "REST/SOAP APIs",
+          "MuleSoft"
+        ],
+        "Data & Cloud": [
+          "SQL Server",
+          "SQL",
+          "Git"
+        ]
+      },
+      "languages": [
+        "French — Fluent",
+        "English — Intermediate",
+        "Arabic — Native"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P08",
+          "title": "Regulatory Reporting Data Warehouse",
+          "context": "Consulting mission · Junior ETL developer",
+          "period": "2024–2025",
+          "bullets": [
+            "Developed SSIS packages loading dimension and fact tables for regulatory reports.",
+            "Wrote unit checks that caught load anomalies before report generation."
+          ],
+          "stack": [
+            "SSIS",
+            "SQL Server",
+            "Azure",
+            "Power BI"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Computer Science Student Club (generic)",
+          "role": "Member",
+          "period": "2020 – 2022",
+          "bullets": [
+            "Helped organise two coding workshops for first-year students."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "Institute of Applied Computing (generic)",
+          "degree": "Applied Bachelor in Business Computing",
+          "period": "2020 – 2023"
+        }
+      ],
+      "certifications": [],
+      "output_language": "en",
+      "document_title": "Junior Integration Developer SSIS"
+    },
+    {
+      "id": "C05",
+      "seniority": "senior",
+      "years_experience": 12,
+      "site": "Paris",
+      "header": {
+        "name": "Claire Fontaine",
+        "tagline": "Senior BI Lead · KPI Governance & Semantic Models",
+        "email": "claire.fontaine@example.com",
+        "phone": "+33 0 00 00 00 05",
+        "location": "Paris, France",
+        "github": "github.com/c-fontaine-demo",
+        "linkedin": "linkedin.com/in/c-fontaine-demo"
+      },
+      "summary": "BI lead with 12 years in dimensional modelling, KPI governance and self-service analytics for banking and retail. Builds semantic layers business teams trust.",
+      "skills": {
+        "BI & Analytics": [
+          "Power BI",
+          "DAX",
+          "Tableau",
+          "Dimensional modelling"
+        ],
+        "Data & Cloud": [
+          "SQL",
+          "Azure",
+          "SQL Server"
+        ],
+        "Management & Architecture": [
+          "Data governance",
+          "Agile/Scrum"
+        ]
+      },
+      "languages": [
+        "French — Native",
+        "English — Fluent"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P08",
+          "title": "Regulatory Reporting Data Warehouse",
+          "context": "Consulting mission · BI lead",
+          "period": "2022–2024",
+          "bullets": [
+            "Designed the dimensional model and Power BI semantic layer for regulatory and finance reporting.",
+            "Standardised 120 KPIs under a governance catalogue, cutting reporting close time by 50%."
+          ],
+          "stack": [
+            "SSIS",
+            "SQL Server",
+            "Azure",
+            "Power BI"
+          ]
+        },
+        {
+          "project_id": "P03",
+          "title": "AI Demand Forecasting Dashboards",
+          "context": "Consulting mission · Dashboard owner",
+          "period": "2024–2025",
+          "bullets": [
+            "Delivered forecast and stock dashboards in Power BI fed by Databricks outputs.",
+            "Defined alert thresholds with planners, contributing to a 30% drop in stock-outs."
+          ],
+          "stack": [
+            "Azure",
+            "Databricks",
+            "Power BI",
+            "Python"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "BI Practice (fictional)",
+          "role": "Practice lead",
+          "period": "2021 – Present",
+          "bullets": [
+            "Coaches 8 BI developers and maintains the internal modelling standards."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "University of Decision Sciences (generic)",
+          "degree": "Master in Business Intelligence",
+          "period": "2011 – 2013"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Microsoft Certified: Power BI Data Analyst (PL-300)",
+          "issuer": "Microsoft",
+          "date": "Apr 2023"
+        },
+        {
+          "name": "Tableau Desktop Specialist",
+          "issuer": "Tableau",
+          "date": "Sep 2020"
+        }
+      ],
+      "output_language": "fr",
+      "document_title": "Responsable BI senior Power BI"
+    },
+    {
+      "id": "C06",
+      "seniority": "mid",
+      "years_experience": 5,
+      "site": "Sfax",
+      "header": {
+        "name": "Omar Trabelsi",
+        "tagline": "BI Developer · Qlik Sense & Power BI",
+        "email": "omar.trabelsi@example.com",
+        "phone": "+216 00 000 006",
+        "location": "Sfax, Tunisia",
+        "github": "github.com/o-trabelsi-demo",
+        "linkedin": "linkedin.com/in/o-trabelsi-demo"
+      },
+      "summary": "BI developer with 5 years building operational dashboards and optimising data models in Qlik Sense and Power BI.",
+      "skills": {
+        "BI & Analytics": [
+          "Qlik Sense",
+          "Power BI",
+          "Looker Studio"
+        ],
+        "Data & Cloud": [
+          "SQL",
+          "Azure",
+          "Snowflake"
+        ],
+        "AI / ML & LLM": [
+          "Python"
+        ]
+      },
+      "languages": [
+        "French — Fluent",
+        "English — Fluent",
+        "Arabic — Native"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P12",
+          "title": "Energy Operations Steering",
+          "context": "Consulting mission · Qlik developer",
+          "period": "2023–2024",
+          "bullets": [
+            "Built Qlik Sense dashboards for operations KPIs with threshold-based alerts.",
+            "Automated monthly reporting to 90% using scripted data loads."
+          ],
+          "stack": [
+            "Qlik Sense",
+            "Azure",
+            "SQL",
+            "Python"
+          ]
+        },
+        {
+          "project_id": "P05",
+          "title": "Fashion Supply Chain Visibility",
+          "context": "Consulting mission · Dashboard developer",
+          "period": "2022–2023",
+          "bullets": [
+            "Created stock tracking dashboards on Snowflake data for boutiques and warehouses.",
+            "Optimised data models to bring dashboard load times under 3 seconds."
+          ],
+          "stack": [
+            "Apache Kafka",
+            "Snowflake",
+            "Tableau",
+            "SQL"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Sfax Data Meetup (fictional)",
+          "role": "Volunteer",
+          "period": "2022 – Present",
+          "bullets": [
+            "Supports event logistics and demo sessions."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "National Engineering School (generic)",
+          "degree": "Engineering Degree in Computer Science",
+          "period": "2016 – 2019"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Qlik Sense Data Architect",
+          "issuer": "Qlik",
+          "date": "Jul 2022"
+        }
+      ],
+      "output_language": "en",
+      "document_title": "BI Developer Qlik Sense and Power BI"
+    },
+    {
+      "id": "C07",
+      "seniority": "junior",
+      "years_experience": 1,
+      "site": "Sfax",
+      "header": {
+        "name": "Lina Haddad",
+        "tagline": "Junior BI Analyst · Power BI & SQL",
+        "email": "lina.haddad@example.com",
+        "phone": "+216 00 000 007",
+        "location": "Sfax, Tunisia",
+        "github": "github.com/l-haddad-demo",
+        "linkedin": "linkedin.com/in/l-haddad-demo"
+      },
+      "summary": "Junior BI analyst with 1 year creating reports and KPIs in Power BI, with solid SQL and Excel foundations.",
+      "skills": {
+        "BI & Analytics": [
+          "Power BI",
+          "DAX",
+          "Dimensional modelling"
+        ],
+        "Data & Cloud": [
+          "SQL",
+          "Git"
+        ]
+      },
+      "languages": [
+        "French — Fluent",
+        "English — Fluent",
+        "Arabic — Native"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P03",
+          "title": "AI Demand Forecasting Dashboards",
+          "context": "Consulting mission · BI analyst",
+          "period": "2025",
+          "bullets": [
+            "Built Power BI report pages for forecast accuracy and stock coverage.",
+            "Validated dashboard figures against ERP extracts with SQL checks."
+          ],
+          "stack": [
+            "Azure",
+            "Databricks",
+            "Power BI",
+            "Python"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Data Science Student Association (generic)",
+          "role": "Communication officer",
+          "period": "2022 – 2024",
+          "bullets": [
+            "Managed the association's social media and event announcements."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "Institute of Business Intelligence (generic)",
+          "degree": "Bachelor in Business Intelligence",
+          "period": "2021 – 2024"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Microsoft Certified: Power BI Data Analyst (PL-300)",
+          "issuer": "Microsoft",
+          "date": "Feb 2025"
+        }
+      ],
+      "output_language": "en",
+      "document_title": "Junior BI Analyst Power BI"
+    },
+    {
+      "id": "C08",
+      "seniority": "senior",
+      "years_experience": 10,
+      "site": "Paris",
+      "header": {
+        "name": "Julien Marchetti",
+        "tagline": "Senior Data Platform Engineer · Lakehouse & Streaming",
+        "email": "julien.marchetti@example.com",
+        "phone": "+33 0 00 00 00 08",
+        "location": "Paris, France",
+        "github": "github.com/j-marchetti-demo",
+        "linkedin": "linkedin.com/in/j-marchetti-demo"
+      },
+      "summary": "Data platform engineer with 10 years designing cloud warehouses, streaming pipelines and infrastructure as code for retail and luxury clients.",
+      "skills": {
+        "Data & Cloud": [
+          "Snowflake",
+          "BigQuery",
+          "GCP",
+          "Terraform",
+          "dbt",
+          "SQL"
+        ],
+        "Integration & Orchestration": [
+          "Apache Kafka",
+          "Airflow"
+        ],
+        "Management & Architecture": [
+          "Data governance"
+        ]
+      },
+      "languages": [
+        "French — Native",
+        "English — Fluent"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P02",
+          "title": "Unified CRM and Customer 360",
+          "context": "Consulting mission · Data platform architect",
+          "period": "2022–2023",
+          "bullets": [
+            "Architected the BigQuery warehouse and ingestion layers consolidating four source domains.",
+            "Provisioned environments with Terraform for repeatable deployments."
+          ],
+          "stack": [
+            "GCP",
+            "BigQuery",
+            "Sales Cloud",
+            "Talend"
+          ]
+        },
+        {
+          "project_id": "P05",
+          "title": "Fashion Supply Chain Visibility",
+          "context": "Consulting mission · Lead data engineer",
+          "period": "2021–2022",
+          "bullets": [
+            "Designed Kafka event streams and Snowflake models for production, warehouse and boutique stock events.",
+            "Set up data contracts and lineage so stock figures reached dashboards within minutes."
+          ],
+          "stack": [
+            "Apache Kafka",
+            "Snowflake",
+            "Tableau",
+            "SQL"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Data Platform Guild (fictional)",
+          "role": "Guild lead",
+          "period": "2020 – Present",
+          "bullets": [
+            "Maintains platform reference architectures and reviews designs for 5 project teams."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "National Engineering School (generic)",
+          "degree": "Engineering Degree in Computer Science",
+          "period": "2013 – 2016"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "SnowPro Core",
+          "issuer": "Snowflake",
+          "date": "May 2022"
+        },
+        {
+          "name": "Professional Data Engineer",
+          "issuer": "Google Cloud",
+          "date": "Oct 2021"
+        }
+      ],
+      "output_language": "fr",
+      "document_title": "Ingénieur senior data platform Snowflake"
+    },
+    {
+      "id": "C09",
+      "seniority": "mid",
+      "years_experience": 5,
+      "site": "Sfax",
+      "header": {
+        "name": "Nour El Houda Ben Salah",
+        "tagline": "Data Engineer · Databricks & Azure",
+        "email": "nour.bensalah@example.com",
+        "phone": "+216 00 000 009",
+        "location": "Sfax, Tunisia",
+        "github": "github.com/n-bensalah-demo",
+        "linkedin": "linkedin.com/in/n-bensalah-demo"
+      },
+      "summary": "Data engineer with 5 years building Databricks and Azure pipelines and industrialising batch and streaming workloads.",
+      "skills": {
+        "Data & Cloud": [
+          "Databricks",
+          "Azure",
+          "Azure Data Factory",
+          "Delta Lake",
+          "SQL",
+          "Git"
+        ],
+        "AI / ML & LLM": [
+          "PySpark",
+          "Python"
+        ],
+        "Integration & Orchestration": [
+          "Apache Kafka"
+        ]
+      },
+      "languages": [
+        "French — Fluent",
+        "English — Fluent",
+        "Arabic — Native"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P03",
+          "title": "AI Demand Forecasting Dashboards",
+          "context": "Consulting mission · Data engineer",
+          "period": "2024",
+          "bullets": [
+            "Built Delta Lake pipelines in Databricks feeding forecasting models and Power BI.",
+            "Orchestrated ERP extractions with Azure Data Factory and added freshness monitoring."
+          ],
+          "stack": [
+            "Azure",
+            "Databricks",
+            "Power BI",
+            "Python"
+          ]
+        },
+        {
+          "project_id": "P10",
+          "title": "Toll Flow Anomaly Detection",
+          "context": "Consulting mission · Streaming data engineer",
+          "period": "2025",
+          "bullets": [
+            "Implemented Kafka to Databricks streaming ingestion for transaction and image metadata.",
+            "Tuned micro-batch jobs to surface anomalies 3x faster."
+          ],
+          "stack": [
+            "Apache Kafka",
+            "Databricks",
+            "Python",
+            "OpenCV"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Women in Tech Tunisia (fictional)",
+          "role": "Mentor",
+          "period": "2023 – Present",
+          "bullets": [
+            "Mentors 4 students on data engineering career paths."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "National Engineering School (generic)",
+          "degree": "Engineering Degree in Data Engineering",
+          "period": "2016 – 2019"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Azure Data Engineer Associate (DP-203)",
+          "issuer": "Microsoft",
+          "date": "Dec 2022"
+        },
+        {
+          "name": "Databricks Certified Data Engineer Associate",
+          "issuer": "Databricks",
+          "date": "Aug 2023"
+        }
+      ],
+      "output_language": "en",
+      "document_title": "Data Engineer Databricks and Azure"
+    },
+    {
+      "id": "C10",
+      "seniority": "junior",
+      "years_experience": 2,
+      "site": "Sfax",
+      "header": {
+        "name": "Hamza Jlassi",
+        "tagline": "Junior Data Engineer · Snowflake & Airflow",
+        "email": "hamza.jlassi@example.com",
+        "phone": "+216 00 000 010",
+        "location": "Sfax, Tunisia",
+        "github": "github.com/h-jlassi-demo",
+        "linkedin": "linkedin.com/in/h-jlassi-demo"
+      },
+      "summary": "Junior data engineer with 2 years on batch pipelines and analytical SQL in Snowflake, using Airflow and dbt.",
+      "skills": {
+        "Data & Cloud": [
+          "Snowflake",
+          "dbt",
+          "SQL",
+          "Git"
+        ],
+        "Integration & Orchestration": [
+          "Airflow"
+        ],
+        "AI / ML & LLM": [
+          "Python"
+        ]
+      },
+      "languages": [
+        "French — Fluent",
+        "English — Fluent",
+        "Arabic — Native"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P13",
+          "title": "ETL to Cloud ELT Migration",
+          "context": "Consulting mission · Junior data engineer",
+          "period": "2024",
+          "bullets": [
+            "Wrote dbt models and tests for migrated marketplace datasets in Snowflake.",
+            "Scheduled and monitored Airflow DAGs with alerting on failures."
+          ],
+          "stack": [
+            "Talend",
+            "Snowflake",
+            "dbt",
+            "Airflow"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Computer Science Student Club (generic)",
+          "role": "Workshop organiser",
+          "period": "2019 – 2022",
+          "bullets": [
+            "Organised SQL and Git workshops for 40 students."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "National Engineering School (generic)",
+          "degree": "Engineering Degree in Computer Science",
+          "period": "2019 – 2022"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "SnowPro Core",
+          "issuer": "Snowflake",
+          "date": "Mar 2024"
+        }
+      ],
+      "output_language": "en",
+      "document_title": "Junior Data Engineer Snowflake"
+    },
+    {
+      "id": "C11",
+      "seniority": "senior",
+      "years_experience": 9,
+      "site": "Paris",
+      "header": {
+        "name": "Dr. Amine Khelifi",
+        "tagline": "Senior AI Engineer · NLP, LLM & RAG Systems",
+        "email": "amine.khelifi@example.com",
+        "phone": "+33 0 00 00 00 11",
+        "location": "Paris, France",
+        "github": "github.com/a-khelifi-demo",
+        "linkedin": "linkedin.com/in/a-khelifi-demo"
+      },
+      "summary": "AI engineer with a PhD in NLP and 9 years taking language models from prototype to production. Leads RAG and GenAI architectures with focus on reliability and sourcing.",
+      "skills": {
+        "AI / ML & LLM": [
+          "Python",
+          "PyTorch",
+          "NLP",
+          "LLM",
+          "RAG",
+          "Vector DB",
+          "Elasticsearch"
+        ],
+        "Data & Cloud": [
+          "Azure",
+          "Docker",
+          "Git"
+        ],
+        "CRM & Salesforce": [
+          "Service Cloud"
+        ]
+      },
+      "languages": [
+        "French — Native",
+        "English — Fluent",
+        "Arabic — Native"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P04",
+          "title": "Intelligent Trademark Registration Platform",
+          "context": "Consulting mission · AI lead",
+          "period": "2023–2024",
+          "bullets": [
+            "Led the guided-filing chatbot and a similarity crawler combining Elasticsearch and embedding search.",
+            "Reduced processing time by 40% with a RAG assistant grounded on registry rules."
+          ],
+          "stack": [
+            "Python",
+            "NLP",
+            "LLM",
+            "RAG",
+            "Elasticsearch",
+            "Azure"
+          ]
+        },
+        {
+          "project_id": "P15",
+          "title": "GenAI Customer Support Assistant",
+          "context": "Consulting mission · GenAI architect",
+          "period": "2025",
+          "bullets": [
+            "Designed the RAG pipeline and vector index over the support knowledge base.",
+            "Enforced sourced answers and fallback rules, cutting agent response time by 35%."
+          ],
+          "stack": [
+            "LLM",
+            "RAG",
+            "Vector DB",
+            "Service Cloud",
+            "GCP"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "AI Practice (fictional)",
+          "role": "Research and innovation lead",
+          "period": "2022 – Present",
+          "bullets": [
+            "Runs monthly reading groups and evaluates new LLM tooling for delivery teams."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "University of Language Technologies (generic)",
+          "degree": "PhD in Natural Language Processing",
+          "period": "2014 – 2018"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Azure AI Engineer Associate",
+          "issuer": "Microsoft",
+          "date": "Jan 2024"
+        }
+      ],
+      "output_language": "fr",
+      "document_title": "Ingénieur IA senior NLP et RAG"
+    },
+    {
+      "id": "C12",
+      "seniority": "mid",
+      "years_experience": 5,
+      "site": "Sfax",
+      "header": {
+        "name": "Ines Rekik",
+        "tagline": "Machine Learning Engineer · Predictive Models & MLOps",
+        "email": "ines.rekik@example.com",
+        "phone": "+216 00 000 012",
+        "location": "Sfax, Tunisia",
+        "github": "github.com/i-rekik-demo",
+        "linkedin": "linkedin.com/in/i-rekik-demo"
+      },
+      "summary": "ML engineer with 5 years building predictive models and deploying them with monitoring and drift detection.",
+      "skills": {
+        "AI / ML & LLM": [
+          "Python",
+          "scikit-learn",
+          "XGBoost",
+          "MLflow",
+          "PySpark"
+        ],
+        "Data & Cloud": [
+          "Databricks",
+          "SQL",
+          "Docker",
+          "Git"
+        ]
+      },
+      "languages": [
+        "French — Fluent",
+        "English — Fluent",
+        "Arabic — Native"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P09",
+          "title": "Customer Churn Prediction",
+          "context": "Consulting mission · ML engineer",
+          "period": "2023",
+          "bullets": [
+            "Built the feature pipeline and XGBoost churn scoring model tracked in MLflow.",
+            "Deployed the model with drift monitoring, supporting a 12% retention uplift target."
+          ],
+          "stack": [
+            "Databricks",
+            "Python",
+            "GCP",
+            "MLflow"
+          ]
+        },
+        {
+          "project_id": "P03",
+          "title": "AI Demand Forecasting Dashboards",
+          "context": "Consulting mission · Forecasting models",
+          "period": "2024",
+          "bullets": [
+            "Trained demand forecasting models per product family and benchmarked against baselines.",
+            "Exposed predictions to Power BI through scheduled Databricks jobs."
+          ],
+          "stack": [
+            "Azure",
+            "Databricks",
+            "Power BI",
+            "Python"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "ML Study Group (fictional)",
+          "role": "Organiser",
+          "period": "2022 – Present",
+          "bullets": [
+            "Organises bi-weekly paper discussions for 15 engineers."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "National Engineering School (generic)",
+          "degree": "Engineering Degree in Data Science",
+          "period": "2016 – 2019"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Databricks Certified Machine Learning Associate",
+          "issuer": "Databricks",
+          "date": "Jun 2023"
+        }
+      ],
+      "output_language": "en",
+      "document_title": "Machine Learning Engineer MLOps"
+    },
+    {
+      "id": "C13",
+      "seniority": "mid",
+      "years_experience": 6,
+      "site": "Paris",
+      "header": {
+        "name": "Thomas Girard",
+        "tagline": "Computer Vision Engineer · Anomaly Detection",
+        "email": "thomas.girard@example.com",
+        "phone": "+33 0 00 00 00 13",
+        "location": "Paris, France",
+        "github": "github.com/t-girard-demo",
+        "linkedin": "linkedin.com/in/t-girard-demo"
+      },
+      "summary": "Computer vision engineer with 6 years in image classification and anomaly detection, optimising models for production latency.",
+      "skills": {
+        "AI / ML & LLM": [
+          "Python",
+          "PyTorch",
+          "OpenCV",
+          "Anomaly detection"
+        ],
+        "Integration & Orchestration": [
+          "Apache Kafka"
+        ],
+        "Data & Cloud": [
+          "Docker",
+          "Git"
+        ]
+      },
+      "languages": [
+        "French — Native",
+        "English — Fluent"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P10",
+          "title": "Toll Flow Anomaly Detection",
+          "context": "Consulting mission · Computer vision engineer",
+          "period": "2024–2025",
+          "bullets": [
+            "Trained PyTorch classifiers on lane images and integrated them with the Kafka event pipeline.",
+            "Quantised models to meet latency targets, contributing to 3x faster anomaly detection."
+          ],
+          "stack": [
+            "Apache Kafka",
+            "Databricks",
+            "Python",
+            "OpenCV"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Applied AI Meetup (fictional)",
+          "role": "Speaker",
+          "period": "2023 – Present",
+          "bullets": [
+            "Gave two talks on deploying vision models at the edge."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "University of Artificial Intelligence (generic)",
+          "degree": "Master in Artificial Intelligence",
+          "period": "2017 – 2019"
+        }
+      ],
+      "certifications": [],
+      "output_language": "fr",
+      "document_title": "Ingénieur vision par ordinateur"
+    },
+    {
+      "id": "C14",
+      "seniority": "junior",
+      "years_experience": 1,
+      "site": "Sfax",
+      "header": {
+        "name": "Mariem Chaabane",
+        "tagline": "Junior Data Scientist · Classification & Feature Engineering",
+        "email": "mariem.chaabane@example.com",
+        "phone": "+216 00 000 014",
+        "location": "Sfax, Tunisia",
+        "github": "github.com/m-chaabane-demo",
+        "linkedin": "linkedin.com/in/m-chaabane-demo"
+      },
+      "summary": "Junior data scientist with 1 year in data exploration, feature engineering and classification models.",
+      "skills": {
+        "AI / ML & LLM": [
+          "Python",
+          "scikit-learn",
+          "NLP"
+        ],
+        "Data & Cloud": [
+          "SQL",
+          "Git"
+        ]
+      },
+      "languages": [
+        "French — Fluent",
+        "English — Fluent",
+        "Arabic — Native"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P09",
+          "title": "Customer Churn Prediction",
+          "context": "Consulting mission · Junior data scientist",
+          "period": "2025",
+          "bullets": [
+            "Explored usage data and engineered 30 candidate features for churn scoring.",
+            "Trained baseline classifiers and documented evaluation results for the team."
+          ],
+          "stack": [
+            "Databricks",
+            "Python",
+            "GCP",
+            "MLflow"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Data Science Student Association (generic)",
+          "role": "Vice president",
+          "period": "2022 – 2024",
+          "bullets": [
+            "Coordinated a student data challenge with 80 participants."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "National Engineering School (generic)",
+          "degree": "Engineering Degree in Computer Science, Data track",
+          "period": "2021 – 2024"
+        }
+      ],
+      "certifications": [],
+      "output_language": "en",
+      "document_title": "Junior Data Scientist"
+    },
+    {
+      "id": "C15",
+      "seniority": "senior",
+      "years_experience": 11,
+      "site": "Paris",
+      "header": {
+        "name": "Sophie Delattre",
+        "tagline": "Senior Salesforce Architect · Multi-cloud & Integration",
+        "email": "sophie.delattre@example.com",
+        "phone": "+33 0 00 00 00 15",
+        "location": "Paris, France",
+        "github": "github.com/s-delattre-demo",
+        "linkedin": "linkedin.com/in/s-delattre-demo"
+      },
+      "summary": "Salesforce architect with 11 years leading multi-cloud programmes, platform governance and API-led integrations for retail and luxury brands.",
+      "skills": {
+        "CRM & Salesforce": [
+          "Sales Cloud",
+          "Service Cloud",
+          "Commerce Cloud",
+          "Apex",
+          "LWC",
+          "Flow"
+        ],
+        "Integration & Orchestration": [
+          "MuleSoft",
+          "REST/SOAP APIs"
+        ],
+        "Management & Architecture": [
+          "Enterprise architecture",
+          "Data governance"
+        ]
+      },
+      "languages": [
+        "French — Native",
+        "English — Fluent"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P06",
+          "title": "Commerce Cloud and ERP Integration",
+          "context": "Consulting mission · Salesforce architect",
+          "period": "2021–2022",
+          "bullets": [
+            "Defined the target architecture across Commerce Cloud, ERP and logistics.",
+            "Set deployment and governance rules adopted by three delivery teams."
+          ],
+          "stack": [
+            "Commerce Cloud",
+            "MuleSoft",
+            "Apex",
+            "Flow"
+          ]
+        },
+        {
+          "project_id": "P02",
+          "title": "Unified CRM and Customer 360",
+          "context": "Consulting mission · CRM architect",
+          "period": "2022–2023",
+          "bullets": [
+            "Designed the Sales Cloud data model and sync with the BigQuery customer warehouse.",
+            "Established data ownership rules that removed duplicate customer records."
+          ],
+          "stack": [
+            "GCP",
+            "BigQuery",
+            "Sales Cloud",
+            "Talend"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Salesforce Practice (fictional)",
+          "role": "Practice architect",
+          "period": "2020 – Present",
+          "bullets": [
+            "Runs design authority reviews and certifies internal consultants."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "Business and Information Systems School (generic)",
+          "degree": "Master in Information Systems",
+          "period": "2012 – 2014"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Salesforce Certified Application Architect",
+          "issuer": "Salesforce",
+          "date": "Sep 2022"
+        },
+        {
+          "name": "Salesforce Certified Platform Developer II",
+          "issuer": "Salesforce",
+          "date": "Feb 2021"
+        }
+      ],
+      "output_language": "fr",
+      "document_title": "Architecte Salesforce senior"
+    },
+    {
+      "id": "C16",
+      "seniority": "mid",
+      "years_experience": 5,
+      "site": "Sfax",
+      "header": {
+        "name": "Wassim Chaouch",
+        "tagline": "Salesforce Developer · Apex, LWC & Integrations",
+        "email": "wassim.chaouch@example.com",
+        "phone": "+216 00 000 016",
+        "location": "Sfax, Tunisia",
+        "github": "github.com/w-chaouch-demo",
+        "linkedin": "linkedin.com/in/w-chaouch-demo"
+      },
+      "summary": "Salesforce developer with 5 years building Apex, Lightning components and API integrations for service and retail use cases.",
+      "skills": {
+        "CRM & Salesforce": [
+          "Apex",
+          "LWC",
+          "Flow",
+          "SOQL",
+          "Service Cloud"
+        ],
+        "Integration & Orchestration": [
+          "REST/SOAP APIs"
+        ],
+        "Data & Cloud": [
+          "Git"
+        ]
+      },
+      "languages": [
+        "French — Fluent",
+        "English — Fluent",
+        "Arabic — Native"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P11",
+          "title": "Stock and Customer Service on Salesforce",
+          "context": "Consulting mission · Salesforce developer",
+          "period": "2022–2023",
+          "bullets": [
+            "Developed Apex services and LWC screens for stock lookup and ticket handling.",
+            "Added bulk-safe triggers and tests reaching 90% coverage."
+          ],
+          "stack": [
+            "Service Cloud",
+            "Boomi",
+            "Apex",
+            "LWC"
+          ]
+        },
+        {
+          "project_id": "P15",
+          "title": "GenAI Customer Support Assistant",
+          "context": "Consulting mission · Service Cloud integration",
+          "period": "2025",
+          "bullets": [
+            "Embedded the assistant in a Lightning component for support agents.",
+            "Logged answer feedback in Salesforce to feed knowledge base improvements."
+          ],
+          "stack": [
+            "LLM",
+            "RAG",
+            "Vector DB",
+            "Service Cloud",
+            "GCP"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Salesforce Community Sfax (fictional)",
+          "role": "Volunteer organiser",
+          "period": "2023 – Present",
+          "bullets": [
+            "Organises quarterly developer meetups on Lightning best practices."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "National Engineering School (generic)",
+          "degree": "Engineering Degree in Software Engineering",
+          "period": "2016 – 2019"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Salesforce Certified Platform Developer I",
+          "issuer": "Salesforce",
+          "date": "Oct 2021"
+        }
+      ],
+      "output_language": "en",
+      "document_title": "Salesforce Developer Apex and LWC"
+    },
+    {
+      "id": "C17",
+      "seniority": "mid",
+      "years_experience": 6,
+      "site": "Paris",
+      "header": {
+        "name": "Camille Roussel",
+        "tagline": "Salesforce Marketing Consultant · Journeys & Segmentation",
+        "email": "camille.roussel@example.com",
+        "phone": "+33 0 00 00 00 17",
+        "location": "Paris, France",
+        "github": "github.com/c-roussel-demo",
+        "linkedin": "linkedin.com/in/c-roussel-demo"
+      },
+      "summary": "Marketing Cloud consultant with 6 years designing segmentation, automated journeys and performance analytics for fashion brands.",
+      "skills": {
+        "CRM & Salesforce": [
+          "Marketing Cloud",
+          "AMPscript",
+          "CRM Analytics"
+        ],
+        "Data & Cloud": [
+          "SQL",
+          "Snowflake"
+        ],
+        "Integration & Orchestration": [
+          "n8n"
+        ]
+      },
+      "languages": [
+        "French — Native",
+        "English — Fluent"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P07",
+          "title": "Multi-brand Marketing Automation",
+          "context": "Consulting mission · Marketing Cloud consultant",
+          "period": "2023–2024",
+          "bullets": [
+            "Designed segmentation and Journey Builder flows across five brands.",
+            "Fed audiences from Snowflake via n8n, lifting open rates by 18%."
+          ],
+          "stack": [
+            "Marketing Cloud",
+            "Snowflake",
+            "n8n",
+            "SQL"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Digital Marketing Circle (fictional)",
+          "role": "Mentor",
+          "period": "2022 – Present",
+          "bullets": [
+            "Coaches junior consultants on campaign measurement."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "Digital Business School (generic)",
+          "degree": "Master in Digital Marketing and Data",
+          "period": "2016 – 2018"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Marketing Cloud Email Specialist",
+          "issuer": "Salesforce",
+          "date": "Mar 2021"
+        },
+        {
+          "name": "Marketing Cloud Administrator",
+          "issuer": "Salesforce",
+          "date": "Nov 2021"
+        }
+      ],
+      "output_language": "fr",
+      "document_title": "Consultante Marketing Cloud Salesforce"
+    },
+    {
+      "id": "C18",
+      "seniority": "junior",
+      "years_experience": 2,
+      "site": "Sfax",
+      "header": {
+        "name": "Rim Dridi",
+        "tagline": "Junior Salesforce Administrator · Flow & Reporting",
+        "email": "rim.dridi@example.com",
+        "phone": "+216 00 000 018",
+        "location": "Sfax, Tunisia",
+        "github": "github.com/r-dridi-demo",
+        "linkedin": "linkedin.com/in/r-dridi-demo"
+      },
+      "summary": "Salesforce administrator with 2 years configuring orgs, automating with Flow and supporting users.",
+      "skills": {
+        "CRM & Salesforce": [
+          "Sales Cloud",
+          "Service Cloud",
+          "Flow",
+          "SOQL"
+        ],
+        "Data & Cloud": [
+          "SQL"
+        ]
+      },
+      "languages": [
+        "French — Fluent",
+        "English — Intermediate",
+        "Arabic — Native"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P11",
+          "title": "Stock and Customer Service on Salesforce",
+          "context": "Consulting mission · Salesforce administrator",
+          "period": "2024",
+          "bullets": [
+            "Configured case queues, assignment rules and Flow automations for store support.",
+            "Built reports and dashboards tracking resolution time and backlog."
+          ],
+          "stack": [
+            "Service Cloud",
+            "Boomi",
+            "Apex",
+            "LWC"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Computer Science Student Club (generic)",
+          "role": "Treasurer",
+          "period": "2020 – 2022",
+          "bullets": [
+            "Managed budget for student events and workshops."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "Institute of Applied Computing (generic)",
+          "degree": "Applied Bachelor in Business Computing",
+          "period": "2020 – 2023"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Salesforce Certified Administrator",
+          "issuer": "Salesforce",
+          "date": "Jan 2024"
+        }
+      ],
+      "output_language": "en",
+      "document_title": "Junior Salesforce Administrator"
+    },
+    {
+      "id": "C19",
+      "seniority": "senior",
+      "years_experience": 15,
+      "site": "Dubai",
+      "header": {
+        "name": "Nabil Al-Mansoori",
+        "tagline": "Enterprise Architect · Data Strategy & Integration Patterns",
+        "email": "nabil.almansoori@example.com",
+        "phone": "+971 00 000 0019",
+        "location": "Dubai, UAE",
+        "github": "github.com/n-almansoori-demo",
+        "linkedin": "linkedin.com/in/n-almansoori-demo"
+      },
+      "summary": "Enterprise architect with 15 years aligning data strategy and IT landscapes for clients in the Gulf and Europe, with strong security and integration expertise.",
+      "skills": {
+        "Management & Architecture": [
+          "TOGAF",
+          "Enterprise architecture",
+          "Data governance"
+        ],
+        "Data & Cloud": [
+          "Azure",
+          "GCP",
+          "Terraform"
+        ],
+        "Integration & Orchestration": [
+          "MuleSoft",
+          "REST/SOAP APIs"
+        ]
+      },
+      "languages": [
+        "Arabic — Native",
+        "English — Fluent",
+        "French — Intermediate"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P01",
+          "title": "Real-time Centralised HRIS",
+          "context": "Consulting mission · Enterprise architect",
+          "period": "2023–2024",
+          "bullets": [
+            "Defined the target integration architecture and security model across 8 countries.",
+            "Set data residency and access rules validated with the client's security office."
+          ],
+          "stack": [
+            "MuleSoft",
+            "Talend",
+            "REST/SOAP APIs"
+          ]
+        },
+        {
+          "project_id": "P04",
+          "title": "Intelligent Trademark Registration Platform",
+          "context": "Consulting mission · Solution architect",
+          "period": "2023–2024",
+          "bullets": [
+            "Shaped the Azure reference architecture for the chatbot and crawler components.",
+            "Led architecture reviews that kept the platform within government hosting constraints."
+          ],
+          "stack": [
+            "Python",
+            "NLP",
+            "LLM",
+            "RAG",
+            "Elasticsearch",
+            "Azure"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Architecture Board (fictional)",
+          "role": "Chair",
+          "period": "2019 – Present",
+          "bullets": [
+            "Chairs monthly design authority covering 12 client programmes."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "Technology University (generic)",
+          "degree": "Master in Information Systems Architecture",
+          "period": "2009 – 2011"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "TOGAF 9 Certified",
+          "issuer": "The Open Group",
+          "date": "May 2018"
+        },
+        {
+          "name": "Azure Solutions Architect Expert",
+          "issuer": "Microsoft",
+          "date": "Sep 2022"
+        }
+      ],
+      "output_language": "en",
+      "document_title": "Enterprise Architect Data Strategy"
+    },
+    {
+      "id": "C20",
+      "seniority": "senior",
+      "years_experience": 10,
+      "site": "Paris",
+      "header": {
+        "name": "Elodie Bertrand",
+        "tagline": "Project Manager Data & AI · Agile Delivery",
+        "email": "elodie.bertrand@example.com",
+        "phone": "+33 0 00 00 00 20",
+        "location": "Paris, France",
+        "github": "github.com/e-bertrand-demo",
+        "linkedin": "linkedin.com/in/e-bertrand-demo"
+      },
+      "summary": "Project manager with 10 years steering integration, BI and AI programmes, combining agile delivery, budget control and client relationship.",
+      "skills": {
+        "Management & Architecture": [
+          "Agile/Scrum",
+          "Jira",
+          "Risk management",
+          "Data governance"
+        ]
+      },
+      "languages": [
+        "French — Native",
+        "English — Fluent"
+      ],
+      "projects_experience": [
+        {
+          "project_id": "P02",
+          "title": "Unified CRM and Customer 360",
+          "context": "Consulting mission · Project manager",
+          "period": "2022–2023",
+          "bullets": [
+            "Managed a 9-person team delivering the CRM and warehouse programme on budget.",
+            "Ran weekly steering committees with marketing, IT and support stakeholders."
+          ],
+          "stack": [
+            "GCP",
+            "BigQuery",
+            "Sales Cloud",
+            "Talend"
+          ]
+        },
+        {
+          "project_id": "P03",
+          "title": "AI Demand Forecasting Dashboards",
+          "context": "Consulting mission · Project manager",
+          "period": "2024",
+          "bullets": [
+            "Coordinated data engineering, ML and BI workstreams across two time zones.",
+            "Introduced a risk register that surfaced ERP data quality issues early."
+          ],
+          "stack": [
+            "Azure",
+            "Databricks",
+            "Power BI",
+            "Python"
+          ]
+        },
+        {
+          "project_id": "P14",
+          "title": "Back-office Workflow Automation",
+          "context": "Consulting mission · Project manager",
+          "period": "2024",
+          "bullets": [
+            "Prioritised 12 automation candidates by value and effort with operations leads.",
+            "Delivered the first wave in 10 weeks, saving 1,200 hours per year."
+          ],
+          "stack": [
+            "Workato",
+            "n8n",
+            "REST/SOAP APIs",
+            "Python"
+          ]
+        }
+      ],
+      "leadership_volunteering": [
+        {
+          "organisation": "Project Management Community (fictional)",
+          "role": "Volunteer coach",
+          "period": "2021 – Present",
+          "bullets": [
+            "Coaches new project managers on agile delivery and stakeholder management."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "school": "Business School (generic)",
+          "degree": "Master in Business with Information Systems specialisation",
+          "period": "2013 – 2016"
+        }
+      ],
+      "certifications": [
+        {
+          "name": "Project Management Professional (PMP)",
+          "issuer": "PMI",
+          "date": "Jun 2020"
+        },
+        {
+          "name": "Professional Scrum Master I",
+          "issuer": "Scrum.org",
+          "date": "Mar 2019"
+        }
+      ],
+      "output_language": "fr",
+      "document_title": "Cheffe de projet Data et IA"
+    }
+  ],
+  "stack_capabilities": [
+    {
+      "id": "STK-01",
+      "title": "Data Integration and API",
+      "category": "Integration & Orchestration",
+      "technologies": [
+        "MuleSoft",
+        "Talend",
+        "Boomi",
+        "Workato",
+        "n8n",
+        "SSIS",
+        "Apache Kafka",
+        "Airflow",
+        "REST/SOAP APIs"
+      ],
+      "description": "Designing and running flows that move and transform data between applications, through APIs, ETL and event streams.",
+      "use_cases": [
+        "Real-time HR and payroll synchronisation",
+        "ERP to e-commerce order flows",
+        "Back-office process automation"
+      ]
+    },
+    {
+      "id": "STK-02",
+      "title": "Data Platform and Cloud",
+      "category": "Data & Cloud",
+      "technologies": [
+        "Snowflake",
+        "BigQuery",
+        "GCP",
+        "Azure",
+        "Azure Data Factory",
+        "Databricks",
+        "Delta Lake",
+        "dbt",
+        "SQL Server",
+        "PostgreSQL",
+        "Terraform",
+        "Docker",
+        "SQL",
+        "Git"
+      ],
+      "description": "Building cloud warehouses, lakehouses and pipelines with versioned infrastructure and quality controls.",
+      "use_cases": [
+        "Customer 360 warehouse",
+        "ETL to ELT migration",
+        "Streaming ingestion for anomaly detection"
+      ]
+    },
+    {
+      "id": "STK-03",
+      "title": "Business Intelligence and Analytics",
+      "category": "BI & Analytics",
+      "technologies": [
+        "Power BI",
+        "DAX",
+        "Tableau",
+        "Qlik Sense",
+        "Looker Studio",
+        "Dimensional modelling"
+      ],
+      "description": "Modelling data and delivering governed dashboards and KPIs for business and finance teams.",
+      "use_cases": [
+        "Regulatory reporting",
+        "Operations dashboards",
+        "Forecast and stock monitoring"
+      ]
+    },
+    {
+      "id": "STK-04",
+      "title": "AI, Machine Learning and LLM",
+      "category": "AI / ML & LLM",
+      "technologies": [
+        "Python",
+        "PyTorch",
+        "scikit-learn",
+        "XGBoost",
+        "MLflow",
+        "NLP",
+        "LLM",
+        "RAG",
+        "Vector DB",
+        "Elasticsearch",
+        "OpenCV",
+        "Anomaly detection",
+        "PySpark"
+      ],
+      "description": "Developing predictive models, NLP and GenAI systems and deploying them with monitoring.",
+      "use_cases": [
+        "Churn prediction",
+        "RAG assistants",
+        "Anomaly detection and image classification"
+      ]
+    },
+    {
+      "id": "STK-05",
+      "title": "CRM and Salesforce",
+      "category": "CRM & Salesforce",
+      "technologies": [
+        "Sales Cloud",
+        "Service Cloud",
+        "Commerce Cloud",
+        "Marketing Cloud",
+        "Apex",
+        "LWC",
+        "Flow",
+        "SOQL",
+        "AMPscript",
+        "CRM Analytics"
+      ],
+      "description": "Configuring and extending Salesforce clouds and connecting them to surrounding systems.",
+      "use_cases": [
+        "Omnichannel commerce",
+        "Customer service with stock context",
+        "Marketing automation"
+      ]
+    },
+    {
+      "id": "STK-06",
+      "title": "Delivery, Management and Architecture",
+      "category": "Management & Architecture",
+      "technologies": [
+        "TOGAF",
+        "Agile/Scrum",
+        "Jira",
+        "Enterprise architecture",
+        "Data governance",
+        "Risk management"
+      ],
+      "description": "Steering programmes and defining target architectures, governance and delivery practices.",
+      "use_cases": [
+        "Enterprise target architecture",
+        "Agile programme delivery",
+        "Data governance and KPI catalogues"
+      ]
+    }
+  ]
+}

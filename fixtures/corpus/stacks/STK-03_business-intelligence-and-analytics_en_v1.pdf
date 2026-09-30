@@ -1,0 +1,159 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 1813 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(Capability stack STK-03 - Business Intelligence and Analytics) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: STK-03 | version: v1 | asset_type: stack | language: en) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(category: BI & Analytics) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 733 Tm
+0.55 G 0.7 w
+56 729.5 m 539 729.5 l S
+0 G 1 w
+(Description) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 717 Tm
+(Modelling data and delivering governed dashboards and KPIs for business and finance teams.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 693.5 Tm
+0.55 G 0.7 w
+56 690 m 539 690 l S
+0 G 1 w
+(Technologies) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 677.5 Tm
+(- Power BI) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 664 Tm
+(- DAX) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 650.5 Tm
+(- Tableau) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 637 Tm
+(- Qlik Sense) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 623.5 Tm
+(- Looker Studio) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 610 Tm
+(- Dimensional modelling) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 586.5 Tm
+0.55 G 0.7 w
+56 583 m 539 583 l S
+0 G 1 w
+(Use cases) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 570.5 Tm
+(- Regulatory reporting) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 557 Tm
+(- Operations dashboards) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 543.5 Tm
+(- Forecast and stock monitoring) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 520 Tm
+0.55 G 0.7 w
+56 516.5 m 539 516.5 l S
+0 G 1 w
+(Related projects) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 504 Tm
+(P03 - AI Demand Forecasting Dashboards | P05 - Fashion Supply Chain Visibility | P08 - Regulatory) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 490.5 Tm
+(Reporting Data Warehouse | P12 - Energy Operations Steering) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 467 Tm
+0.55 G 0.7 w
+56 463.5 m 539 463.5 l S
+0 G 1 w
+(Related profiles) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 451 Tm
+(C05 Claire Fontaine \(senior\) | C06 Omar Trabelsi \(mid\) | C07 Lina Haddad \(junior\)) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2315
+%%EOF

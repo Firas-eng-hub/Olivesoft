@@ -1,0 +1,227 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3142 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(CV C06 - BI Developer Qlik Sense and Power BI) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: C06 | version: v1 | asset_type: cv | language: en) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(seniority: mid | site: Sfax | experience: 5 years) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 743 Tm
+0.55 G 0.7 w
+56 739.5 m 539 739.5 l S
+0 G 1 w
+(Omar Trabelsi) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 727 Tm
+(BI Developer · Qlik Sense & Power BI) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 713.5 Tm
+0.4 g
+(omar.trabelsi@example.com | +216 00 000 006 | Sfax, Tunisia | github.com/o-trabelsi-demo |) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 701.5 Tm
+0.4 g
+(linkedin.com/in/o-trabelsi-demo) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 679.5 Tm
+0.55 G 0.7 w
+56 676 m 539 676 l S
+0 G 1 w
+(Summary) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 663.5 Tm
+(BI developer with 5 years building operational dashboards and optimising data models in Qlik) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 650 Tm
+(Sense and Power BI.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 626.5 Tm
+0.55 G 0.7 w
+56 623 m 539 623 l S
+0 G 1 w
+(Skills) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 610.5 Tm
+(BI & Analytics: Qlik Sense, Power BI, Looker Studio) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 597 Tm
+(Data & Cloud: SQL, Azure, Snowflake) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 583.5 Tm
+(AI / ML & LLM: Python) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 560 Tm
+0.55 G 0.7 w
+56 556.5 m 539 556.5 l S
+0 G 1 w
+(Languages) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 544 Tm
+(French — Fluent; English — Fluent; Arabic — Native) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 520.5 Tm
+0.55 G 0.7 w
+56 517 m 539 517 l S
+0 G 1 w
+(Project experience) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 504.5 Tm
+(P12 - Energy Operations Steering \(2023–2024\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 491 Tm
+(Context: Consulting mission · Qlik developer) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 477.5 Tm
+(- Built Qlik Sense dashboards for operations KPIs with threshold-based alerts.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 464 Tm
+(- Automated monthly reporting to 90% using scripted data loads.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 450.5 Tm
+(P05 - Fashion Supply Chain Visibility \(2022–2023\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 437 Tm
+(Context: Consulting mission · Dashboard developer) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 423.5 Tm
+(- Created stock tracking dashboards on Snowflake data for boutiques and warehouses.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 410 Tm
+(- Optimised data models to bring dashboard load times under 3 seconds.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 386.5 Tm
+0.55 G 0.7 w
+56 383 m 539 383 l S
+0 G 1 w
+(Leadership & volunteering) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 370.5 Tm
+(Sfax Data Meetup \(fictional\) - Volunteer \(2022 – Present\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 357 Tm
+(- Supports event logistics and demo sessions.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 333.5 Tm
+0.55 G 0.7 w
+56 330 m 539 330 l S
+0 G 1 w
+(Education) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 317.5 Tm
+(National Engineering School \(generic\) - Engineering Degree in Computer Science \(2016 – 2019\)) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 294 Tm
+0.55 G 0.7 w
+56 290.5 m 539 290.5 l S
+0 G 1 w
+(Certifications) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 278 Tm
+(Qlik Sense Data Architect - Qlik \(Jul 2022\)) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3644
+%%EOF

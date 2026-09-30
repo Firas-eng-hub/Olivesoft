@@ -15,57 +15,229 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
 endobj
 6 0 obj
-<< /Length 1179 >>
+<< /Length 3959 >>
 stream
 BT
-/F1 15 Tf
-56 786 Td
+/F1 14 Tf
+1 0 0 1 56 786 Tm
 (CV C01 - Consultant senior intégration MuleSoft) Tj
+ET
+BT
 /F2 8.5 Tf
-56 765 Td
-(ID: C01 | version: v1 | asset_type: cv | language: fr | seniority: senior | location: Paris | experience: 10) Tj
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: C01 | version: v1 | asset_type: cv | language: fr) Tj
+0 g
+ET
+BT
 /F2 8.5 Tf
-56 753 Td
-(ans) Tj
-/F2 8.5 Tf
-56 741 Td
-(skills: MuleSoft, Anypoint Platform, API REST, RAML, DataWeave, Kafka, Oracle, Azure Monitor, OAuth2, CI/CD) Tj
+1 0 0 1 56 755 Tm
+0.4 g
+(seniority: senior | site: Paris | experience: 11 years) Tj
+0 g
+ET
+BT
 /F1 10.5 Tf
-56 719 Td
+1 0 0 1 56 743 Tm
+0.55 G 0.7 w
+56 739.5 m 539 739.5 l S
+0 G 1 w
+(Karim Belhadj) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 727 Tm
+(Ingénieur intégration senior – Architecture API & ETL) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 713.5 Tm
+0.4 g
+(karim.belhadj@example.com | +33 0 00 00 00 01 | Paris, France | github.com/k-belhadj-demo |) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 701.5 Tm
+0.4 g
+(linkedin.com/in/k-belhadj-demo) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 679.5 Tm
+0.55 G 0.7 w
+56 676 m 539 676 l S
+0 G 1 w
 (Profil) Tj
+ET
+BT
 /F2 9.5 Tf
-56 703 Td
-(Consultant intégration spécialisé MuleSoft, conçoit et industrialise des architectures d'API et) Tj
+1 0 0 1 56 663.5 Tm
+(Ingénieur intégration senior avec 11 ans d'expérience dans la conception de paysages ETL et API) Tj
+ET
+BT
 /F2 9.5 Tf
-56 689.5 Td
-(des flux inter-applicatifs pour des clients grands comptes en environnement hybride.) Tj
+1 0 0 1 56 650 Tm
+(d'entreprise pour des clients retail, luxe et industrie. Pilote des squads d'intégration et porte) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 636.5 Tm
+(la livraison du design jusqu'au run.) Tj
+ET
+BT
 /F1 10.5 Tf
-56 666 Td
-(Certifications) Tj
+1 0 0 1 56 613 Tm
+0.55 G 0.7 w
+56 609.5 m 539 609.5 l S
+0 G 1 w
+(Compétences) Tj
+ET
+BT
 /F2 9.5 Tf
-56 650 Td
-(MuleSoft Certified Platform Architect; MuleSoft Certified Developer Level 1) Tj
-/F1 10.5 Tf
-56 626.5 Td
-(Formation) Tj
+1 0 0 1 56 597 Tm
+(Intégration & Orchestration: MuleSoft, Talend, Boomi, SSIS, REST/SOAP APIs) Tj
+ET
+BT
 /F2 9.5 Tf
-56 610.5 Td
-(Master en génie logiciel — université publique \(France\)) Tj
+1 0 0 1 56 583.5 Tm
+(Données & Cloud: SQL, Azure, Docker, Git) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 570 Tm
+(Management & Architecture: Data governance, Agile/Scrum) Tj
+ET
+BT
 /F1 10.5 Tf
-56 587 Td
+1 0 0 1 56 546.5 Tm
+0.55 G 0.7 w
+56 543 m 539 543 l S
+0 G 1 w
 (Langues) Tj
+ET
+BT
 /F2 9.5 Tf
-56 571 Td
-(Français \(natif\), Anglais \(courant\)) Tj
+1 0 0 1 56 530.5 Tm
+(Français – langue maternelle; Anglais – courant; Arabe – langue maternelle) Tj
+ET
+BT
 /F1 10.5 Tf
-56 547.5 Td
-(Références projet) Tj
+1 0 0 1 56 507 Tm
+0.55 G 0.7 w
+56 503.5 m 539 503.5 l S
+0 G 1 w
+(Expérience projet) Tj
+ET
+BT
 /F2 9.5 Tf
-56 531.5 Td
-(- P02 - Tech lead intégration) Tj
+1 0 0 1 56 491 Tm
+(P01 - Real-time Centralised HRIS \(2023–2024\)) Tj
+ET
+BT
 /F2 9.5 Tf
-56 518 Td
-(- P14 - Architecte API MuleSoft) Tj
+1 0 0 1 56 477.5 Tm
+(Contexte: Mission de conseil – Ingénieur intégration lead) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 464 Tm
+(- A piloté une squad de 5 personnes construisant des flux bidirectionnels RH-paie pour 8 pays) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 450.5 Tm
+(avec MuleSoft et Talend.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 437 Tm
+(- A introduit le design d'API contract-first et le rejeu automatique des erreurs, réduisant de 60) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 423.5 Tm
+(% les erreurs de synchronisation.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 410 Tm
+(P06 - Commerce Cloud and ERP Integration \(2021–2022\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 396.5 Tm
+(Contexte: Mission de conseil – Architecte intégration) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 383 Tm
+(- A conçu la couche MuleSoft reliant boutique en ligne, ERP et logistique pour les commandes et) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 369.5 Tm
+(retours omnicanal.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 356 Tm
+(- A défini les patterns de retry, d'idempotence et de supervision réutilisés sur le programme) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 342.5 Tm
+(d'intégration du client.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 319 Tm
+0.55 G 0.7 w
+56 315.5 m 539 315.5 l S
+0 G 1 w
+(Leadership & engagement) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 303 Tm
+(Integration Guild \(fictional\) - Responsable de guilde interne \(2022 – Present\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 289.5 Tm
+(- Anime des revues trimestrielles des patterns d'intégration et mentorise 6 ingénieurs.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 266 Tm
+0.55 G 0.7 w
+56 262.5 m 539 262.5 l S
+0 G 1 w
+(Formation) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 250 Tm
+(National Engineering School \(generic\) - Diplôme d'ingénieur en informatique \(2012 – 2015\)) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 226.5 Tm
+0.55 G 0.7 w
+56 223 m 539 223 l S
+0 G 1 w
+(Certifications) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 210.5 Tm
+(MuleSoft Certified Developer - MuleSoft \(Mar 2022\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 197 Tm
+(Talend Data Integration Certified Developer - Talend \(Jun 2020\)) Tj
 ET
 endstream
 endobj
@@ -81,5 +253,5 @@ xref
 trailer
 << /Size 7 /Root 1 0 R >>
 startxref
-1681
+4461
 %%EOF

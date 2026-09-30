@@ -1,0 +1,222 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3142 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(CV C12 - Machine Learning Engineer MLOps) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: C12 | version: v1 | asset_type: cv | language: en) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(seniority: mid | site: Sfax | experience: 5 years) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 743 Tm
+0.55 G 0.7 w
+56 739.5 m 539 739.5 l S
+0 G 1 w
+(Ines Rekik) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 727 Tm
+(Machine Learning Engineer · Predictive Models & MLOps) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 713.5 Tm
+0.4 g
+(ines.rekik@example.com | +216 00 000 012 | Sfax, Tunisia | github.com/i-rekik-demo | linkedin.com/in/i-rekik-) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 701.5 Tm
+0.4 g
+(demo) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 679.5 Tm
+0.55 G 0.7 w
+56 676 m 539 676 l S
+0 G 1 w
+(Summary) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 663.5 Tm
+(ML engineer with 5 years building predictive models and deploying them with monitoring and drift) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 650 Tm
+(detection.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 626.5 Tm
+0.55 G 0.7 w
+56 623 m 539 623 l S
+0 G 1 w
+(Skills) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 610.5 Tm
+(AI / ML & LLM: Python, scikit-learn, XGBoost, MLflow, PySpark) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 597 Tm
+(Data & Cloud: Databricks, SQL, Docker, Git) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 573.5 Tm
+0.55 G 0.7 w
+56 570 m 539 570 l S
+0 G 1 w
+(Languages) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 557.5 Tm
+(French — Fluent; English — Fluent; Arabic — Native) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 534 Tm
+0.55 G 0.7 w
+56 530.5 m 539 530.5 l S
+0 G 1 w
+(Project experience) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 518 Tm
+(P09 - Customer Churn Prediction \(2023\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 504.5 Tm
+(Context: Consulting mission · ML engineer) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 491 Tm
+(- Built the feature pipeline and XGBoost churn scoring model tracked in MLflow.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 477.5 Tm
+(- Deployed the model with drift monitoring, supporting a 12% retention uplift target.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 464 Tm
+(P03 - AI Demand Forecasting Dashboards \(2024\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 450.5 Tm
+(Context: Consulting mission · Forecasting models) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 437 Tm
+(- Trained demand forecasting models per product family and benchmarked against baselines.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 423.5 Tm
+(- Exposed predictions to Power BI through scheduled Databricks jobs.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 400 Tm
+0.55 G 0.7 w
+56 396.5 m 539 396.5 l S
+0 G 1 w
+(Leadership & volunteering) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 384 Tm
+(ML Study Group \(fictional\) - Organiser \(2022 – Present\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 370.5 Tm
+(- Organises bi-weekly paper discussions for 15 engineers.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 347 Tm
+0.55 G 0.7 w
+56 343.5 m 539 343.5 l S
+0 G 1 w
+(Education) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 331 Tm
+(National Engineering School \(generic\) - Engineering Degree in Data Science \(2016 – 2019\)) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 307.5 Tm
+0.55 G 0.7 w
+56 304 m 539 304 l S
+0 G 1 w
+(Certifications) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 291.5 Tm
+(Databricks Certified Machine Learning Associate - Databricks \(Jun 2023\)) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3644
+%%EOF

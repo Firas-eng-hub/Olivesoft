@@ -1,0 +1,252 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3796 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(CV C05 - Responsable BI senior Power BI) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: C05 | version: v1 | asset_type: cv | language: fr) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(seniority: senior | site: Paris | experience: 12 years) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 743 Tm
+0.55 G 0.7 w
+56 739.5 m 539 739.5 l S
+0 G 1 w
+(Claire Fontaine) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 727 Tm
+(Responsable BI senior – Gouvernance KPI & modèles sémantiques) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 713.5 Tm
+0.4 g
+(claire.fontaine@example.com | +33 0 00 00 00 05 | Paris, France | github.com/c-fontaine-demo |) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 701.5 Tm
+0.4 g
+(linkedin.com/in/c-fontaine-demo) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 679.5 Tm
+0.55 G 0.7 w
+56 676 m 539 676 l S
+0 G 1 w
+(Profil) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 663.5 Tm
+(Responsable BI avec 12 ans d'expérience en modélisation dimensionnelle, gouvernance des KPI et) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 650 Tm
+(analytics en self-service pour la banque et le retail. Construit des couches sémantiques de) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 636.5 Tm
+(confiance pour les métiers.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 613 Tm
+0.55 G 0.7 w
+56 609.5 m 539 609.5 l S
+0 G 1 w
+(Compétences) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 597 Tm
+(BI & Analytics: Power BI, DAX, Tableau, Dimensional modelling) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 583.5 Tm
+(Données & Cloud: SQL, Azure, SQL Server) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 570 Tm
+(Management & Architecture: Data governance, Agile/Scrum) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 546.5 Tm
+0.55 G 0.7 w
+56 543 m 539 543 l S
+0 G 1 w
+(Langues) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 530.5 Tm
+(Français – langue maternelle; Anglais – courant) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 507 Tm
+0.55 G 0.7 w
+56 503.5 m 539 503.5 l S
+0 G 1 w
+(Expérience projet) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 491 Tm
+(P08 - Regulatory Reporting Data Warehouse \(2022–2024\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 477.5 Tm
+(Contexte: Mission de conseil – Responsable BI) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 464 Tm
+(- A conçu le modèle dimensionnel et la couche sémantique Power BI pour le reporting réglementaire) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 450.5 Tm
+(et financier.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 437 Tm
+(- A standardisé 120 KPI dans un catalogue de gouvernance, réduisant de 50 % le délai de clôture) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 423.5 Tm
+(reporting.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 410 Tm
+(P03 - AI Demand Forecasting Dashboards \(2024–2025\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 396.5 Tm
+(Contexte: Mission de conseil – Propriétaire des dashboards) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 383 Tm
+(- A livré des dashboards prévision et stock dans Power BI alimentés par les sorties Databricks.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 369.5 Tm
+(- A défini les seuils d'alerte avec les planificateurs, contribuant à une baisse de 30 % des) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 356 Tm
+(ruptures de stock.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 332.5 Tm
+0.55 G 0.7 w
+56 329 m 539 329 l S
+0 G 1 w
+(Leadership & engagement) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 316.5 Tm
+(BI Practice \(fictional\) - Responsable de practice \(2021 – Present\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 303 Tm
+(- Encadre 8 développeurs BI et maintient les standards de modélisation internes.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 279.5 Tm
+0.55 G 0.7 w
+56 276 m 539 276 l S
+0 G 1 w
+(Formation) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 263.5 Tm
+(University of Decision Sciences \(generic\) - Master business intelligence \(2011 – 2013\)) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 240 Tm
+0.55 G 0.7 w
+56 236.5 m 539 236.5 l S
+0 G 1 w
+(Certifications) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 224 Tm
+(Microsoft Certified: Power BI Data Analyst \(PL-300\) - Microsoft \(Apr 2023\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 210.5 Tm
+(Tableau Desktop Specialist - Tableau \(Sep 2020\)) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+4298
+%%EOF

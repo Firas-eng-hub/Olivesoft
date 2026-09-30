@@ -15,63 +15,64 @@
       "expected_class": "supported",
       "supporting_docs": [
         "C01",
-        "C05",
-        "C17",
-        "P14"
+        "C15",
+        "C19",
+        "P01",
+        "P06"
       ]
     },
     {
       "id": "R2",
-      "text": "ETL industriel Talend avec contrôles de qualité de données",
+      "text": "Industrialisation d'ETL Talend avec contrôles de qualité de données",
       "expected_class": "supported",
       "supporting_docs": [
-        "C06",
-        "P11"
+        "C02",
+        "P01",
+        "P13"
       ]
     },
     {
       "id": "R3",
-      "text": "Streaming événementiel Kafka entre systèmes",
+      "text": "Streaming événementiel Apache Kafka",
       "expected_class": "supported",
       "supporting_docs": [
-        "C01",
-        "C03",
         "C08",
-        "P10",
-        "P14"
+        "C09",
+        "C13",
+        "P05",
+        "P10"
       ]
     },
     {
       "id": "R4",
-      "text": "Connecteur Salesforce Service Cloud",
-      "expected_class": "partial",
+      "text": "Automatisation de workflows avec n8n / Workato",
+      "expected_class": "supported",
       "supporting_docs": [
-        "C05",
-        "C10",
-        "P08"
-      ],
-      "note": "Salesforce skills exist but combined SF+integration profiles are indirect."
+        "C03",
+        "C17",
+        "P07",
+        "P14"
+      ]
     },
     {
       "id": "R5",
-      "text": "Orchestration de workflows d'automatisation (type n8n)",
-      "expected_class": "partial",
+      "text": "Gouvernance et sécurité des API",
+      "expected_class": "supported",
       "supporting_docs": [
-        "C11",
-        "P07"
+        "C01",
+        "C19"
       ],
-      "note": "Junior profile only."
+      "note": "Contract-first patterns and enterprise governance evidenced on integration programmes."
     },
     {
       "id": "R6",
-      "text": "Supervision et observabilité des flux",
+      "text": "Supervision 24/7 des flux en mode run",
       "expected_class": "partial",
       "supporting_docs": [
         "C01",
-        "C06",
-        "C16"
+        "P01"
       ],
-      "note": "Monitoring skills present but not as a dedicated profile."
+      "note": "Monitoring patterns evidenced (runbook, dashboards) but no dedicated run/ops profile."
     },
     {
       "id": "R7",
@@ -81,7 +82,7 @@
     },
     {
       "id": "R8",
-      "text": "Interface de supervision web React",
+      "text": "Interface web React de supervision",
       "expected_class": "unsupported",
       "supporting_docs": []
     }

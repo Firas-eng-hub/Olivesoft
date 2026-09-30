@@ -1,27 +1,25 @@
 {
-  "source": "data/synthetic_data.json",
-  "source_sha256": "66a82dc0823f12888fce54ae9a0620ca427497ebef721162b33196f9ff22d57f",
+  "source": "data/fake_cv_dataset.json",
+  "source_sha256": "3bc6b40252241468e26b3187984ecdb463a8c9652657dcfd795e61eb167404ab",
   "generator": "dashboard/scripts/generate_corpus.py",
   "notes": "Synthetic corpus; no real clients or people. Labels and tenders are evaluation assets and are NOT meant for ingestion.",
   "upload_mapping": {
-    "cvs/": "cv",
-    "projects/": "project",
-    "stacks/": "expertise (mapped to asset_type stack by ingestion)"
+    "cvs/": "CV",
+    "projects/": "Project",
+    "stacks/": "Expertise (mapped to asset_type stack by ingestion)"
   },
   "counts": {
     "cvs": 20,
     "projects": 15,
-    "stacks": 3,
-    "total": 38,
+    "stacks": 6,
+    "total": 41,
     "v2_variants": 3,
     "languages": {
-      "fr": 27,
-      "en": 11
+      "fr": 10,
+      "en": 31
     },
     "formats": {
-      "pdf": 30,
-      "txt": 6,
-      "docx": 5
+      "pdf": 44
     }
   },
   "files": [
@@ -32,8 +30,8 @@
       "language": "fr",
       "format": "pdf",
       "file": "cvs/C01_consultant-senior-integration-mulesoft_fr_v1.pdf",
-      "sha256": "3deb220142eec1e8763a8e21a7bd7cc8f0cbf8dc3bd491cad9612bee5151b863",
-      "bytes": 1885
+      "sha256": "8a88db76d49d0254c6624e64a7e396c30081eeff29afc0971d27b13619be56bd",
+      "bytes": 4665
     },
     {
       "id": "C02",
@@ -41,9 +39,9 @@
       "asset_type": "cv",
       "language": "fr",
       "format": "pdf",
-      "file": "cvs/C02_consultante-bi-power-bi_fr_v1.pdf",
-      "sha256": "363118d82fd4f663bb774a3888fca1f5e6acff261380ce029e962b0ab788dd50",
-      "bytes": 1775
+      "file": "cvs/C02_ingenieure-integration-de-donnees-talend_fr_v1.pdf",
+      "sha256": "05ff1cc87f65b2e4d770bb81e6cc4366a6fd3a20c9fb0f696dd714205931f553",
+      "bytes": 4265
     },
     {
       "id": "C02",
@@ -51,9 +49,9 @@
       "asset_type": "cv",
       "language": "fr",
       "format": "pdf",
-      "file": "versions/C02_consultante-bi-power-bi_fr_v2.pdf",
-      "sha256": "7ee3f51f2c0f9cf5a7393904f3338ad3f6549199b8380a40a5dd8d480c5a2cac",
-      "bytes": 1830
+      "file": "versions/C02_ingenieure-integration-de-donnees-talend_fr_v2.pdf",
+      "sha256": "40ba03124b7553feb9993c10f0e70f244921e5c32e88d4f970183fd7b8bad2ff",
+      "bytes": 4347
     },
     {
       "id": "C03",
@@ -61,9 +59,9 @@
       "asset_type": "cv",
       "language": "fr",
       "format": "pdf",
-      "file": "cvs/C03_ingenieure-senior-data-platform_fr_v1.pdf",
-      "sha256": "da67dc95ac1d77890d914758ea783592b6e4bd26bbe9ac8030dddfe1eb04e9d4",
-      "bytes": 1954
+      "file": "cvs/C03_consultant-integration-boomi-et-workato_fr_v1.pdf",
+      "sha256": "10e351e1980dfb465e5bbb1c432011758a88f11076664e8c8b7d9a67ec4b5c9e",
+      "bytes": 4144
     },
     {
       "id": "C04",
@@ -71,29 +69,29 @@
       "asset_type": "cv",
       "language": "en",
       "format": "pdf",
-      "file": "cvs/C04_data-scientist-ia-generative_en_v1.pdf",
-      "sha256": "d85f9a59099101cd662873373d33b60478ebaa7ddd1d0de41723eb4a08f52dab",
-      "bytes": 1874
+      "file": "cvs/C04_junior-integration-developer-ssis_en_v1.pdf",
+      "sha256": "7c5fe1bcffaf1473ab8e821cf1c218c23c7b01f1c09fed55b553ac0c3ce1939b",
+      "bytes": 3415
     },
     {
       "id": "C05",
       "version": "v1",
       "asset_type": "cv",
       "language": "fr",
-      "format": "txt",
-      "file": "cvs/C05_consultante-salesforce-confirmee_fr_v1.txt",
-      "sha256": "860bdc805d97a8036791c8548507dfc0cd37150e1d657ef59f233b6eb37efa3b",
-      "bytes": 804
+      "format": "pdf",
+      "file": "cvs/C05_responsable-bi-senior-power-bi_fr_v1.pdf",
+      "sha256": "4cde0815b4fb6f8835c7ab2e696e006b9366ba1b8a81a5dc62ac1628c2c0abe0",
+      "bytes": 4502
     },
     {
       "id": "C06",
       "version": "v1",
       "asset_type": "cv",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "cvs/C06_ingenieur-integration-talend_fr_v1.pdf",
-      "sha256": "1fca6db133e788f8699a24a8fcc2a40b7f7cadeb5bfcb70dba178ef0aa49c5a8",
-      "bytes": 1846
+      "file": "cvs/C06_bi-developer-qlik-sense-and-power-bi_en_v1.pdf",
+      "sha256": "2cb4f0992c8ff1119dfa12a782ed74e7f6adcc5779e334a5d282f203ad558427",
+      "bytes": 3848
     },
     {
       "id": "C07",
@@ -101,79 +99,79 @@
       "asset_type": "cv",
       "language": "en",
       "format": "pdf",
-      "file": "cvs/C07_consultant-senior-bi-analytics_en_v1.pdf",
-      "sha256": "2cf87997668f7564c53674230f001a1d807e596d06255fa2699d2ae35c773350",
-      "bytes": 1826
+      "file": "cvs/C07_junior-bi-analyst-power-bi_en_v1.pdf",
+      "sha256": "77e910a976407461e63c08489ae3435c750b67c6705afe5872109df853de5198",
+      "bytes": 3404
     },
     {
       "id": "C08",
       "version": "v1",
       "asset_type": "cv",
-      "language": "en",
+      "language": "fr",
       "format": "pdf",
-      "file": "cvs/C08_data-engineer-gcp_en_v1.pdf",
-      "sha256": "bd23a4a8b01e0e4d1f331db866194e7609c47950f13bd0cdc1de245efcd4bbfe",
-      "bytes": 1783
+      "file": "cvs/C08_ingenieur-senior-data-platform-snowflake_fr_v1.pdf",
+      "sha256": "8b04db8c60a1bc679ec79c16feabb44a89d7dce3eae9cf81587866964b88b832",
+      "bytes": 4452
     },
     {
       "id": "C09",
       "version": "v1",
       "asset_type": "cv",
-      "language": "fr",
-      "format": "docx",
-      "file": "cvs/C09_lead-data-scientist-ml-industriel_fr_v1.docx",
-      "sha256": "ad522f48b04f994defb0beb34056cf3fba724ef58c83171c92a8684b9e180af9",
-      "bytes": 1433
+      "language": "en",
+      "format": "pdf",
+      "file": "cvs/C09_data-engineer-databricks-and-azure_en_v1.pdf",
+      "sha256": "cfdf4c47d81acb5a919b65ef24d9bf86f782e9e23d607c626db40e72efa0f3b7",
+      "bytes": 4055
     },
     {
       "id": "C10",
       "version": "v1",
       "asset_type": "cv",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "cvs/C10_consultant-senior-salesforce-marketing-cloud_fr_v1.pdf",
-      "sha256": "fbd6ec33783f70109022afa336eedc269d02b30e74ce772e94f5dc19764c27cb",
-      "bytes": 1985
+      "file": "cvs/C10_junior-data-engineer-snowflake_en_v1.pdf",
+      "sha256": "e13209ac23f563493b3155aac2c8f327ab00cf399a6f018e07551bde31a6851b",
+      "bytes": 3423
     },
     {
       "id": "C11",
       "version": "v1",
       "asset_type": "cv",
-      "language": "en",
+      "language": "fr",
       "format": "pdf",
-      "file": "cvs/C11_developpeur-integration-junior_en_v1.pdf",
-      "sha256": "e4e24da664f25178bac0686591d1cb04d16771bc693b4b11adcc935e4144f764",
-      "bytes": 1780
+      "file": "cvs/C11_ingenieur-ia-senior-nlp-et-rag_fr_v1.pdf",
+      "sha256": "e568966b91f0d88afd473a79dda9bc3574ec2a1c2b5200db51192e23d8fa88fb",
+      "bytes": 4485
     },
     {
       "id": "C12",
       "version": "v1",
       "asset_type": "cv",
-      "language": "fr",
-      "format": "txt",
-      "file": "cvs/C12_consultante-bi-junior_fr_v1.txt",
-      "sha256": "384f84692604cc01ad94a8e1c687d81ddcf48d9263797f9b7a8cadbb120363f2",
-      "bytes": 657
+      "language": "en",
+      "format": "pdf",
+      "file": "cvs/C12_machine-learning-engineer-mlops_en_v1.pdf",
+      "sha256": "13ee0d82e9fc1012381ecbcfdfe2437e844100a3fb65f54cd9fd7caf4bf1d885",
+      "bytes": 3848
     },
     {
       "id": "C13",
       "version": "v1",
       "asset_type": "cv",
       "language": "fr",
-      "format": "docx",
-      "file": "cvs/C13_data-engineer-junior_fr_v1.docx",
-      "sha256": "a14db1af604c96304de9ee0589ff740e4e504d0dae32d9829ce74e1f28db702c",
-      "bytes": 1336
+      "format": "pdf",
+      "file": "cvs/C13_ingenieur-vision-par-ordinateur_fr_v1.pdf",
+      "sha256": "ead7a62dcee44a89427c6ef795dd667c5240b7826166792ab9674554c14d463b",
+      "bytes": 3748
     },
     {
       "id": "C14",
       "version": "v1",
       "asset_type": "cv",
       "language": "en",
-      "format": "txt",
-      "file": "cvs/C14_machine-learning-engineer-junior_en_v1.txt",
-      "sha256": "85371e3735fb29d0a14b5c6aaa54d45593ba34a31a72d835e83950b75601e787",
-      "bytes": 636
+      "format": "pdf",
+      "file": "cvs/C14_junior-data-scientist_en_v1.pdf",
+      "sha256": "f327c0f4e3bf6d4aa09d4ad614104ffbe9b2d7d537d876cc42c92c7c66184054",
+      "bytes": 3411
     },
     {
       "id": "C15",
@@ -181,49 +179,49 @@
       "asset_type": "cv",
       "language": "fr",
       "format": "pdf",
-      "file": "cvs/C15_developpeuse-salesforce-junior_fr_v1.pdf",
-      "sha256": "0b886f67e2bf259c443e7d6b9a6cbec3f7ac301e92ff717549f4fd623720d792",
-      "bytes": 1867
+      "file": "cvs/C15_architecte-salesforce-senior_fr_v1.pdf",
+      "sha256": "30fbd1806a63dd7f81463327be769acb187732d8e144504aeaf69469a79830e0",
+      "bytes": 4327
     },
     {
       "id": "C16",
       "version": "v1",
       "asset_type": "cv",
-      "language": "fr",
-      "format": "txt",
-      "file": "cvs/C16_consultant-integration-boomi-workato_fr_v1.txt",
-      "sha256": "8ed4aecd992afdb392b1211a0d19b7b18172b35a594f7b4a3117423fdd2c0269",
-      "bytes": 765
+      "language": "en",
+      "format": "pdf",
+      "file": "cvs/C16_salesforce-developer-apex-and-lwc_en_v1.pdf",
+      "sha256": "e979bc112c3ec17e922fa3ea46d7f628c17830da04c91cee0e7861c08d8ad01f",
+      "bytes": 3953
     },
     {
       "id": "C17",
       "version": "v1",
       "asset_type": "cv",
-      "language": "en",
-      "format": "docx",
-      "file": "cvs/C17_architecte-data-si_en_v1.docx",
-      "sha256": "b8e821b39b784af10d2cc218a64e9394dbfa0bc279aff2e42fe18e79c11a62b9",
-      "bytes": 1380
+      "language": "fr",
+      "format": "pdf",
+      "file": "cvs/C17_consultante-marketing-cloud-salesforce_fr_v1.pdf",
+      "sha256": "79ee8a2602a90ff27a623f4807cd149cb4b2896a581bd271d0f033c456486db0",
+      "bytes": 3681
     },
     {
       "id": "C18",
       "version": "v1",
       "asset_type": "cv",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "cvs/C18_architecte-cloud-data_fr_v1.pdf",
-      "sha256": "7e00325de008af35596f10534bbea315600c53c279bcda55919a20655164fe8f",
-      "bytes": 1966
+      "file": "cvs/C18_junior-salesforce-administrator_en_v1.pdf",
+      "sha256": "f4720b6b7b1acc5439ef3c1c914f9df0da0041ceb4e41dda6f0a1a538d64da27",
+      "bytes": 3404
     },
     {
       "id": "C19",
       "version": "v1",
       "asset_type": "cv",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "cvs/C19_cheffe-de-projet-data-senior_fr_v1.pdf",
-      "sha256": "3f8247a61e81c7aecd8f9063659d74a950f2780b73bef6ef0a4b1e62ccd2b04a",
-      "bytes": 2023
+      "file": "cvs/C19_enterprise-architect-data-strategy_en_v1.pdf",
+      "sha256": "8c6eeacadca8730433f95e3027ebdef2ada780547e5a9f9437785f4b0386f30c",
+      "bytes": 4166
     },
     {
       "id": "C20",
@@ -231,39 +229,39 @@
       "asset_type": "cv",
       "language": "fr",
       "format": "pdf",
-      "file": "cvs/C20_chef-de-projet-it-confirme_fr_v1.pdf",
-      "sha256": "9205fea186069ff3a4b7b4e23d025c517e5a7ed9911c61f5b0ad6a2ddde3a8c9",
-      "bytes": 1963
+      "file": "cvs/C20_cheffe-de-projet-data-et-ia_fr_v1.pdf",
+      "sha256": "e1b177b4a40b17223c340bfd1996d2123bff2089d348dd65b67c531b955df414",
+      "bytes": 4519
     },
     {
       "id": "P01",
       "version": "v1",
       "asset_type": "project",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "projects/P01_crm-unifie-et-plateforme-customer-intelligence-p_fr_v1.pdf",
-      "sha256": "d3d4b28e5bdc726ea2ba8a6786b9274b1a9cfe682b43b6a3f4e39923125bff0b",
-      "bytes": 1748
+      "file": "projects/P01_real-time-centralised-hris_en_v1.pdf",
+      "sha256": "b7bbd0b0c1cce1a67619c20dbbce4980d09078ab1277287d4fbc1db57db2b206",
+      "bytes": 3096
     },
     {
       "id": "P02",
       "version": "v1",
       "asset_type": "project",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "projects/P02_integration-hris-temps-reel-multi-pays_fr_v1.pdf",
-      "sha256": "f6ceacd1ef1d6e1e0a8b4109da1a7a8fbd40e12916b980cce685f9a90e9cd876",
-      "bytes": 1585
+      "file": "projects/P02_unified-crm-and-customer-360_en_v1.pdf",
+      "sha256": "0cec56fd8dcadd65b08f82c922939053e12f2f58abe083ee3ec8019858e9fb17",
+      "bytes": 3267
     },
     {
       "id": "P03",
       "version": "v1",
       "asset_type": "project",
-      "language": "fr",
-      "format": "docx",
-      "file": "projects/P03_prevision-de-la-demande-par-ia-et-dashboards-tem_fr_v1.docx",
-      "sha256": "3eed744551e1304bc00d45dd0864426589d59e86c6099b8505a2a74bda958c64",
-      "bytes": 1321
+      "language": "en",
+      "format": "pdf",
+      "file": "projects/P03_ai-demand-forecasting-dashboards_en_v1.pdf",
+      "sha256": "b2bb9bdaae0710ab667843b59673b80d2a7ea46b251628e01f98d0fb875dfa79",
+      "bytes": 3193
     },
     {
       "id": "P04",
@@ -271,9 +269,9 @@
       "asset_type": "project",
       "language": "en",
       "format": "pdf",
-      "file": "projects/P04_plateforme-d-aide-a-l-enregistrement-de-propriet_en_v1.pdf",
-      "sha256": "e7bf014634e7a1e6a0d69697c87dd1b5628705099fa5c899524ca7be7c59da2a",
-      "bytes": 1682
+      "file": "projects/P04_intelligent-trademark-registration-platform_en_v1.pdf",
+      "sha256": "7cd2a211b725c53596da022c93461b85381b726ca9ceaa041179177da9af01fa",
+      "bytes": 3062
     },
     {
       "id": "P04",
@@ -281,59 +279,59 @@
       "asset_type": "project",
       "language": "en",
       "format": "pdf",
-      "file": "versions/P04_plateforme-d-aide-a-l-enregistrement-de-propriet_en_v2.pdf",
-      "sha256": "39e8b0244839b8567963f8e0a1a55c38a87babd212120dd0965acf0498f789ad",
-      "bytes": 1697
+      "file": "versions/P04_intelligent-trademark-registration-platform_en_v2.pdf",
+      "sha256": "8bf66ee7ab0eb4beced864041caf6d1d45c091fb822ad2bccd2e33ca53f5211b",
+      "bytes": 3078
     },
     {
       "id": "P05",
       "version": "v1",
       "asset_type": "project",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "projects/P05_data-warehouse-snowflake-pour-une-maison-de-luxe_fr_v1.pdf",
-      "sha256": "a7eb23e054aa65a87bc4ca0b88a425015472cac4d9fc431bbc865328eca9add4",
-      "bytes": 1584
+      "file": "projects/P05_fashion-supply-chain-visibility_en_v1.pdf",
+      "sha256": "16ed08db78fcf5285b42860e3ae9ebb5152b041ad8fec5eba9e47abbe20e68a7",
+      "bytes": 2943
     },
     {
       "id": "P06",
       "version": "v1",
       "asset_type": "project",
-      "language": "fr",
-      "format": "txt",
-      "file": "projects/P06_dashboards-de-pilotage-des-ventes-multi-canaux_fr_v1.txt",
-      "sha256": "337ac9c8ea16699cecfe96a4956c6ac3c688ea1b71cd129fdbd90f359b4db4ec",
-      "bytes": 561
+      "language": "en",
+      "format": "pdf",
+      "file": "projects/P06_commerce-cloud-and-erp-integration_en_v1.pdf",
+      "sha256": "7a7337e982d59c17b87524a5fa2c86877f6c2f50b816a38be92b669352531c49",
+      "bytes": 3000
     },
     {
       "id": "P07",
       "version": "v1",
       "asset_type": "project",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "projects/P07_integration-e-commerce-erp-et-automatisation-des_fr_v1.pdf",
-      "sha256": "12f973ceb286ac15cf2f59e487ba90eea5524b7dbbe8dd257108962f02e62b37",
-      "bytes": 1592
+      "file": "projects/P07_multi-brand-marketing-automation_en_v1.pdf",
+      "sha256": "375e74a55748195b887f2a9dbd5f63b635c7bb6cc3bf7640f30dcdad577359ff",
+      "bytes": 2877
     },
     {
       "id": "P08",
       "version": "v1",
       "asset_type": "project",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "projects/P08_service-cloud-et-vision-360-client-pour-un-assur_fr_v1.pdf",
-      "sha256": "86ba15869f504733e1bdfe9261326be938344a487f8fb0b558c77fcb3d4b06a0",
-      "bytes": 1669
+      "file": "projects/P08_regulatory-reporting-data-warehouse_en_v1.pdf",
+      "sha256": "a7050994e257ad34648584714011a1e7466c21f84fcf14128718dc3d8d954373",
+      "bytes": 2950
     },
     {
       "id": "P09",
       "version": "v1",
       "asset_type": "project",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "projects/P09_marketing-cloud-et-personnalisation-des-campagne_fr_v1.pdf",
-      "sha256": "8c8fcb4cb1d46a0b88ee61b33ade520b2cda4e57467eabad5df78c6c3b48a423",
-      "bytes": 1625
+      "file": "projects/P09_customer-churn-prediction_en_v1.pdf",
+      "sha256": "4002462e3348daea1db923cbf8c0daf124f24dd998793bac3d0034796352c2a1",
+      "bytes": 2881
     },
     {
       "id": "P10",
@@ -341,89 +339,89 @@
       "asset_type": "project",
       "language": "en",
       "format": "pdf",
-      "file": "projects/P10_data-platform-cloud-temps-reel-pour-un-operateur_en_v1.pdf",
-      "sha256": "352b7811f26d552e5b56e23613ec5b2ea8ca4590eee8181ef90c929854c699aa",
-      "bytes": 1635
+      "file": "projects/P10_toll-flow-anomaly-detection_en_v1.pdf",
+      "sha256": "7f668908507851c160d8e140ea68d18fa9c80d24e0a37444bbc24ab19d1f7f35",
+      "bytes": 3054
     },
     {
       "id": "P11",
       "version": "v1",
       "asset_type": "project",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "projects/P11_migration-d-integrations-et-qualite-de-donnees-p_fr_v1.pdf",
-      "sha256": "db17d867f0947e8d8ad61d3f7018eccae209044465dc1fc9ef430621d569d24e",
-      "bytes": 1668
+      "file": "projects/P11_stock-and-customer-service-on-salesforce_en_v1.pdf",
+      "sha256": "bccf081dc3643f72892c893450e12523903ce8e1ac1f062865a51cc7ebfeb2c4",
+      "bytes": 3095
     },
     {
       "id": "P12",
       "version": "v1",
       "asset_type": "project",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "projects/P12_analyse-nlp-des-retours-clients-multi-boutiques_fr_v1.pdf",
-      "sha256": "f416389a486edcb33d62f8971c336b23f01fdbea7e3e7948e1915d826f9608b8",
-      "bytes": 1632
+      "file": "projects/P12_energy-operations-steering_en_v1.pdf",
+      "sha256": "9bebd1aa697d685fd4aa20a2157ae7ca1a2094e008110c6be99cd1aeed7dab08",
+      "bytes": 2780
     },
     {
       "id": "P13",
       "version": "v1",
       "asset_type": "project",
       "language": "en",
-      "format": "txt",
-      "file": "projects/P13_reporting-self-service-pour-un-reseau-de-franchi_en_v1.txt",
-      "sha256": "9d14fad7f1aa650908225ab4cd1dbe48ea092df46846491dc1965d8aff0190c9",
-      "bytes": 554
+      "format": "pdf",
+      "file": "projects/P13_etl-to-cloud-elt-migration_en_v1.pdf",
+      "sha256": "622b5867bc2603d32bc74f0f8f60da20b06b1182cdbb41c749548fa4d1ae8439",
+      "bytes": 2883
     },
     {
       "id": "P14",
       "version": "v1",
       "asset_type": "project",
       "language": "en",
-      "format": "docx",
-      "file": "projects/P14_couche-d-api-et-integration-si-pour-un-gestionna_en_v1.docx",
-      "sha256": "af6e6b3d6cfa23d1ccb0bccd503f603701ee343fa89024276abd30fc4f647cc6",
-      "bytes": 1300
+      "format": "pdf",
+      "file": "projects/P14_back-office-workflow-automation_en_v1.pdf",
+      "sha256": "7fcb19764cc92ef87e18d53b6a5fb5a67b62b4f462492d5b65906ed4cc0633be",
+      "bytes": 2876
     },
     {
       "id": "P15",
       "version": "v1",
       "asset_type": "project",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "projects/P15_assistant-ia-generatif-pour-le-support-client-d_fr_v1.pdf",
-      "sha256": "8a86e7907140da038bf6889b07261144a0d216a053d5902e1768f32797922075",
-      "bytes": 1674
+      "file": "projects/P15_genai-customer-support-assistant_en_v1.pdf",
+      "sha256": "0ca23d9cea9a881487056865ee70ffc9827afbe2c480d64ce697bf8f040e2959",
+      "bytes": 3000
     },
     {
       "id": "STK-01",
       "version": "v1",
       "asset_type": "stack",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "stacks/STK-01_integration-de-donnees-api_fr_v1.pdf",
-      "sha256": "d7ef82606a0dad34cb0add12eef755efc63184874c6d0d52af4e05dcb8d77f29",
-      "bytes": 2286
+      "file": "stacks/STK-01_data-integration-and-api_en_v1.pdf",
+      "sha256": "054eef40f98c658d3a12a7128ee737e8f10329d9735a8f04b043ff301773fbb9",
+      "bytes": 3527
     },
     {
       "id": "STK-01",
       "version": "v2",
       "asset_type": "stack",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "versions/STK-01_integration-de-donnees-api_fr_v2.pdf",
-      "sha256": "c96827fc23293bd7d02218eadc7cdc1defe0e14bbf9deb190f2c90e8e15e5905",
-      "bytes": 2376
+      "file": "versions/STK-01_data-integration-and-api_en_v2.pdf",
+      "sha256": "4f69ae99dc00bd7dea51fd5f60e184397382a96a0c28839e29064e672eeea16d",
+      "bytes": 3596
     },
     {
       "id": "STK-02",
       "version": "v1",
       "asset_type": "stack",
-      "language": "fr",
+      "language": "en",
       "format": "pdf",
-      "file": "stacks/STK-02_bi-analytics_fr_v1.pdf",
-      "sha256": "9d521169ac344fd2f8d8fd00e1107e49724a10c5f2d054073251852c8b31f08f",
-      "bytes": 2008
+      "file": "stacks/STK-02_data-platform-and-cloud_en_v1.pdf",
+      "sha256": "9c538495ab3611b2b1e66986038728745aef163aa543b857632943118bfbe63d",
+      "bytes": 4042
     },
     {
       "id": "STK-03",
@@ -431,9 +429,39 @@
       "asset_type": "stack",
       "language": "en",
       "format": "pdf",
-      "file": "stacks/STK-03_data-ai-platform_en_v1.pdf",
-      "sha256": "78d906956fe36171e847aba5e0210864443d682f52309530379dfae273af872d",
-      "bytes": 2116
+      "file": "stacks/STK-03_business-intelligence-and-analytics_en_v1.pdf",
+      "sha256": "dea6c7020efdea1cff9ade1fbf42554f2b7863cbfa0989f7870e7a2fb1a903f9",
+      "bytes": 2519
+    },
+    {
+      "id": "STK-04",
+      "version": "v1",
+      "asset_type": "stack",
+      "language": "en",
+      "format": "pdf",
+      "file": "stacks/STK-04_ai-machine-learning-and-llm_en_v1.pdf",
+      "sha256": "1f23a5b18dbc84483b8f8fb327dc75b18fb703a736a41e8026439f705d2035db",
+      "bytes": 3253
+    },
+    {
+      "id": "STK-05",
+      "version": "v1",
+      "asset_type": "stack",
+      "language": "en",
+      "format": "pdf",
+      "file": "stacks/STK-05_crm-and-salesforce_en_v1.pdf",
+      "sha256": "1747aa968208ff60313d872ae3c18201bf40a1c37fc7546026c8e5f829e9f0d6",
+      "bytes": 2935
+    },
+    {
+      "id": "STK-06",
+      "version": "v1",
+      "asset_type": "stack",
+      "language": "en",
+      "format": "pdf",
+      "file": "stacks/STK-06_delivery-management-and-architecture_en_v1.pdf",
+      "sha256": "a097bf64eb7c9cdc2349410c722d0dceacf4c68b57ce6da8f31a152d783e600d",
+      "bytes": 2469
     }
   ]
 }

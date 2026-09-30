@@ -1,0 +1,244 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3336 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(Capability stack STK-02 - Data Platform and Cloud) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: STK-02 | version: v1 | asset_type: stack | language: en) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(category: Data & Cloud) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 733 Tm
+0.55 G 0.7 w
+56 729.5 m 539 729.5 l S
+0 G 1 w
+(Description) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 717 Tm
+(Building cloud warehouses, lakehouses and pipelines with versioned infrastructure and quality) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 703.5 Tm
+(controls.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 680 Tm
+0.55 G 0.7 w
+56 676.5 m 539 676.5 l S
+0 G 1 w
+(Technologies) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 664 Tm
+(- Snowflake) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 650.5 Tm
+(- BigQuery) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 637 Tm
+(- GCP) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 623.5 Tm
+(- Azure) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 610 Tm
+(- Azure Data Factory) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 596.5 Tm
+(- Databricks) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 583 Tm
+(- Delta Lake) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 569.5 Tm
+(- dbt) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 556 Tm
+(- SQL Server) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 542.5 Tm
+(- PostgreSQL) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 529 Tm
+(- Terraform) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 515.5 Tm
+(- Docker) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 502 Tm
+(- SQL) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 488.5 Tm
+(- Git) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 465 Tm
+0.55 G 0.7 w
+56 461.5 m 539 461.5 l S
+0 G 1 w
+(Use cases) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 449 Tm
+(- Customer 360 warehouse) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 435.5 Tm
+(- ETL to ELT migration) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 422 Tm
+(- Streaming ingestion for anomaly detection) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 398.5 Tm
+0.55 G 0.7 w
+56 395 m 539 395 l S
+0 G 1 w
+(Related projects) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 382.5 Tm
+(P02 - Unified CRM and Customer 360 | P03 - AI Demand Forecasting Dashboards | P04 - Intelligent) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 369 Tm
+(Trademark Registration Platform | P05 - Fashion Supply Chain Visibility | P07 - Multi-brand) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 355.5 Tm
+(Marketing Automation | P08 - Regulatory Reporting Data Warehouse | P09 - Customer Churn) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 342 Tm
+(Prediction | P10 - Toll Flow Anomaly Detection | P12 - Energy Operations Steering | P13 - ETL to) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 328.5 Tm
+(Cloud ELT Migration | P15 - GenAI Customer Support Assistant) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 305 Tm
+0.55 G 0.7 w
+56 301.5 m 539 301.5 l S
+0 G 1 w
+(Related profiles) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 289 Tm
+(C01 Karim Belhadj \(senior\) | C02 Sarra Mezghani \(mid\) | C03 Mathieu Vasseur \(mid\) | C04 Yassine) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 275.5 Tm
+(Gharbi \(junior\) | C05 Claire Fontaine \(senior\) | C06 Omar Trabelsi \(mid\) | C07 Lina Haddad) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 262 Tm
+(\(junior\) | C08 Julien Marchetti \(senior\) | C09 Nour El Houda Ben Salah \(mid\) | C10 Hamza Jlassi) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 248.5 Tm
+(\(junior\) | C11 Dr. Amine Khelifi \(senior\) | C12 Ines Rekik \(mid\) | C13 Thomas Girard \(mid\) | C14) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 235 Tm
+(Mariem Chaabane \(junior\) | C16 Wassim Chaouch \(mid\) | C17 Camille Roussel \(mid\) | C18 Rim Dridi) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 221.5 Tm
+(\(junior\) | C19 Nabil Al-Mansoori \(senior\)) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3838
+%%EOF

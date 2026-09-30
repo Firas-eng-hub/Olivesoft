@@ -1,0 +1,202 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 2709 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(CV C04 - Junior Integration Developer SSIS) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: C04 | version: v1 | asset_type: cv | language: en) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(seniority: junior | site: Sfax | experience: 2 years) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 743 Tm
+0.55 G 0.7 w
+56 739.5 m 539 739.5 l S
+0 G 1 w
+(Yassine Gharbi) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 727 Tm
+(Junior Integration Developer · SSIS & APIs) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 713.5 Tm
+0.4 g
+(yassine.gharbi@example.com | +216 00 000 004 | Sfax, Tunisia | github.com/y-gharbi-demo |) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 701.5 Tm
+0.4 g
+(linkedin.com/in/y-gharbi-demo) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 679.5 Tm
+0.55 G 0.7 w
+56 676 m 539 676 l S
+0 G 1 w
+(Summary) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 663.5 Tm
+(Junior developer with 2 years on SSIS flows and REST APIs, now ramping up on MuleSoft. Reliable) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 650 Tm
+(on testing and documentation.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 626.5 Tm
+0.55 G 0.7 w
+56 623 m 539 623 l S
+0 G 1 w
+(Skills) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 610.5 Tm
+(Integration & Orchestration: SSIS, REST/SOAP APIs, MuleSoft) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 597 Tm
+(Data & Cloud: SQL Server, SQL, Git) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 573.5 Tm
+0.55 G 0.7 w
+56 570 m 539 570 l S
+0 G 1 w
+(Languages) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 557.5 Tm
+(French — Fluent; English — Intermediate; Arabic — Native) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 534 Tm
+0.55 G 0.7 w
+56 530.5 m 539 530.5 l S
+0 G 1 w
+(Project experience) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 518 Tm
+(P08 - Regulatory Reporting Data Warehouse \(2024–2025\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 504.5 Tm
+(Context: Consulting mission · Junior ETL developer) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 491 Tm
+(- Developed SSIS packages loading dimension and fact tables for regulatory reports.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 477.5 Tm
+(- Wrote unit checks that caught load anomalies before report generation.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 454 Tm
+0.55 G 0.7 w
+56 450.5 m 539 450.5 l S
+0 G 1 w
+(Leadership & volunteering) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 438 Tm
+(Computer Science Student Club \(generic\) - Member \(2020 – 2022\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 424.5 Tm
+(- Helped organise two coding workshops for first-year students.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 401 Tm
+0.55 G 0.7 w
+56 397.5 m 539 397.5 l S
+0 G 1 w
+(Education) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 385 Tm
+(Institute of Applied Computing \(generic\) - Applied Bachelor in Business Computing \(2020 – 2023\)) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 361.5 Tm
+0.55 G 0.7 w
+56 358 m 539 358 l S
+0 G 1 w
+(Certifications) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 345.5 Tm
+(\(None\)) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3211
+%%EOF

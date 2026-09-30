@@ -1,0 +1,209 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 2547 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(Capability stack STK-04 - AI, Machine Learning and LLM) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: STK-04 | version: v1 | asset_type: stack | language: en) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(category: AI / ML & LLM) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 733 Tm
+0.55 G 0.7 w
+56 729.5 m 539 729.5 l S
+0 G 1 w
+(Description) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 717 Tm
+(Developing predictive models, NLP and GenAI systems and deploying them with monitoring.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 693.5 Tm
+0.55 G 0.7 w
+56 690 m 539 690 l S
+0 G 1 w
+(Technologies) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 677.5 Tm
+(- Python) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 664 Tm
+(- PyTorch) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 650.5 Tm
+(- scikit-learn) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 637 Tm
+(- XGBoost) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 623.5 Tm
+(- MLflow) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 610 Tm
+(- NLP) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 596.5 Tm
+(- LLM) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 583 Tm
+(- RAG) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 569.5 Tm
+(- Vector DB) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 556 Tm
+(- Elasticsearch) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 542.5 Tm
+(- OpenCV) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 529 Tm
+(- Anomaly detection) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 515.5 Tm
+(- PySpark) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 492 Tm
+0.55 G 0.7 w
+56 488.5 m 539 488.5 l S
+0 G 1 w
+(Use cases) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 476 Tm
+(- Churn prediction) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 462.5 Tm
+(- RAG assistants) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 449 Tm
+(- Anomaly detection and image classification) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 425.5 Tm
+0.55 G 0.7 w
+56 422 m 539 422 l S
+0 G 1 w
+(Related projects) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 409.5 Tm
+(P03 - AI Demand Forecasting Dashboards | P04 - Intelligent Trademark Registration Platform | P09) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 396 Tm
+(- Customer Churn Prediction | P10 - Toll Flow Anomaly Detection | P12 - Energy Operations) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 382.5 Tm
+(Steering | P14 - Back-office Workflow Automation | P15 - GenAI Customer Support Assistant) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 359 Tm
+0.55 G 0.7 w
+56 355.5 m 539 355.5 l S
+0 G 1 w
+(Related profiles) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 343 Tm
+(C02 Sarra Mezghani \(mid\) | C06 Omar Trabelsi \(mid\) | C09 Nour El Houda Ben Salah \(mid\) | C10) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 329.5 Tm
+(Hamza Jlassi \(junior\) | C11 Dr. Amine Khelifi \(senior\) | C12 Ines Rekik \(mid\) | C13 Thomas Girard) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 316 Tm
+(\(mid\) | C14 Mariem Chaabane \(junior\)) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3049
+%%EOF

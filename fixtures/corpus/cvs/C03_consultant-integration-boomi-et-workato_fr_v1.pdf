@@ -1,0 +1,232 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3438 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(CV C03 - Consultant intégration Boomi et Workato) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: C03 | version: v1 | asset_type: cv | language: fr) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(seniority: mid | site: Paris | experience: 7 years) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 743 Tm
+0.55 G 0.7 w
+56 739.5 m 539 739.5 l S
+0 G 1 w
+(Mathieu Vasseur) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 727 Tm
+(Consultant intégration – Boomi, Workato & automatisation de processus) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 713.5 Tm
+0.4 g
+(mathieu.vasseur@example.com | +33 0 00 00 00 03 | Paris, France | github.com/m-vasseur-demo |) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 701.5 Tm
+0.4 g
+(linkedin.com/in/m-vasseur-demo) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 679.5 Tm
+0.55 G 0.7 w
+56 676 m 539 676 l S
+0 G 1 w
+(Profil) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 663.5 Tm
+(Consultant intégration avec 7 ans d'expérience à traduire des processus métier en automatisations) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 650 Tm
+(Boomi et Workato. Solide relationnel et animation d'ateliers de cadrage.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 626.5 Tm
+0.55 G 0.7 w
+56 623 m 539 623 l S
+0 G 1 w
+(Compétences) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 610.5 Tm
+(Intégration & Orchestration: Boomi, Workato, n8n, REST/SOAP APIs) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 597 Tm
+(CRM & Salesforce: Service Cloud, SOQL) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 583.5 Tm
+(Données & Cloud: SQL, Git) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 560 Tm
+0.55 G 0.7 w
+56 556.5 m 539 556.5 l S
+0 G 1 w
+(Langues) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 544 Tm
+(Français – langue maternelle; Anglais – courant) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 520.5 Tm
+0.55 G 0.7 w
+56 517 m 539 517 l S
+0 G 1 w
+(Expérience projet) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 504.5 Tm
+(P11 - Stock and Customer Service on Salesforce \(2022–2023\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 491 Tm
+(Contexte: Mission de conseil – Consultant intégration) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 477.5 Tm
+(- A construit des processus Boomi synchronisant stock magasins et commandes ERP avec Service) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 464 Tm
+(Cloud.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 450.5 Tm
+(- A documenté les contrats d'interface, réduisant les escalades de tickets entre équipes.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 437 Tm
+(P14 - Back-office Workflow Automation \(2024\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 423.5 Tm
+(Contexte: Mission de conseil – Consultant automatisation) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 410 Tm
+(- A automatisé onboarding, relances et réconciliations avec Workato et n8n.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 396.5 Tm
+(- A identifié 12 workflows manuels et livré 1 200 heures gagnées par an.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 373 Tm
+0.55 G 0.7 w
+56 369.5 m 539 369.5 l S
+0 G 1 w
+(Leadership & engagement) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 357 Tm
+(Process Automation Community \(fictional\) - Facilitateur d'ateliers \(2023 – Present\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 343.5 Tm
+(- Organise des ateliers mensuels d'automatisation no-code pour les consultants juniors.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 320 Tm
+0.55 G 0.7 w
+56 316.5 m 539 316.5 l S
+0 G 1 w
+(Formation) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 304 Tm
+(Business and Information Systems School \(generic\) - Master systèmes d'information \(2017 – 2019\)) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 280.5 Tm
+0.55 G 0.7 w
+56 277 m 539 277 l S
+0 G 1 w
+(Certifications) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 264.5 Tm
+(Boomi Associate Developer - Boomi \(Feb 2021\)) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3940
+%%EOF

@@ -4,7 +4,7 @@
       "tender_id": "T-001",
       "language": "fr",
       "requirement_count": 8,
-      "expected_coverage_pct": 56,
+      "expected_coverage_pct": 69,
       "requirements": [
         {
           "id": "R1",
@@ -12,63 +12,64 @@
           "expected_class": "supported",
           "supporting_docs": [
             "C01",
-            "C05",
-            "C17",
-            "P14"
+            "C15",
+            "C19",
+            "P01",
+            "P06"
           ]
         },
         {
           "id": "R2",
-          "text": "ETL industriel Talend avec contrôles de qualité de données",
+          "text": "Industrialisation d'ETL Talend avec contrôles de qualité de données",
           "expected_class": "supported",
           "supporting_docs": [
-            "C06",
-            "P11"
+            "C02",
+            "P01",
+            "P13"
           ]
         },
         {
           "id": "R3",
-          "text": "Streaming événementiel Kafka entre systèmes",
+          "text": "Streaming événementiel Apache Kafka",
           "expected_class": "supported",
           "supporting_docs": [
-            "C01",
-            "C03",
             "C08",
-            "P10",
-            "P14"
+            "C09",
+            "C13",
+            "P05",
+            "P10"
           ]
         },
         {
           "id": "R4",
-          "text": "Connecteur Salesforce Service Cloud",
-          "expected_class": "partial",
+          "text": "Automatisation de workflows avec n8n / Workato",
+          "expected_class": "supported",
           "supporting_docs": [
-            "C05",
-            "C10",
-            "P08"
-          ],
-          "note": "Salesforce skills exist but combined SF+integration profiles are indirect."
+            "C03",
+            "C17",
+            "P07",
+            "P14"
+          ]
         },
         {
           "id": "R5",
-          "text": "Orchestration de workflows d'automatisation (type n8n)",
-          "expected_class": "partial",
+          "text": "Gouvernance et sécurité des API",
+          "expected_class": "supported",
           "supporting_docs": [
-            "C11",
-            "P07"
+            "C01",
+            "C19"
           ],
-          "note": "Junior profile only."
+          "note": "Contract-first patterns and enterprise governance evidenced on integration programmes."
         },
         {
           "id": "R6",
-          "text": "Supervision et observabilité des flux",
+          "text": "Supervision 24/7 des flux en mode run",
           "expected_class": "partial",
           "supporting_docs": [
             "C01",
-            "C06",
-            "C16"
+            "P01"
           ],
-          "note": "Monitoring skills present but not as a dedicated profile."
+          "note": "Monitoring patterns evidenced (runbook, dashboards) but no dedicated run/ops profile."
         },
         {
           "id": "R7",
@@ -78,7 +79,7 @@
         },
         {
           "id": "R8",
-          "text": "Interface de supervision web React",
+          "text": "Interface web React de supervision",
           "expected_class": "unsupported",
           "supporting_docs": []
         }
@@ -95,74 +96,76 @@
           "text": "Data warehouse Snowflake avec transformations dbt",
           "expected_class": "supported",
           "supporting_docs": [
-            "C03",
-            "C13",
-            "C17",
-            "P05"
+            "C08",
+            "C10",
+            "P05",
+            "P13"
           ]
         },
         {
           "id": "R2",
           "text": "Dashboards Power BI avec sécurité par ligne (RLS)",
-          "expected_class": "supported",
+          "expected_class": "partial",
           "supporting_docs": [
-            "C02",
-            "P06"
-          ]
+            "C05",
+            "C07",
+            "P08"
+          ],
+          "note": "Power BI delivery evidenced; row-level security not explicitly evidenced."
         },
         {
           "id": "R3",
-          "text": "Migration des flux SSIS legacy vers ELT moderne",
+          "text": "Migration des flux SSIS legacy vers ELT cloud",
           "expected_class": "supported",
           "supporting_docs": [
-            "C06",
-            "C16",
-            "C18",
-            "P11"
+            "C02",
+            "C04",
+            "C10",
+            "P08",
+            "P13"
           ]
         },
         {
           "id": "R4",
-          "text": "Gouvernance des données et catalogue de KPI",
+          "text": "Harmonisation Tableau et Qlik Sense",
           "expected_class": "supported",
           "supporting_docs": [
-            "C03",
-            "C07",
-            "C17",
-            "C19"
+            "C05",
+            "C06",
+            "P05",
+            "P12"
           ]
         },
         {
           "id": "R5",
-          "text": "Machine learning prédictif intégré à la BI",
-          "expected_class": "partial",
+          "text": "Gouvernance des données et catalogue de KPI",
+          "expected_class": "supported",
           "supporting_docs": [
-            "C09",
-            "P03"
-          ],
-          "note": "Forecasting exists; BI-integrated ML is indirect."
+            "C05",
+            "C08",
+            "C19",
+            "C20"
+          ]
         },
         {
           "id": "R6",
-          "text": "Dataviz Looker Studio pour réseau multi-boutiques",
+          "text": "Narration automatique de rapports par LLM",
           "expected_class": "partial",
           "supporting_docs": [
-            "C07",
-            "C12",
-            "P13"
+            "C11",
+            "P15"
           ],
-          "note": "Junior/adjacent profiles."
+          "note": "RAG/GenAI capability exists; automated report narration is adjacent."
         },
         {
           "id": "R7",
-          "text": "Fine-tuning de LLM on-premise pour narration automatique",
+          "text": "Fine-tuning de LLM on-premise",
           "expected_class": "unsupported",
-          "supporting_docs": [],
-          "note": "RAG capability exists (C04) but fine-tuning is not evidenced."
+          "supporting_docs": []
         },
         {
           "id": "R8",
-          "text": "Développement d'un portail web React",
+          "text": "Portail web React",
           "expected_class": "unsupported",
           "supporting_docs": []
         }
@@ -176,10 +179,11 @@
       "requirements": [
         {
           "id": "R1",
-          "text": "Retrieval-augmented generation assistant over a document corpus",
+          "text": "RAG assistant over a document corpus",
           "expected_class": "supported",
           "supporting_docs": [
-            "C04",
+            "C11",
+            "P04",
             "P15"
           ]
         },
@@ -188,59 +192,61 @@
           "text": "Vector database and embedding pipeline",
           "expected_class": "supported",
           "supporting_docs": [
-            "C04",
+            "C11",
             "P15"
           ]
         },
         {
           "id": "R3",
-          "text": "NLP classification with Transformers",
+          "text": "NLP models with PyTorch",
           "expected_class": "supported",
           "supporting_docs": [
+            "C11",
             "C14",
-            "P12"
+            "P04"
           ]
         },
         {
           "id": "R4",
-          "text": "Workflow automation with n8n",
+          "text": "Search infrastructure with Elasticsearch",
           "expected_class": "supported",
           "supporting_docs": [
             "C11",
-            "P07"
+            "P04"
           ]
         },
         {
           "id": "R5",
-          "text": "Service exposure with FastAPI",
+          "text": "Workflow automation with n8n",
           "expected_class": "supported",
           "supporting_docs": [
-            "C04",
-            "C14"
+            "C03",
+            "C17",
+            "P07",
+            "P14"
           ]
         },
         {
           "id": "R6",
+          "text": "OCR and vision on scanned documents",
+          "expected_class": "partial",
+          "supporting_docs": [
+            "C13",
+            "P10"
+          ],
+          "note": "OpenCV image classification evidenced; OCR not evidenced."
+        },
+        {
+          "id": "R7",
           "text": "On-premise GPU cluster for open-source LLMs",
           "expected_class": "unsupported",
           "supporting_docs": []
         },
         {
-          "id": "R7",
+          "id": "R8",
           "text": "Mobile Flutter client application",
           "expected_class": "unsupported",
           "supporting_docs": []
-        },
-        {
-          "id": "R8",
-          "text": "Data governance for AI outputs",
-          "expected_class": "partial",
-          "supporting_docs": [
-            "C03",
-            "C17",
-            "C19"
-          ],
-          "note": "General data governance exists; AI-output governance is indirect."
         }
       ]
     }
