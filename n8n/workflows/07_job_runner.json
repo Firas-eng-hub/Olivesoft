@@ -47,7 +47,7 @@
       ],
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT * FROM public.claim_pipeline_job() WHERE operation IN ('intake','retry');",
+        "query": "SELECT * FROM public.claim_pipeline_job();",
         "options": {}
       }
     },
