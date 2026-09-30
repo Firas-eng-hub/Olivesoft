@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ReactDOM from "react-dom";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -8,6 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  ReactDOM.preconnect("https://fonts.googleapis.com");
+  ReactDOM.preconnect("https://fonts.gstatic.com", { crossOrigin: "anonymous" });
   return (
     <html lang="en">
       <body>{children}</body>

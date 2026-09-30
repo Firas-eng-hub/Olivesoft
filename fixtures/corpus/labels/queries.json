@@ -1,0 +1,155 @@
+{
+  "queries": [
+    {
+      "id": "Q01",
+      "language": "fr",
+      "type": "exact",
+      "query": "consultant MuleSoft intégration API REST",
+      "must_appear": [
+        "C01"
+      ],
+      "also_relevant": [
+        "P14",
+        "C05",
+        "C17"
+      ]
+    },
+    {
+      "id": "Q02",
+      "language": "fr",
+      "type": "exact",
+      "query": "data warehouse Snowflake dbt modélisation",
+      "must_appear": [
+        "C03"
+      ],
+      "also_relevant": [
+        "P05",
+        "C13"
+      ]
+    },
+    {
+      "id": "Q03",
+      "language": "fr",
+      "type": "paraphrase",
+      "query": "tableaux de bord décisionnels ventes multicanal Power BI",
+      "must_appear": [
+        "C02"
+      ],
+      "also_relevant": [
+        "P06",
+        "C12"
+      ]
+    },
+    {
+      "id": "Q04",
+      "language": "fr",
+      "type": "paraphrase",
+      "query": "assistant IA conversationnel sur base documentaire interne",
+      "must_appear": [
+        "C04"
+      ],
+      "also_relevant": [
+        "P15",
+        "P04"
+      ]
+    },
+    {
+      "id": "Q05",
+      "language": "fr",
+      "type": "exact",
+      "query": "automatisation de flux n8n connecteurs API",
+      "must_appear": [
+        "C11"
+      ],
+      "also_relevant": [
+        "P07"
+      ]
+    },
+    {
+      "id": "Q06",
+      "language": "en",
+      "type": "cross_lingual",
+      "query": "Salesforce Marketing Cloud campaign personalization journey builder",
+      "must_appear": [
+        "C10"
+      ],
+      "also_relevant": [
+        "P09"
+      ]
+    },
+    {
+      "id": "Q07",
+      "language": "en",
+      "type": "exact",
+      "query": "GCP BigQuery data pipeline Airflow dbt",
+      "must_appear": [
+        "C08"
+      ],
+      "also_relevant": [
+        "P10",
+        "P01"
+      ]
+    },
+    {
+      "id": "Q08",
+      "language": "en",
+      "type": "paraphrase",
+      "query": "demand forecasting machine learning production monitoring",
+      "must_appear": [
+        "C09"
+      ],
+      "also_relevant": [
+        "P03"
+      ]
+    },
+    {
+      "id": "Q09",
+      "language": "en",
+      "type": "cross_lingual",
+      "query": "enterprise data governance and platform architecture",
+      "must_appear": [
+        "C17"
+      ],
+      "also_relevant": [
+        "C03",
+        "P10"
+      ]
+    },
+    {
+      "id": "Q10",
+      "language": "en",
+      "type": "paraphrase",
+      "query": "legacy ETL migration and data quality banking",
+      "must_appear": [
+        "C16"
+      ],
+      "also_relevant": [
+        "P11",
+        "C06"
+      ]
+    }
+  ],
+  "no_match": [
+    {
+      "id": "NM01",
+      "language": "fr",
+      "query": "développeur senior React interface web single page",
+      "expected_doc_ids": []
+    },
+    {
+      "id": "NM02",
+      "language": "fr",
+      "query": "consultant migration SAP S/4HANA modules FI/CO",
+      "expected_doc_ids": [],
+      "note": "Deliberate near-miss: SAP SuccessFactors appears in P02; S/4HANA FI/CO must not be endorsed."
+    },
+    {
+      "id": "NM03",
+      "language": "en",
+      "query": "Kubernetes service mesh Istio platform engineer",
+      "expected_doc_ids": [],
+      "note": "Docker exists on C04/C14; Kubernetes and service mesh do not."
+    }
+  ],
+  "gate": "hit@5 >= 8/10 positives (a query hits when a must_appear doc is in the top 5); no-match queries must return no endorsed document."
+}

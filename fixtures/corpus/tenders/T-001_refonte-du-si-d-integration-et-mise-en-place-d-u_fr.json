@@ -1,0 +1,89 @@
+{
+  "id": "T-001",
+  "language": "fr",
+  "title": "Refonte du SI d'intégration et mise en place d'un API management",
+  "buyer": "Agence publique K",
+  "sector": "Secteur public",
+  "country": "France",
+  "deadline": "2026-11-15",
+  "budget": null,
+  "description": "L'acheteur souhaite industrialiser ses échanges applicatifs : couche d'API managée, flux d'intégration batch et temps réel, supervision centralisée.",
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "Conception et déploiement d'API avec MuleSoft",
+      "expected_class": "supported",
+      "supporting_docs": [
+        "C01",
+        "C05",
+        "C17",
+        "P14"
+      ]
+    },
+    {
+      "id": "R2",
+      "text": "ETL industriel Talend avec contrôles de qualité de données",
+      "expected_class": "supported",
+      "supporting_docs": [
+        "C06",
+        "P11"
+      ]
+    },
+    {
+      "id": "R3",
+      "text": "Streaming événementiel Kafka entre systèmes",
+      "expected_class": "supported",
+      "supporting_docs": [
+        "C01",
+        "C03",
+        "C08",
+        "P10",
+        "P14"
+      ]
+    },
+    {
+      "id": "R4",
+      "text": "Connecteur Salesforce Service Cloud",
+      "expected_class": "partial",
+      "supporting_docs": [
+        "C05",
+        "C10",
+        "P08"
+      ],
+      "note": "Salesforce skills exist but combined SF+integration profiles are indirect."
+    },
+    {
+      "id": "R5",
+      "text": "Orchestration de workflows d'automatisation (type n8n)",
+      "expected_class": "partial",
+      "supporting_docs": [
+        "C11",
+        "P07"
+      ],
+      "note": "Junior profile only."
+    },
+    {
+      "id": "R6",
+      "text": "Supervision et observabilité des flux",
+      "expected_class": "partial",
+      "supporting_docs": [
+        "C01",
+        "C06",
+        "C16"
+      ],
+      "note": "Monitoring skills present but not as a dedicated profile."
+    },
+    {
+      "id": "R7",
+      "text": "Déploiement Kubernetes avec service mesh",
+      "expected_class": "unsupported",
+      "supporting_docs": []
+    },
+    {
+      "id": "R8",
+      "text": "Interface de supervision web React",
+      "expected_class": "unsupported",
+      "supporting_docs": []
+    }
+  ]
+}

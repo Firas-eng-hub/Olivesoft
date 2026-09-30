@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight, Radar, RefreshCcw } from "lucide-react";
+import { ArrowUpRight, Globe, Radar } from "lucide-react";
 
 export type DiscoveryItem = {
   id: string;
@@ -38,11 +38,11 @@ export default function Discovery({ password, live, onSelect }: { password: stri
 
   return <div className="view-enter discovery-view">
     <div className="page-heading"><div><div className="overline"><span className="overline-pulse" /> TENDER DISCOVERY</div><h1>Find tenders<span className="heading-dot">.</span></h1><p>Search official EU notices or the wider web. Review the source before adding an opportunity to the pipeline.</p></div></div>
-    <div className="discovery-controls panel"><div><strong>Choose a source</strong><p>TED returns recent IT service competition notices. Tavily finds additional public tender pages.</p></div><div className="discovery-actions"><button className={`secondary-button ${source === "ted" ? "discovery-selected" : ""}`} disabled={!live || busy} onClick={() => void scan("ted")}><Radar size={16} /> Scan TED</button><button className={`secondary-button ${source === "tavily" ? "discovery-selected" : ""}`} disabled={!live || busy} onClick={() => void scan("tavily")}><RefreshCcw size={16} /> Search web</button></div></div>
+    <div className="discovery-controls panel"><div><strong>Choose a source</strong><p>TED returns recent IT service competition notices. Tavily finds additional public tender pages.</p></div><div className="discovery-actions"><button className={`secondary-button ${source === "ted" ? "discovery-selected" : ""}`} disabled={!live || busy} onClick={() => void scan("ted")}><Radar size={16} /> Scan TED</button><button className={`secondary-button ${source === "tavily" ? "discovery-selected" : ""}`} disabled={!live || busy} onClick={() => void scan("tavily")}><Globe size={16} /> Search web</button></div></div>
     {!live && <div className="panel discovery-empty">Live discovery becomes available after connecting the n8n workspace.</div>}
     {busy && <div className="panel discovery-empty">Searching {source === "ted" ? "TED" : "the web"}…</div>}
     {error && <p className="knowledge-form-error" role="alert">{error}</p>}
     {scanned && <p className="discovery-count">{items.length} results from {actualSource}. Results are suggestions; opening the source is required before intake.</p>}
-    <div className="discovery-results">{items.map((item) => <article className="panel discovery-card" key={item.id}><div><span className="eyebrow">{item.source}{item.publishedAt ? ` · ${item.publishedAt}` : ""}</span><h2>{item.title}</h2><p className="discovery-org">{item.organization}</p><p>{item.summary}</p></div><div className="discovery-card-actions"><a className="secondary-button compact" href={item.url} target="_blank" rel="noopener noreferrer">Open source <ArrowUpRight size={15} /></a><button className="primary-button" onClick={() => onSelect(item)}>Review and add <ArrowUpRight size={15} /></button></div></article>)}</div>
+    <div className="discovery-results">{items.map((item) => <article className="panel discovery-card" key={item.id}><div><span className="eyebrow">{item.source}{item.publishedAt ? ` · ${item.publishedAt}` : ""}</span><h2>{item.title}</h2><p className="discovery-org">{item.organization}</p><p>{item.summary}</p></div><div className="discovery-card-actions"><a className="secondary-button compact" href={item.url} target="_blank" rel="noopener noreferrer">Open source <ArrowUpRight size={16} /></a><button className="primary-button" onClick={() => onSelect(item)}>Review and add <ArrowUpRight size={16} /></button></div></article>)}</div>
   </div>;
 }
