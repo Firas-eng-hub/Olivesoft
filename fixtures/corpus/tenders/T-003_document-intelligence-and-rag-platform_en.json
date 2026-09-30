@@ -1,0 +1,81 @@
+{
+  "id": "T-003",
+  "language": "en",
+  "title": "Document intelligence and RAG platform",
+  "buyer": "Public agency E",
+  "sector": "Public sector",
+  "country": "France",
+  "deadline": "2026-11-30",
+  "budget": null,
+  "description": "The buyer wants an assistant grounded on an internal document corpus: ingestion, vector search, cited answers and workflow automation around the results.",
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "Retrieval-augmented generation assistant over a document corpus",
+      "expected_class": "supported",
+      "supporting_docs": [
+        "C04",
+        "P15"
+      ]
+    },
+    {
+      "id": "R2",
+      "text": "Vector database and embedding pipeline",
+      "expected_class": "supported",
+      "supporting_docs": [
+        "C04",
+        "P15"
+      ]
+    },
+    {
+      "id": "R3",
+      "text": "NLP classification with Transformers",
+      "expected_class": "supported",
+      "supporting_docs": [
+        "C14",
+        "P12"
+      ]
+    },
+    {
+      "id": "R4",
+      "text": "Workflow automation with n8n",
+      "expected_class": "supported",
+      "supporting_docs": [
+        "C11",
+        "P07"
+      ]
+    },
+    {
+      "id": "R5",
+      "text": "Service exposure with FastAPI",
+      "expected_class": "supported",
+      "supporting_docs": [
+        "C04",
+        "C14"
+      ]
+    },
+    {
+      "id": "R6",
+      "text": "On-premise GPU cluster for open-source LLMs",
+      "expected_class": "unsupported",
+      "supporting_docs": []
+    },
+    {
+      "id": "R7",
+      "text": "Mobile Flutter client application",
+      "expected_class": "unsupported",
+      "supporting_docs": []
+    },
+    {
+      "id": "R8",
+      "text": "Data governance for AI outputs",
+      "expected_class": "partial",
+      "supporting_docs": [
+        "C03",
+        "C17",
+        "C19"
+      ],
+      "note": "General data governance exists; AI-output governance is indirect."
+    }
+  ]
+}

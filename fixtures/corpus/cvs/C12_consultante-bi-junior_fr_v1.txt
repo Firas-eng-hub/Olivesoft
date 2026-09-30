@@ -1,0 +1,18 @@
+CV C12 - Consultante BI junior
+ID: C12 | version: v1 | asset_type: cv | language: fr | seniority: junior | location: Tunis | experience: 1 ans
+skills: Looker Studio, Power BI, SQL, Excel avancé, Data visualisation, Qualité des données
+
+Profil
+Consultante BI junior, crée des rapports Looker Studio et Power BI à partir de spécifications, et prépare les jeux de données en SQL.
+
+Certifications
+Microsoft PL-300 Power BI Data Analyst
+
+Formation
+Master en business intelligence — université publique (Tunisie)
+
+Langues
+Français (courant), Arabe (natif), Anglais (intermédiaire)
+
+Références projet
+- P13 - Consultante BI junior

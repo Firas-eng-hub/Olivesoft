@@ -1,0 +1,248 @@
+{
+  "tenders": [
+    {
+      "tender_id": "T-001",
+      "language": "fr",
+      "requirement_count": 8,
+      "expected_coverage_pct": 56,
+      "requirements": [
+        {
+          "id": "R1",
+          "text": "Conception et déploiement d'API avec MuleSoft",
+          "expected_class": "supported",
+          "supporting_docs": [
+            "C01",
+            "C05",
+            "C17",
+            "P14"
+          ]
+        },
+        {
+          "id": "R2",
+          "text": "ETL industriel Talend avec contrôles de qualité de données",
+          "expected_class": "supported",
+          "supporting_docs": [
+            "C06",
+            "P11"
+          ]
+        },
+        {
+          "id": "R3",
+          "text": "Streaming événementiel Kafka entre systèmes",
+          "expected_class": "supported",
+          "supporting_docs": [
+            "C01",
+            "C03",
+            "C08",
+            "P10",
+            "P14"
+          ]
+        },
+        {
+          "id": "R4",
+          "text": "Connecteur Salesforce Service Cloud",
+          "expected_class": "partial",
+          "supporting_docs": [
+            "C05",
+            "C10",
+            "P08"
+          ],
+          "note": "Salesforce skills exist but combined SF+integration profiles are indirect."
+        },
+        {
+          "id": "R5",
+          "text": "Orchestration de workflows d'automatisation (type n8n)",
+          "expected_class": "partial",
+          "supporting_docs": [
+            "C11",
+            "P07"
+          ],
+          "note": "Junior profile only."
+        },
+        {
+          "id": "R6",
+          "text": "Supervision et observabilité des flux",
+          "expected_class": "partial",
+          "supporting_docs": [
+            "C01",
+            "C06",
+            "C16"
+          ],
+          "note": "Monitoring skills present but not as a dedicated profile."
+        },
+        {
+          "id": "R7",
+          "text": "Déploiement Kubernetes avec service mesh",
+          "expected_class": "unsupported",
+          "supporting_docs": []
+        },
+        {
+          "id": "R8",
+          "text": "Interface de supervision web React",
+          "expected_class": "unsupported",
+          "supporting_docs": []
+        }
+      ]
+    },
+    {
+      "tender_id": "T-002",
+      "language": "fr",
+      "requirement_count": 8,
+      "expected_coverage_pct": 62,
+      "requirements": [
+        {
+          "id": "R1",
+          "text": "Data warehouse Snowflake avec transformations dbt",
+          "expected_class": "supported",
+          "supporting_docs": [
+            "C03",
+            "C13",
+            "C17",
+            "P05"
+          ]
+        },
+        {
+          "id": "R2",
+          "text": "Dashboards Power BI avec sécurité par ligne (RLS)",
+          "expected_class": "supported",
+          "supporting_docs": [
+            "C02",
+            "P06"
+          ]
+        },
+        {
+          "id": "R3",
+          "text": "Migration des flux SSIS legacy vers ELT moderne",
+          "expected_class": "supported",
+          "supporting_docs": [
+            "C06",
+            "C16",
+            "C18",
+            "P11"
+          ]
+        },
+        {
+          "id": "R4",
+          "text": "Gouvernance des données et catalogue de KPI",
+          "expected_class": "supported",
+          "supporting_docs": [
+            "C03",
+            "C07",
+            "C17",
+            "C19"
+          ]
+        },
+        {
+          "id": "R5",
+          "text": "Machine learning prédictif intégré à la BI",
+          "expected_class": "partial",
+          "supporting_docs": [
+            "C09",
+            "P03"
+          ],
+          "note": "Forecasting exists; BI-integrated ML is indirect."
+        },
+        {
+          "id": "R6",
+          "text": "Dataviz Looker Studio pour réseau multi-boutiques",
+          "expected_class": "partial",
+          "supporting_docs": [
+            "C07",
+            "C12",
+            "P13"
+          ],
+          "note": "Junior/adjacent profiles."
+        },
+        {
+          "id": "R7",
+          "text": "Fine-tuning de LLM on-premise pour narration automatique",
+          "expected_class": "unsupported",
+          "supporting_docs": [],
+          "note": "RAG capability exists (C04) but fine-tuning is not evidenced."
+        },
+        {
+          "id": "R8",
+          "text": "Développement d'un portail web React",
+          "expected_class": "unsupported",
+          "supporting_docs": []
+        }
+      ]
+    },
+    {
+      "tender_id": "T-003",
+      "language": "en",
+      "requirement_count": 8,
+      "expected_coverage_pct": 69,
+      "requirements": [
+        {
+          "id": "R1",
+          "text": "Retrieval-augmented generation assistant over a document corpus",
+          "expected_class": "supported",
+          "supporting_docs": [
+            "C04",
+            "P15"
+          ]
+        },
+        {
+          "id": "R2",
+          "text": "Vector database and embedding pipeline",
+          "expected_class": "supported",
+          "supporting_docs": [
+            "C04",
+            "P15"
+          ]
+        },
+        {
+          "id": "R3",
+          "text": "NLP classification with Transformers",
+          "expected_class": "supported",
+          "supporting_docs": [
+            "C14",
+            "P12"
+          ]
+        },
+        {
+          "id": "R4",
+          "text": "Workflow automation with n8n",
+          "expected_class": "supported",
+          "supporting_docs": [
+            "C11",
+            "P07"
+          ]
+        },
+        {
+          "id": "R5",
+          "text": "Service exposure with FastAPI",
+          "expected_class": "supported",
+          "supporting_docs": [
+            "C04",
+            "C14"
+          ]
+        },
+        {
+          "id": "R6",
+          "text": "On-premise GPU cluster for open-source LLMs",
+          "expected_class": "unsupported",
+          "supporting_docs": []
+        },
+        {
+          "id": "R7",
+          "text": "Mobile Flutter client application",
+          "expected_class": "unsupported",
+          "supporting_docs": []
+        },
+        {
+          "id": "R8",
+          "text": "Data governance for AI outputs",
+          "expected_class": "partial",
+          "supporting_docs": [
+            "C03",
+            "C17",
+            "C19"
+          ],
+          "note": "General data governance exists; AI-output governance is indirect."
+        }
+      ]
+    }
+  ]
+}

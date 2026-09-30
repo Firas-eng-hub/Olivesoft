@@ -1,0 +1,12 @@
+Project P13 - Self-service reporting for a franchise network
+ID: P13 | version: v1 | asset_type: project | language: en | sector: Retail | duration: 4 months
+stack: Looker Studio, BigQuery, Google Sheets, SQL
+
+Client
+Réseau de franchise M
+
+Description
+Semantic layer and Looker Studio dashboards for franchisees: sales, traffic and average-basket KPIs with cross-store comparison, security and per-franchise isolation.
+
+Measurable results
+150 franchisees connected in 3 months, 100% reporting autonomy, monthly closing accelerated by 4 days

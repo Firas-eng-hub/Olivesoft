@@ -1,0 +1,506 @@
+{
+  "meta": {
+    "societe": "OliveSoft",
+    "source": "Données synthétiques générées à partir de olivesoft.fr (services, secteurs, success stories). Aucun profil ni client réel.",
+    "date_generation": "2026-09-30",
+    "usage": "Jeu de test fictif : 15 projets + 20 CV"
+  },
+  "projets": [
+    {
+      "id": "P01",
+      "titre": "CRM unifié et plateforme customer intelligence pour un retailer",
+      "client": "Retailer & e-commerçant A",
+      "secteur": "Retail / E-commerce",
+      "duree_mois": 10,
+      "stack": ["Salesforce Sales Cloud", "Google Cloud Platform", "BigQuery", "dbt", "Talend", "Power BI"],
+      "description": "Centralisation des données clients issues de l'ERP, du e-commerce, du marketing et du support dans un entrepôt BigQuery, exposition d'une vue client 360° dans Salesforce et dashboards Power BI pour les équipes commerciales et marketing.",
+      "resultat_chiffre": "-40% de doublons clients, +18% de taux de conversion des campagnes, reporting consolidé passé de 5 jours à temps réel"
+    },
+    {
+      "id": "P02",
+      "titre": "Intégration HRIS temps réel multi-pays",
+      "client": "Groupe multinational B",
+      "secteur": "Industrie / Distribution",
+      "duree_mois": 8,
+      "stack": ["SAP SuccessFactors", "MuleSoft", "API REST", "Azure SQL", "Workato"],
+      "description": "Mise en place d'un SI RH centralisé connectant SAP SuccessFactors, Talent Connect et paies locales via MuleSoft, avec flux bidirectionnels temps réel, réconciliation et monitoring des échanges.",
+      "resultat_chiffre": "-60% de saisies manuelles RH, 99,8% de flux sans erreur, conformité audit renforcée sur 12 pays"
+    },
+    {
+      "id": "P03",
+      "titre": "Prévision de la demande par IA et dashboards temps réel",
+      "client": "Fournisseur de matières premières C",
+      "secteur": "Industrie",
+      "duree_mois": 9,
+      "stack": ["Python", "Databricks", "Azure Data Factory", "Power BI", "MLflow"],
+      "description": "Intégration des systèmes ERP et plateformes cloud, entraînement de modèles de forecasting (demande, stocks) et dashboards temps réel pour les équipes achats, logistique et planification.",
+      "resultat_chiffre": "MAPE réduit de 32% à 14%, -22% de ruptures de stock, décisions achats accélérées de 3 jours"
+    },
+    {
+      "id": "P04",
+      "titre": "Plateforme d'aide à l'enregistrement de propriété intellectuelle avec IA",
+      "client": "Agence gouvernementale D",
+      "secteur": "Secteur public",
+      "duree_mois": 12,
+      "stack": ["Python", "NLP", "Generative AI", "PostgreSQL", "FastAPI", "Docker"],
+      "description": "Conception d'une plateforme end-to-end de dépôt de marques et brevets : chatbot conversationnel guidant les usagers, crawler intelligent détectant les entrées similaires pour prévenir les doublons et renforcer l'originalité des dépôts.",
+      "resultat_chiffre": "-45% de temps de traitement par dossier, 87% des questions usagers résolues sans agent, zéro doublon détecté après go-live"
+    },
+    {
+      "id": "P05",
+      "titre": "Data warehouse Snowflake pour une maison de luxe",
+      "client": "Maison de luxe E",
+      "secteur": "Mode / Luxe",
+      "duree_mois": 7,
+      "stack": ["Snowflake", "Azure Data Lake", "Talend", "dbt", "Tableau"],
+      "description": "Refonte du data warehouse : ingestion batch et temps réel des données ventes boutiques, wholesale et e-commerce, modélisation dbt, cataloging et gouvernance fine des données clients premium.",
+      "resultat_chiffre": "50% de réduction des coûts d'infrastructure data, temps de requêtes divisé par 6, couverture data 100% des marchés"
+    },
+    {
+      "id": "P06",
+      "titre": "Dashboards de pilotage des ventes multi-canaux",
+      "client": "Retailer F",
+      "secteur": "Retail",
+      "duree_mois": 5,
+      "stack": ["Power BI", "SQL Server", "SSIS", "DAX"],
+      "description": "Modélisation sémantique et création de dashboards Power BI (ventes, marges, stocks, perf magasin) connectés à l'ERP et au CRM, avec row-level security par direction régionale.",
+      "resultat_chiffre": "Adoption par 85% des directeurs de magasin, -50% d'erreurs de reporting, décisions hebdo basées sur données unifiées"
+    },
+    {
+      "id": "P07",
+      "titre": "Intégration e-commerce / ERP et automatisation des flux",
+      "client": "E-commerçant G",
+      "secteur": "E-commerce",
+      "duree_mois": 6,
+      "stack": ["Talend", "API REST", "n8n", "PostgreSQL", "Magento"],
+      "description": "Pipelines ETL synchronisant catalogue produits, commandes, stocks et transporteurs entre la plateforme e-commerce et l'ERP, automatisation des alertes et des réassorts via workflows n8n.",
+      "resultat_chiffre": "Synchronisation stock passée de 4 h à 5 min, -35% d'incidents de livraison, +12% de ventes sans rupture"
+    },
+    {
+      "id": "P08",
+      "titre": "Service Cloud et vision 360° client pour un assureur",
+      "client": "Assureur H",
+      "secteur": "Banque / Assurance",
+      "duree_mois": 8,
+      "stack": ["Salesforce Service Cloud", "Apex", "Flow", "MuleSoft", "CTI"],
+      "description": "Implémentation de Salesforce Service Cloud : centre d'appels intégré (CTI), automatisation des parcours sinistres via Flow, intégration du back-office assurance via MuleSoft et vue client unifiée pour les conseillers.",
+      "resultat_chiffre": "-30% de temps moyen de traitement des sinistres, +25% de satisfaction client (CSAT), 100% des dossiers tracés"
+    },
+    {
+      "id": "P09",
+      "titre": "Marketing Cloud et personnalisation des campagnes",
+      "client": "Maison de mode I",
+      "secteur": "Mode / Luxe",
+      "duree_mois": 6,
+      "stack": ["Salesforce Marketing Cloud", "SQL", "API REST", "Looker Studio", "Segmentation RFM"],
+      "description": "Mise en place de Marketing Cloud : data extensions centralisées, segmentation RFM automatisée, journey builder cross-canal (email, SMS) et reporting consolidé par boutique et par marché.",
+      "resultat_chiffre": "+28% de taux d'ouverture, +19% de CA attribué aux campagnes, temps de production de campagne divisé par 3"
+    },
+    {
+      "id": "P10",
+      "titre": "Data platform cloud temps réel pour un opérateur télécom",
+      "client": "Opérateur télécom J",
+      "secteur": "Télécoms",
+      "duree_mois": 11,
+      "stack": ["Google Cloud Platform", "BigQuery", "Kafka", "Dataflow", "Databricks", "Airflow"],
+      "description": "Architecture d'une data platform scalable : ingestion streaming Kafka/Dataflow des événements réseau et CRM, lakehouse Databricks pour le ML, orchestration Airflow, data catalog et gouvernance des accès.",
+      "resultat_chiffre": "2 To/jour ingérés en streaming, latence analytics réduite de 24 h à 5 min, base pour 3 cas d'usage ML en production"
+    },
+    {
+      "id": "P11",
+      "titre": "Migration d'intégrations et qualité de données pour une banque",
+      "client": "Banque K",
+      "secteur": "Banque / Assurance",
+      "duree_mois": 10,
+      "stack": ["Talend", "SSIS", "Boomi", "Snowflake", "Great Expectations"],
+      "description": "Audit et migration de plus de 200 jobs d'intégration legacy vers une architecture cible Boomi/Snowflake, mise en place de règles de qualité de données automatisées et d'un socle de monitoring des pipelines.",
+      "resultat_chiffre": "-50% d'erreurs de données, -30% de coûts d'exploitation des intégrations, 200 jobs migrés avec zéro incident majeur"
+    },
+    {
+      "id": "P12",
+      "titre": "Analyse NLP des retours clients multi-boutiques",
+      "client": "Distributeur de sport L",
+      "secteur": "Retail",
+      "duree_mois": 7,
+      "stack": ["Python", "NLP", "Transformers", "Azure", "Power BI"],
+      "description": "Pipeline d'analyse automatique des avis clients, emails service client et retours magasin : classification thématique, détection de sentiment et extraction d'insights produit alimentant des dashboards qualité.",
+      "resultat_chiffre": "90% de précision de classification, 120 000 verbatims analysés/mois, 3 axes d'amélioration produit priorisés par trimestre"
+    },
+    {
+      "id": "P13",
+      "titre": "Reporting self-service pour un réseau de franchises",
+      "client": "Réseau de franchise M",
+      "secteur": "Retail",
+      "duree_mois": 4,
+      "stack": ["Looker Studio", "BigQuery", "Google Sheets", "SQL"],
+      "description": "Semantic layer et tableaux de bord Looker Studio accessibles aux franchisés : KPI ventes, trafic, panier moyen et comparaison inter-magasins, avec sécurité et cloisonnement par franchise.",
+      "resultat_chiffre": "150 franchisés connectés en 3 mois, 100% d'autonomie reporting, fermeture mensuelle accélérée de 4 jours"
+    },
+    {
+      "id": "P14",
+      "titre": "Couche d'API et intégration SI pour un gestionnaire d'infrastructures",
+      "client": "Gestionnaire d'infrastructures N",
+      "secteur": "Transport / Énergie",
+      "duree_mois": 9,
+      "stack": ["MuleSoft", "API REST", "Kafka", "Oracle", "Azure Monitor"],
+      "description": "Conception d'un layer d'API MuleSoft exposant les systèmes operationnels (maintenance, capteurs, GIS) aux applications décisionnelles, avec supervision, sécurité OAuth2 et gestion des contrats d'API.",
+      "resultat_chiffre": "40 API publiées, réutilisation de 70% des connecteurs, maintenance prédictive déployée sur 3 000 km d'infrastructures"
+    },
+    {
+      "id": "P15",
+      "titre": "Assistant IA génératif pour le support client d'une EdTech",
+      "client": "EdTech O",
+      "secteur": "Éducation / Formation",
+      "duree_mois": 6,
+      "stack": ["Python", "LangChain", "Generative AI", "RAG", "Vector DB", "FastAPI"],
+      "description": "Assistant conversationnel RAG répondant aux questions apprenants à partir de la base de connaissances pédagogique : ingestion documentaire, évaluation des réponses, garde-fous et intégration à la plateforme LMS.",
+      "resultat_chiffre": "-40% de tickets support, 82% de réponses jugées utiles, temps de première réponse ramené à moins de 10 secondes"
+    }
+  ],
+  "cvs": [
+    {
+      "id": "C01",
+      "nom": "Marc Delacroix",
+      "titre": "Consultant senior intégration MuleSoft",
+      "seniorite": "senior",
+      "site": "Paris",
+      "annees_experience": 10,
+      "resume": "Consultant intégration spécialisé MuleSoft, conçoit et industrialise des architectures d'API et des flux inter-applicatifs pour des clients grands comptes en environnement hybride.",
+      "competences": ["MuleSoft", "Anypoint Platform", "API REST", "RAML", "DataWeave", "Kafka", "Oracle", "Azure Monitor", "OAuth2", "CI/CD"],
+      "certifications": ["MuleSoft Certified Platform Architect", "MuleSoft Certified Developer Level 1"],
+      "formation": "Master en génie logiciel — université publique (France)",
+      "langues": ["Français (natif)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P02", "role": "Tech lead intégration"},
+        {"id": "P14", "role": "Architecte API MuleSoft"}
+      ]
+    },
+    {
+      "id": "C02",
+      "nom": "Claire Fontaine",
+      "titre": "Consultante BI Power BI",
+      "seniorite": "confirmé",
+      "site": "Paris",
+      "annees_experience": 4,
+      "resume": "Consultante BI orientée retail : modélisation sémantique, KPI commerciaux et dashboards Power BI performants connectés à l'ERP et au CRM.",
+      "competences": ["Power BI", "DAX", "SQL", "SSIS", "Data modeling", "Row-level security", "Requirements gathering"],
+      "certifications": ["Microsoft PL-300 Power BI Data Analyst"],
+      "formation": "Master en business intelligence — université publique (France)",
+      "langues": ["Français (natif)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P06", "role": "Consultante BI"},
+        {"id": "P03", "role": "Développeuse dashboards"}
+      ]
+    },
+    {
+      "id": "C03",
+      "nom": "Rana Haddad",
+      "titre": "Ingénieure senior data platform",
+      "seniorite": "senior",
+      "site": "Dubai",
+      "annees_experience": 11,
+      "resume": "Ingénieure data platform expérimentée sur Snowflake et Azure, responsable de la conception, de la performance et de la gouvernance de plateformes data pour des clients retail et luxe.",
+      "competences": ["Snowflake", "Azure Data Lake", "Azure Data Factory", "Kafka", "dbt", "SQL", "Python", "Data governance", "Data catalog", "Cost optimization"],
+      "certifications": ["SnowPro Core Certified", "Microsoft DP-203 Azure Data Engineer"],
+      "formation": "Diplôme d'ingénieure en informatique — université publique (Liban)",
+      "langues": ["Anglais (courant)", "Arabe (natif)", "Français (intermédiaire)"],
+      "projets": [
+        {"id": "P05", "role": "Lead data engineer"},
+        {"id": "P10", "role": "Architecte plateforme adjointe"}
+      ]
+    },
+    {
+      "id": "C04",
+      "nom": "Antoine Mercier",
+      "titre": "Data scientist IA générative",
+      "seniorite": "confirmé",
+      "site": "Paris",
+      "annees_experience": 5,
+      "resume": "Data scientist spécialisé en NLP et IA générative, conçoit des assistants RAG en production avec évaluation systématique et garde-fous, du prototype au déploiement.",
+      "competences": ["Python", "NLP", "Generative AI", "LangChain", "RAG", "Vector DB", "FastAPI", "Docker", "Prompt engineering", "Évaluation LLM"],
+      "certifications": ["TensorFlow Developer Certificate", "Azure AI Engineer Associate (AI-102)"],
+      "formation": "Master en data science — université publique (France)",
+      "langues": ["Français (natif)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P04", "role": "Data scientist NLP"},
+        {"id": "P15", "role": "Lead IA générative"}
+      ]
+    },
+    {
+      "id": "C05",
+      "nom": "Sophie Benali",
+      "titre": "Consultante Salesforce confirmée",
+      "seniorite": "confirmé",
+      "site": "Paris",
+      "annees_experience": 6,
+      "resume": "Consultante Salesforce couvrant Sales Cloud et Service Cloud : cadrage, configuration, développement Apex/Flow et intégrations via MuleSoft pour des clients retail et assurance.",
+      "competences": ["Salesforce Sales Cloud", "Salesforce Service Cloud", "Apex", "Flow", "Lightning Web Components", "MuleSoft", "CTI", "SQL"],
+      "certifications": ["Salesforce Platform Developer I", "Salesforce Service Cloud Consultant"],
+      "formation": "Master en systèmes d'information — université publique (France)",
+      "langues": ["Français (natif)", "Anglais (courant)", "Arabe (intermédiaire)"],
+      "projets": [
+        {"id": "P08", "role": "Consultante Salesforce lead"},
+        {"id": "P01", "role": "Développeuse Salesforce"}
+      ]
+    },
+    {
+      "id": "C06",
+      "nom": "Yassine Trabelsi",
+      "titre": "Ingénieur intégration Talend",
+      "seniorite": "confirmé",
+      "site": "Sfax",
+      "annees_experience": 5,
+      "resume": "Ingénieur intégration spécialisé Talend et SSIS, développe et optimise des pipelines ETL batch et temps réel avec un fort focus sur la qualité des données.",
+      "competences": ["Talend Data Integration", "SSIS", "SQL", "PostgreSQL", "API REST", "Shell", "Data quality", "Monitoring pipelines"],
+      "certifications": ["Talend Data Integration Certified Developer"],
+      "formation": "Diplôme d'ingénieur en informatique — université publique (Tunisie)",
+      "langues": ["Arabe (natif)", "Français (courant)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P07", "role": "Développeur ETL"},
+        {"id": "P11", "role": "Ingénieur migration Talend"}
+      ]
+    },
+    {
+      "id": "C07",
+      "nom": "Nicolas Roussel",
+      "titre": "Consultant senior BI / analytics",
+      "seniorite": "senior",
+      "site": "Tunis",
+      "annees_experience": 9,
+      "resume": "Consultant BI senior, pilote des chantiers de gouvernance analytique, de définition des KPI et de déploiement self-service sur Tableau et Qlik Sense pour des réseaux multi-sites.",
+      "competences": ["Tableau", "Qlik Sense", "Looker Studio", "SQL", "Data modeling", "KPI definition", "Data governance", "Rollout utilisateur"],
+      "certifications": ["Tableau Desktop Certified Professional", "Qlik Sense Business Analyst"],
+      "formation": "Master en statistiques appliquées — université publique (France)",
+      "langues": ["Français (natif)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P13", "role": "Lead BI"},
+        {"id": "P06", "role": "Expert KPI et gouvernance"}
+      ]
+    },
+    {
+      "id": "C08",
+      "nom": "Julien Perret",
+      "titre": "Data engineer GCP",
+      "seniorite": "confirmé",
+      "site": "Paris",
+      "annees_experience": 5,
+      "resume": "Data engineer orientée écosystème Google Cloud : pipelines BigQuery, orchestration Airflow et transformation dbt au service de cas d'usage CRM et marketing.",
+      "competences": ["Google Cloud Platform", "BigQuery", "dbt", "Airflow", "Dataflow", "Python", "SQL", "Kafka", "Git"],
+      "certifications": ["Google Cloud Professional Data Engineer"],
+      "formation": "Diplôme d'ingénieur en informatique — université publique (France)",
+      "langues": ["Français (natif)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P01", "role": "Data engineer"},
+        {"id": "P10", "role": "Data engineer streaming"}
+      ]
+    },
+    {
+      "id": "C09",
+      "nom": "Ines Cherif",
+      "titre": "Lead data scientist ML industriel",
+      "seniorite": "senior",
+      "site": "Tunis",
+      "annees_experience": 10,
+      "resume": "Lead data scientist spécialisée en forecasting et MLOps, accompagne des clients industriels de la préparation des données à la mise en production et au monitoring des modèles.",
+      "competences": ["Python", "Machine learning", "Time series forecasting", "Databricks", "MLflow", "Azure", "MLOps", "Feature engineering", "Scikit-learn"],
+      "certifications": ["Databricks Certified Machine Learning Professional", "Azure Data Scientist Associate (DP-100)"],
+      "formation": "Doctorat en apprentissage automatique — université publique (Tunisie)",
+      "langues": ["Arabe (natif)", "Français (courant)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P03", "role": "Lead data scientist"},
+        {"id": "P12", "role": "Conseillère ML"},
+        {"id": "P15", "role": "Revue architecture IA"}
+      ]
+    },
+    {
+      "id": "C10",
+      "nom": "Omar Al Rashid",
+      "titre": "Consultant senior Salesforce Marketing Cloud",
+      "seniorite": "senior",
+      "site": "Dubai",
+      "annees_experience": 9,
+      "resume": "Consultant Salesforce spécialisé Marketing Cloud et intégrations cross-canal, conçoit des journeys clients automatisés pour des marques mode et luxe sur plusieurs marchés.",
+      "competences": ["Salesforce Marketing Cloud", "Journey Builder", "AMPscript", "SQL", "API REST", "Segmentation", "Email marketing", "Commerce Cloud (intégration)"],
+      "certifications": ["Salesforce Marketing Cloud Consultant", "Salesforce Integration Architecture Designer"],
+      "formation": "Bachelor en business computing — université publique (EAU)",
+      "langues": ["Anglais (courant)", "Arabe (natif)", "Français (intermédiaire)"],
+      "projets": [
+        {"id": "P09", "role": "Lead Marketing Cloud"},
+        {"id": "P08", "role": "Consultant intégration Salesforce"}
+      ]
+    },
+    {
+      "id": "C11",
+      "nom": "Adam Gharbi",
+      "titre": "Développeur intégration junior",
+      "seniorite": "junior",
+      "site": "Sfax",
+      "annees_experience": 2,
+      "resume": "Développeur junior sur les automatisations n8n, connecteurs API et scripts Python de reprise de données, avec un goût marqué pour la fiabilité des flux.",
+      "competences": ["n8n", "Python", "API REST", "JSON", "PostgreSQL", "Git", "Tests de flux"],
+      "certifications": ["Google IT Automation with Python"],
+      "formation": "Licence en informatique — université publique (Tunisie)",
+      "langues": ["Arabe (natif)", "Français (courant)", "Anglais (intermédiaire)"],
+      "projets": [
+        {"id": "P07", "role": "Développeur automatisation n8n"},
+        {"id": "P15", "role": "Développeur ingestion documentaire"}
+      ]
+    },
+    {
+      "id": "C12",
+      "nom": "Léa Bonnet",
+      "titre": "Consultante BI junior",
+      "seniorite": "junior",
+      "site": "Tunis",
+      "annees_experience": 1,
+      "resume": "Consultante BI junior, crée des rapports Looker Studio et Power BI à partir de spécifications, et prépare les jeux de données en SQL.",
+      "competences": ["Looker Studio", "Power BI", "SQL", "Excel avancé", "Data visualisation", "Qualité des données"],
+      "certifications": ["Microsoft PL-300 Power BI Data Analyst"],
+      "formation": "Master en business intelligence — université publique (Tunisie)",
+      "langues": ["Français (courant)", "Arabe (natif)", "Anglais (intermédiaire)"],
+      "projets": [
+        {"id": "P13", "role": "Consultante BI junior"}
+      ]
+    },
+    {
+      "id": "C13",
+      "nom": "Mariem Jelassi",
+      "titre": "Data engineer junior",
+      "seniorite": "junior",
+      "site": "Sfax",
+      "annees_experience": 2,
+      "resume": "Data engineer junior, développe des pipelines SQL/Python et des DAG Airflow sous supervision, et documente les modèles de données Snowflake.",
+      "competences": ["SQL", "Python", "Airflow", "Snowflake", "dbt (notions)", "Git", "Documentation data"],
+      "certifications": ["SnowPro Core Certified"],
+      "formation": "Diplôme d'ingénieure en informatique — université publique (Tunisie)",
+      "langues": ["Arabe (natif)", "Français (courant)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P05", "role": "Data engineer junior"},
+        {"id": "P10", "role": "Support ingestion batch"}
+      ]
+    },
+    {
+      "id": "C14",
+      "nom": "Hugo Lemoine",
+      "titre": "Machine learning engineer junior",
+      "seniorite": "junior",
+      "site": "Paris",
+      "annees_experience": 2,
+      "resume": "ML engineer junior, industrialise des modèles NLP (API de scoring, batch d'inférence) et met en place le suivi d'expériences et de performance.",
+      "competences": ["Python", "Scikit-learn", "Transformers", "NLP", "MLflow", "Azure", "Docker", "API REST"],
+      "certifications": ["Azure AI Engineer Associate (AI-102)"],
+      "formation": "Master en intelligence artificielle — université publique (France)",
+      "langues": ["Français (natif)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P12", "role": "ML engineer"},
+        {"id": "P04", "role": "Développeur pipeline IA"}
+      ]
+    },
+    {
+      "id": "C15",
+      "nom": "Nour Belhadj",
+      "titre": "Développeuse Salesforce junior",
+      "seniorite": "junior",
+      "site": "Sfax",
+      "annees_experience": 1,
+      "resume": "Développeuse Salesforce junior, configuration d'objets, Flow et rapports, participation aux recettes et à la documentation fonctionnelle.",
+      "competences": ["Salesforce Flow", "Lightning App Builder", "Apex (notions)", "SOQL", "Reports & Dashboards", "User acceptance testing"],
+      "certifications": ["Salesforce Certified Administrator"],
+      "formation": "Licence en systèmes d'information — université publique (Tunisie)",
+      "langues": ["Arabe (natif)", "Français (courant)", "Anglais (intermédiaire)"],
+      "projets": [
+        {"id": "P09", "role": "Développeuse Salesforce junior"},
+        {"id": "P01", "role": "Support recette CRM"}
+      ]
+    },
+    {
+      "id": "C16",
+      "nom": "Karim Zouari",
+      "titre": "Consultant intégration Boomi / Workato",
+      "seniorite": "confirmé",
+      "site": "Tunis",
+      "annees_experience": 6,
+      "resume": "Consultant intégration sur plateformes iPaaS (Boomi, Workato) et SSIS, spécialisé dans la migration de flux legacy et l'automatisation des processus inter-systèmes.",
+      "competences": ["Boomi", "Workato", "SSIS", "SQL Server", "API REST", "Groovy", "Reprise de données", "Monitoring"],
+      "certifications": ["Boomi AtomSphere Process Developer", "ITIL 4 Foundation"],
+      "formation": "Diplôme d'ingénieur en génie logiciel — université publique (Tunisie)",
+      "langues": ["Arabe (natif)", "Français (courant)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P11", "role": "Consultant migration intégrations"},
+        {"id": "P02", "role": "Développeur flux RH"}
+      ]
+    },
+    {
+      "id": "C17",
+      "nom": "Élise Vasseur",
+      "titre": "Architecte data & SI",
+      "seniorite": "senior",
+      "site": "Paris",
+      "annees_experience": 14,
+      "resume": "Architecte data et systèmes d'information, définit les cibles cibles cloud, la gouvernance et les standards d'intégration pour des groupes multi-métiers exigeants.",
+      "competences": ["Architecture data", "TOGAF", "Snowflake", "Google Cloud Platform", "Azure", "MuleSoft", "Kafka", "Data governance", "Sécurité des données", "Urbanisation SI"],
+      "certifications": ["TOGAF 9 Certified", "MuleSoft Certified Platform Architect", "Google Cloud Professional Cloud Architect"],
+      "formation": "Diplôme d'ingénieure générale — université publique (France)",
+      "langues": ["Français (natif)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P10", "role": "Architecte solution"},
+        {"id": "P14", "role": "Architecte SI"},
+        {"id": "P05", "role": "Architecte data warehouse"}
+      ]
+    },
+    {
+      "id": "C18",
+      "nom": "Sami Khelifi",
+      "titre": "Architecte cloud data",
+      "seniorite": "senior",
+      "site": "Tunis",
+      "annees_experience": 9,
+      "resume": "Architecte cloud data spécialisé Databricks et Azure, dimensionne les plateformes analytics et cadre les migrations d'intégrations vers le cloud.",
+      "competences": ["Databricks", "Azure", "Azure Data Factory", "Kafka", "Spark", "Python", "Snowflake", "Migration cloud", "Design patterns ETL/ELT"],
+      "certifications": ["Databricks Certified Data Engineer Professional", "Microsoft DP-203 Azure Data Engineer"],
+      "formation": "Diplôme d'ingénieur en informatique — université publique (Tunisie)",
+      "langues": ["Arabe (natif)", "Français (courant)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P03", "role": "Architecte plateforme"},
+        {"id": "P10", "role": "Architecte lakehouse"},
+        {"id": "P11", "role": "Architecte migration"}
+      ]
+    },
+    {
+      "id": "C19",
+      "nom": "Valentina Rossi",
+      "titre": "Cheffe de projet data senior",
+      "seniorite": "senior",
+      "site": "Paris",
+      "annees_experience": 12,
+      "resume": "Cheffe de projet data, pilote des programmes CRM, IA et intégration en mode agile pour des clients retail, secteur public et assurance, du cadrage à la conduite du changement.",
+      "competences": ["Gestion de projet data", "Scrum", "SAFe (notions)", "Cadrage fonctionnel", "Conduite du changement", "Budget & planning", "Stakeholder management", "Data governance (coordination)"],
+      "certifications": ["PMP", "Professional Scrum Master I (PSM I)"],
+      "formation": "Master en management de projets informatiques — université publique (France)",
+      "langues": ["Français (courant)", "Italien (natif)", "Anglais (courant)"],
+      "projets": [
+        {"id": "P01", "role": "Cheffe de projet"},
+        {"id": "P04", "role": "Directrice de programme"},
+        {"id": "P08", "role": "Cheffe de projet"}
+      ]
+    },
+    {
+      "id": "C20",
+      "nom": "David Mansour",
+      "titre": "Chef de projet IT confirmé",
+      "seniorite": "confirmé",
+      "site": "Dubai",
+      "annees_experience": 7,
+      "resume": "Chef de projet IT confirmé, coordonne des projets d'intégration RH, CRM et BI multi-pays entre les équipes Paris, Tunis et Dubai, avec un focus qualité et délais.",
+      "competences": ["Gestion de projet", "Agile / Scrum", "Kanban", "Jira", "Coordination multi-sites", "Recette & UAT", "Reporting projet", "Risk management"],
+      "certifications": ["Professional Scrum Master I (PSM I)", "ITIL 4 Foundation"],
+      "formation": "Master en gestion de projet — université publique (EAU)",
+      "langues": ["Anglais (courant)", "Arabe (natif)", "Français (intermédiaire)"],
+      "projets": [
+        {"id": "P02", "role": "Chef de projet"},
+        {"id": "P09", "role": "Coordinateur projet"},
+        {"id": "P13", "role": "Chef de projet déploiement"}
+      ]
+    }
+  ]
+}
