@@ -1,0 +1,19 @@
+CV C05 - Consultante Salesforce confirmée
+ID: C05 | version: v1 | asset_type: cv | language: fr | seniority: confirmé | location: Paris | experience: 6 ans
+skills: Salesforce Sales Cloud, Salesforce Service Cloud, Apex, Flow, Lightning Web Components, MuleSoft, CTI, SQL
+
+Profil
+Consultante Salesforce couvrant Sales Cloud et Service Cloud : cadrage, configuration, développement Apex/Flow et intégrations via MuleSoft pour des clients retail et assurance.
+
+Certifications
+Salesforce Platform Developer I; Salesforce Service Cloud Consultant
+
+Formation
+Master en systèmes d'information — université publique (France)
+
+Langues
+Français (natif), Anglais (courant), Arabe (intermédiaire)
+
+Références projet
+- P08 - Consultante Salesforce lead
+- P01 - Développeuse Salesforce
