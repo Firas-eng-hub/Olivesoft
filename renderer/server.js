@@ -15,8 +15,9 @@ function respond(response, status, data) {
   response.end(JSON.stringify(data));
 }
 createServer(async (request, response) => {
-  if (request.method === 'GET' && request.url === '/health') return respond(response, 200, { status: 'ok' });
-  if (request.method !== 'POST' || request.url !== '/render') return respond(response, 404, { code: 'NOT_FOUND' });
+  const path = new URL(request.url, 'http://localhost').pathname;
+  if (request.method === 'GET' && ['/', '/health', '/api/render'].includes(path)) return respond(response, 200, { status: 'ok' });
+  if (request.method !== 'POST' || !['/render', '/api/render'].includes(path)) return respond(response, 404, { code: 'NOT_FOUND' });
   if (!authenticated(request.headers.authorization)) return respond(response, 401, { code: 'UNAUTHORIZED' });
   try {
     let size = 0; const parts = [];
