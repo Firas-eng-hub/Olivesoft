@@ -1,0 +1,202 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 2698 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(CV C07 - Junior BI Analyst Power BI) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: C07 | version: v1 | asset_type: cv | language: en) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(seniority: junior | site: Sfax | experience: 1 years) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 743 Tm
+0.55 G 0.7 w
+56 739.5 m 539 739.5 l S
+0 G 1 w
+(Lina Haddad) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 727 Tm
+(Junior BI Analyst · Power BI & SQL) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 713.5 Tm
+0.4 g
+(lina.haddad@example.com | +216 00 000 007 | Sfax, Tunisia | github.com/l-haddad-demo |) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 701.5 Tm
+0.4 g
+(linkedin.com/in/l-haddad-demo) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 679.5 Tm
+0.55 G 0.7 w
+56 676 m 539 676 l S
+0 G 1 w
+(Summary) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 663.5 Tm
+(Junior BI analyst with 1 year creating reports and KPIs in Power BI, with solid SQL and Excel) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 650 Tm
+(foundations.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 626.5 Tm
+0.55 G 0.7 w
+56 623 m 539 623 l S
+0 G 1 w
+(Skills) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 610.5 Tm
+(BI & Analytics: Power BI, DAX, Dimensional modelling) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 597 Tm
+(Data & Cloud: SQL, Git) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 573.5 Tm
+0.55 G 0.7 w
+56 570 m 539 570 l S
+0 G 1 w
+(Languages) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 557.5 Tm
+(French — Fluent; English — Fluent; Arabic — Native) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 534 Tm
+0.55 G 0.7 w
+56 530.5 m 539 530.5 l S
+0 G 1 w
+(Project experience) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 518 Tm
+(P03 - AI Demand Forecasting Dashboards \(2025\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 504.5 Tm
+(Context: Consulting mission · BI analyst) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 491 Tm
+(- Built Power BI report pages for forecast accuracy and stock coverage.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 477.5 Tm
+(- Validated dashboard figures against ERP extracts with SQL checks.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 454 Tm
+0.55 G 0.7 w
+56 450.5 m 539 450.5 l S
+0 G 1 w
+(Leadership & volunteering) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 438 Tm
+(Data Science Student Association \(generic\) - Communication officer \(2022 – 2024\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 424.5 Tm
+(- Managed the association's social media and event announcements.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 401 Tm
+0.55 G 0.7 w
+56 397.5 m 539 397.5 l S
+0 G 1 w
+(Education) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 385 Tm
+(Institute of Business Intelligence \(generic\) - Bachelor in Business Intelligence \(2021 – 2024\)) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 361.5 Tm
+0.55 G 0.7 w
+56 358 m 539 358 l S
+0 G 1 w
+(Certifications) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 345.5 Tm
+(Microsoft Certified: Power BI Data Analyst \(PL-300\) - Microsoft \(Feb 2025\)) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3200
+%%EOF

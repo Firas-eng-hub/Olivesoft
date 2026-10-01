@@ -1,0 +1,222 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3042 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(CV C13 - Ingénieur vision par ordinateur) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: C13 | version: v1 | asset_type: cv | language: fr) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(seniority: mid | site: Paris | experience: 6 years) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 743 Tm
+0.55 G 0.7 w
+56 739.5 m 539 739.5 l S
+0 G 1 w
+(Thomas Girard) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 727 Tm
+(Ingénieur vision par ordinateur – Détection d'anomalies) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 713.5 Tm
+0.4 g
+(thomas.girard@example.com | +33 0 00 00 00 13 | Paris, France | github.com/t-girard-demo |) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 701.5 Tm
+0.4 g
+(linkedin.com/in/t-girard-demo) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 679.5 Tm
+0.55 G 0.7 w
+56 676 m 539 676 l S
+0 G 1 w
+(Profil) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 663.5 Tm
+(Ingénieur vision par ordinateur avec 6 ans d'expérience en classification d'images et détection) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 650 Tm
+(d'anomalies, optimisant les modèles pour la latence de production.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 626.5 Tm
+0.55 G 0.7 w
+56 623 m 539 623 l S
+0 G 1 w
+(Compétences) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 610.5 Tm
+(IA / ML & LLM: Python, PyTorch, OpenCV, Anomaly detection) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 597 Tm
+(Intégration & Orchestration: Apache Kafka) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 583.5 Tm
+(Données & Cloud: Docker, Git) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 560 Tm
+0.55 G 0.7 w
+56 556.5 m 539 556.5 l S
+0 G 1 w
+(Langues) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 544 Tm
+(Français – langue maternelle; Anglais – courant) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 520.5 Tm
+0.55 G 0.7 w
+56 517 m 539 517 l S
+0 G 1 w
+(Expérience projet) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 504.5 Tm
+(P10 - Toll Flow Anomaly Detection \(2024–2025\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 491 Tm
+(Contexte: Mission de conseil – Ingénieur vision par ordinateur) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 477.5 Tm
+(- A entraîné des classifieurs PyTorch sur des images de voies et les a intégrés au pipeline) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 464 Tm
+(d'événements Kafka.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 450.5 Tm
+(- A quantifié les modèles pour tenir les cibles de latence, contribuant à une détection) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 437 Tm
+(d'anomalies 3x plus rapide.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 413.5 Tm
+0.55 G 0.7 w
+56 410 m 539 410 l S
+0 G 1 w
+(Leadership & engagement) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 397.5 Tm
+(Applied AI Meetup \(fictional\) - Conférencier \(2023 – Present\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 384 Tm
+(- A donné deux talks sur le déploiement de modèles de vision à la périphérie \(edge\).) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 360.5 Tm
+0.55 G 0.7 w
+56 357 m 539 357 l S
+0 G 1 w
+(Formation) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 344.5 Tm
+(University of Artificial Intelligence \(generic\) - Master en intelligence artificielle \(2017 –) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 331 Tm
+(2019\)) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 307.5 Tm
+0.55 G 0.7 w
+56 304 m 539 304 l S
+0 G 1 w
+(Certifications) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 291.5 Tm
+(\(Aucune\)) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3544
+%%EOF

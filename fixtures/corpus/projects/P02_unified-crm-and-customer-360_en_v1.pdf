@@ -1,0 +1,205 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 2561 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(Project P02 - Unified CRM and Customer 360) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: P02 | version: v1 | asset_type: project | language: en) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(sector: Retail / E-commerce | duration: 12 months) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 743 Tm
+0.4 g
+(stack: GCP, BigQuery, Sales Cloud, Talend) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 721 Tm
+0.55 G 0.7 w
+56 717.5 m 539 717.5 l S
+0 G 1 w
+(Client) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 705 Tm
+(Retail and e-commerce brand B) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 681.5 Tm
+0.55 G 0.7 w
+56 678 m 539 678 l S
+0 G 1 w
+(Description) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 665.5 Tm
+(Consolidation of ERP, e-commerce, marketing and support data into a single enriched warehouse.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 642 Tm
+0.55 G 0.7 w
+56 638.5 m 539 638.5 l S
+0 G 1 w
+(Measurable result) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 626 Tm
+(Campaign conversion up 25%) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 602.5 Tm
+0.55 G 0.7 w
+56 599 m 539 599 l S
+0 G 1 w
+(Context) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 586.5 Tm
+(Brand sold through stores, web and marketplaces with customer data scattered across ERP,) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 573 Tm
+(e-commerce, marketing and support tools.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 549.5 Tm
+0.55 G 0.7 w
+56 546 m 539 546 l S
+0 G 1 w
+(Challenges) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 533.5 Tm
+(Duplicate customers, inconsistent identifiers and no shared view for sales and marketing.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 510 Tm
+0.55 G 0.7 w
+56 506.5 m 539 506.5 l S
+0 G 1 w
+(Solution) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 494 Tm
+(Unified BigQuery warehouse with matching rules, enriched customer profiles and a two-way sync) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 480.5 Tm
+(with Sales Cloud.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 457 Tm
+0.55 G 0.7 w
+56 453.5 m 539 453.5 l S
+0 G 1 w
+(Deliverables) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 441 Tm
+(- Customer 360 data model) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 427.5 Tm
+(- ETL pipelines) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 414 Tm
+(- Sales Cloud integration) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 400.5 Tm
+(- Customer KPI dashboards) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 377 Tm
+0.55 G 0.7 w
+56 373.5 m 539 373.5 l S
+0 G 1 w
+(Team) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 361 Tm
+(- C02 - Sarra Mezghani - ETL developer) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 347.5 Tm
+(- C08 - Julien Marchetti - Data platform architect) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 334 Tm
+(- C15 - Sophie Delattre - CRM architect) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 320.5 Tm
+(- C20 - Elodie Bertrand - Project manager) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3063
+%%EOF

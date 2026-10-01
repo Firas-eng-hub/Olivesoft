@@ -1,0 +1,257 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3779 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(CV C11 - Ingénieur IA senior NLP et RAG) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: C11 | version: v1 | asset_type: cv | language: fr) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(seniority: senior | site: Paris | experience: 9 years) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 743 Tm
+0.55 G 0.7 w
+56 739.5 m 539 739.5 l S
+0 G 1 w
+(Dr. Amine Khelifi) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 727 Tm
+(Ingénieur IA senior – Systèmes NLP, LLM & RAG) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 713.5 Tm
+0.4 g
+(amine.khelifi@example.com | +33 0 00 00 00 11 | Paris, France | github.com/a-khelifi-demo |) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 701.5 Tm
+0.4 g
+(linkedin.com/in/a-khelifi-demo) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 679.5 Tm
+0.55 G 0.7 w
+56 676 m 539 676 l S
+0 G 1 w
+(Profil) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 663.5 Tm
+(Ingénieur IA titulaire d'un doctorat en NLP avec 9 ans d'expérience à faire passer des modèles de) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 650 Tm
+(langage du prototype à la production. Pilote des architectures RAG et GenAI centrées fiabilité et) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 636.5 Tm
+(traçabilité des sources.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 613 Tm
+0.55 G 0.7 w
+56 609.5 m 539 609.5 l S
+0 G 1 w
+(Compétences) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 597 Tm
+(IA / ML & LLM: Python, PyTorch, NLP, LLM, RAG, Vector DB, Elasticsearch) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 583.5 Tm
+(Données & Cloud: Azure, Docker, Git) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 570 Tm
+(CRM & Salesforce: Service Cloud) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 546.5 Tm
+0.55 G 0.7 w
+56 543 m 539 543 l S
+0 G 1 w
+(Langues) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 530.5 Tm
+(Français – langue maternelle; Anglais – courant; Arabe – langue maternelle) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 507 Tm
+0.55 G 0.7 w
+56 503.5 m 539 503.5 l S
+0 G 1 w
+(Expérience projet) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 491 Tm
+(P04 - Intelligent Trademark Registration Platform \(2023–2024\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 477.5 Tm
+(Contexte: Mission de conseil – Lead IA) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 464 Tm
+(- A piloté le chatbot de dépôt guidé et un crawler de similarité combinant Elasticsearch et) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 450.5 Tm
+(recherche par embeddings.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 437 Tm
+(- A réduit de 40 % le temps de traitement grâce à un assistant RAG ancré sur les règles du) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 423.5 Tm
+(registre.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 410 Tm
+(P15 - GenAI Customer Support Assistant \(2025\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 396.5 Tm
+(Contexte: Mission de conseil – Architecte GenAI) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 383 Tm
+(- A conçu le pipeline RAG et l'index vectoriel sur la base de connaissances du support.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 369.5 Tm
+(- A imposé réponses sourcées et règles de repli, réduisant de 35 % le temps de réponse des) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 356 Tm
+(agents.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 332.5 Tm
+0.55 G 0.7 w
+56 329 m 539 329 l S
+0 G 1 w
+(Leadership & engagement) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 316.5 Tm
+(AI Practice \(fictional\) - Responsable recherche et innovation \(2022 – Present\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 303 Tm
+(- Anime des groupes de lecture mensuels et évalue les nouveaux outils LLM pour les équipes de) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 289.5 Tm
+(livraison.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 266 Tm
+0.55 G 0.7 w
+56 262.5 m 539 262.5 l S
+0 G 1 w
+(Formation) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 250 Tm
+(University of Language Technologies \(generic\) - Doctorat en traitement automatique du langage) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 236.5 Tm
+(\(2014 – 2018\)) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 213 Tm
+0.55 G 0.7 w
+56 209.5 m 539 209.5 l S
+0 G 1 w
+(Certifications) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 197 Tm
+(Azure AI Engineer Associate - Microsoft \(Jan 2024\)) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+4281
+%%EOF

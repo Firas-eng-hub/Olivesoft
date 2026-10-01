@@ -1,0 +1,185 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 2175 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(Project P09 - Customer Churn Prediction) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: P09 | version: v1 | asset_type: project | language: en) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(sector: Telecom | duration: 7 months) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 743 Tm
+0.4 g
+(stack: Databricks, Python, GCP, MLflow) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 721 Tm
+0.55 G 0.7 w
+56 717.5 m 539 717.5 l S
+0 G 1 w
+(Client) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 705 Tm
+(Telecom operator I) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 681.5 Tm
+0.55 G 0.7 w
+56 678 m 539 678 l S
+0 G 1 w
+(Description) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 665.5 Tm
+(Churn scoring model, feature pipeline and production deployment with drift monitoring.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 642 Tm
+0.55 G 0.7 w
+56 638.5 m 539 638.5 l S
+0 G 1 w
+(Measurable result) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 626 Tm
+(Target retention up 12%) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 602.5 Tm
+0.55 G 0.7 w
+56 599 m 539 599 l S
+0 G 1 w
+(Context) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 586.5 Tm
+(Telecom operator losing subscribers without a reliable early-warning signal.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 563 Tm
+0.55 G 0.7 w
+56 559.5 m 539 559.5 l S
+0 G 1 w
+(Challenges) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 547 Tm
+(Imbalanced data, changing customer behaviour and the need for actionable scores.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 523.5 Tm
+0.55 G 0.7 w
+56 520 m 539 520 l S
+0 G 1 w
+(Solution) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 507.5 Tm
+(Feature pipeline and XGBoost churn model tracked in MLflow, deployed with drift monitoring.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 484 Tm
+0.55 G 0.7 w
+56 480.5 m 539 480.5 l S
+0 G 1 w
+(Deliverables) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 468 Tm
+(- Feature pipeline) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 454.5 Tm
+(- Churn scoring model) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 441 Tm
+(- Monitoring dashboard) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 427.5 Tm
+(- Model documentation) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 404 Tm
+0.55 G 0.7 w
+56 400.5 m 539 400.5 l S
+0 G 1 w
+(Team) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 388 Tm
+(- C12 - Ines Rekik - ML engineer) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 374.5 Tm
+(- C14 - Mariem Chaabane - Junior data scientist) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2677
+%%EOF

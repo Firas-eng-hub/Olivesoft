@@ -15,7 +15,7 @@ export async function GET(request: Request) {
       return {
         id: String(row.id ?? ""),
         docId: String(row.doc_id ?? ""),
-        kind: String(row.asset_type ?? ""),
+        kind: String(row.asset_type ?? "") === "stack" ? "expertise" : String(row.asset_type ?? ""),
         name: String(row.title ?? ""),
         version: Number(row.version ?? 0),
         state: String(row.state ?? "indexing"),

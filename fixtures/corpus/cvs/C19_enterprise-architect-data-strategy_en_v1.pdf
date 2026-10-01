@@ -1,0 +1,232 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3460 >>
+stream
+BT
+/F1 14 Tf
+1 0 0 1 56 786 Tm
+(CV C19 - Enterprise Architect Data Strategy) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 767 Tm
+0.4 g
+(ID: C19 | version: v1 | asset_type: cv | language: en) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 755 Tm
+0.4 g
+(seniority: senior | site: Dubai | experience: 15 years) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 743 Tm
+0.55 G 0.7 w
+56 739.5 m 539 739.5 l S
+0 G 1 w
+(Nabil Al-Mansoori) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 727 Tm
+(Enterprise Architect · Data Strategy & Integration Patterns) Tj
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 713.5 Tm
+0.4 g
+(nabil.almansoori@example.com | +971 00 000 0019 | Dubai, UAE | github.com/n-almansoori-demo |) Tj
+0 g
+ET
+BT
+/F2 8.5 Tf
+1 0 0 1 56 701.5 Tm
+0.4 g
+(linkedin.com/in/n-almansoori-demo) Tj
+0 g
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 679.5 Tm
+0.55 G 0.7 w
+56 676 m 539 676 l S
+0 G 1 w
+(Summary) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 663.5 Tm
+(Enterprise architect with 15 years aligning data strategy and IT landscapes for clients in the) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 650 Tm
+(Gulf and Europe, with strong security and integration expertise.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 626.5 Tm
+0.55 G 0.7 w
+56 623 m 539 623 l S
+0 G 1 w
+(Skills) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 610.5 Tm
+(Management & Architecture: TOGAF, Enterprise architecture, Data governance) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 597 Tm
+(Data & Cloud: Azure, GCP, Terraform) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 583.5 Tm
+(Integration & Orchestration: MuleSoft, REST/SOAP APIs) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 560 Tm
+0.55 G 0.7 w
+56 556.5 m 539 556.5 l S
+0 G 1 w
+(Languages) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 544 Tm
+(Arabic — Native; English — Fluent; French — Intermediate) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 520.5 Tm
+0.55 G 0.7 w
+56 517 m 539 517 l S
+0 G 1 w
+(Project experience) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 504.5 Tm
+(P01 - Real-time Centralised HRIS \(2023–2024\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 491 Tm
+(Context: Consulting mission · Enterprise architect) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 477.5 Tm
+(- Defined the target integration architecture and security model across 8 countries.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 464 Tm
+(- Set data residency and access rules validated with the client's security office.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 450.5 Tm
+(P04 - Intelligent Trademark Registration Platform \(2023–2024\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 437 Tm
+(Context: Consulting mission · Solution architect) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 423.5 Tm
+(- Shaped the Azure reference architecture for the chatbot and crawler components.) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 410 Tm
+(- Led architecture reviews that kept the platform within government hosting constraints.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 386.5 Tm
+0.55 G 0.7 w
+56 383 m 539 383 l S
+0 G 1 w
+(Leadership & volunteering) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 370.5 Tm
+(Architecture Board \(fictional\) - Chair \(2019 – Present\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 357 Tm
+(- Chairs monthly design authority covering 12 client programmes.) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 333.5 Tm
+0.55 G 0.7 w
+56 330 m 539 330 l S
+0 G 1 w
+(Education) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 317.5 Tm
+(Technology University \(generic\) - Master in Information Systems Architecture \(2009 – 2011\)) Tj
+ET
+BT
+/F1 10.5 Tf
+1 0 0 1 56 294 Tm
+0.55 G 0.7 w
+56 290.5 m 539 290.5 l S
+0 G 1 w
+(Certifications) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 278 Tm
+(TOGAF 9 Certified - The Open Group \(May 2018\)) Tj
+ET
+BT
+/F2 9.5 Tf
+1 0 0 1 56 264.5 Tm
+(Azure Solutions Architect Expert - Microsoft \(Sep 2022\)) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000217 00000 n 
+0000000314 00000 n 
+0000000450 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3962
+%%EOF

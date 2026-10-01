@@ -11,10 +11,11 @@
   "requirements": [
     {
       "id": "R1",
-      "text": "Retrieval-augmented generation assistant over a document corpus",
+      "text": "RAG assistant over a document corpus",
       "expected_class": "supported",
       "supporting_docs": [
-        "C04",
+        "C11",
+        "P04",
         "P15"
       ]
     },
@@ -23,59 +24,61 @@
       "text": "Vector database and embedding pipeline",
       "expected_class": "supported",
       "supporting_docs": [
-        "C04",
+        "C11",
         "P15"
       ]
     },
     {
       "id": "R3",
-      "text": "NLP classification with Transformers",
+      "text": "NLP models with PyTorch",
       "expected_class": "supported",
       "supporting_docs": [
+        "C11",
         "C14",
-        "P12"
+        "P04"
       ]
     },
     {
       "id": "R4",
-      "text": "Workflow automation with n8n",
+      "text": "Search infrastructure with Elasticsearch",
       "expected_class": "supported",
       "supporting_docs": [
         "C11",
-        "P07"
+        "P04"
       ]
     },
     {
       "id": "R5",
-      "text": "Service exposure with FastAPI",
+      "text": "Workflow automation with n8n",
       "expected_class": "supported",
       "supporting_docs": [
-        "C04",
-        "C14"
+        "C03",
+        "C17",
+        "P07",
+        "P14"
       ]
     },
     {
       "id": "R6",
+      "text": "OCR and vision on scanned documents",
+      "expected_class": "partial",
+      "supporting_docs": [
+        "C13",
+        "P10"
+      ],
+      "note": "OpenCV image classification evidenced; OCR not evidenced."
+    },
+    {
+      "id": "R7",
       "text": "On-premise GPU cluster for open-source LLMs",
       "expected_class": "unsupported",
       "supporting_docs": []
     },
     {
-      "id": "R7",
+      "id": "R8",
       "text": "Mobile Flutter client application",
       "expected_class": "unsupported",
       "supporting_docs": []
-    },
-    {
-      "id": "R8",
-      "text": "Data governance for AI outputs",
-      "expected_class": "partial",
-      "supporting_docs": [
-        "C03",
-        "C17",
-        "C19"
-      ],
-      "note": "General data governance exists; AI-output governance is indirect."
     }
   ]
 }
