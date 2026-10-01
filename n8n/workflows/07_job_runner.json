@@ -1,5 +1,6 @@
 {
   "name": "07_job_runner",
+  "active": true,
   "nodes": [
     {
       "id": "note-runner",
@@ -106,6 +107,7 @@
       "name": "Run research",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
+      "onError": "continueErrorOutput",
       "position": [
         -350,
         0
@@ -119,8 +121,7 @@
         "options": {
           "waitForSubWorkflow": true
         }
-      },
-      "onError": "continueErrorOutput"
+      }
     },
     {
       "id": "pg-status",
@@ -183,9 +184,9 @@
       ],
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT public.complete_pipeline_stage(($1::jsonb->>'job_id')::uuid,($1::jsonb->>'lease_token')::uuid,'matching',$1::jsonb->'result','matched',true) AS committed",
+        "query": "SELECT public.complete_pipeline_stage($1::uuid,$2::uuid,'matching',jsonb_build_object('lead_id',$3::text,'status',$4::text),'matched',true) AS committed",
         "options": {
-          "queryReplacement": "={{ JSON.stringify({job_id:$('Claim job').first().json.id,lease_token:$('Claim job').first().json.lease_token,result:{lead_id:$json.id,status:$json.status}}) }}"
+          "queryReplacement": "={{ $('Claim job').first().json.id }},={{ $('Claim job').first().json.lease_token }},={{ $json.id }},={{ $json.status }}"
         }
       }
     },
@@ -200,9 +201,9 @@
       ],
       "parameters": {
         "operation": "executeQuery",
-        "query": "WITH p AS (SELECT $1::jsonb j) UPDATE public.pipeline_jobs q SET state=CASE WHEN attempts>=3 THEN 'failed' ELSE 'queued' END,stage='stage_failed',error=jsonb_build_object('message',p.j->>'reason'),next_retry_at=now()+make_interval(mins=>power(2,LEAST(attempts,3))::int),lease_until=NULL,lease_token=NULL,updated_at=now() FROM p WHERE q.id=(p.j->>'job_id')::uuid AND q.lease_token=(p.j->>'lease_token')::uuid RETURNING q.id,q.state,q.attempts",
+        "query": "UPDATE public.pipeline_jobs q SET state=CASE WHEN q.attempts>=3 THEN 'failed' ELSE 'queued' END,stage='stage_failed',error=jsonb_build_object('message',COALESCE('Lead ended at '||NULLIF($3::text,''),'Research or matching failed')),next_retry_at=now()+make_interval(mins=>power(2,LEAST(q.attempts,3))::int),lease_until=NULL,lease_token=NULL,updated_at=now() WHERE q.id=$1::uuid AND q.lease_token=$2::uuid RETURNING q.id,q.state,q.attempts",
         "options": {
-          "queryReplacement": "={{ JSON.stringify({job_id:$('Claim job').first().json.id,lease_token:$('Claim job').first().json.lease_token,reason:$json.status ? 'Lead ended at '+$json.status : 'Research or matching failed'}) }}"
+          "queryReplacement": "={{ $('Claim job').first().json.id }},={{ $('Claim job').first().json.lease_token }},={{ $json.status }}"
         }
       }
     },
@@ -257,6 +258,7 @@
       "name": "Run proposal generation",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
+      "onError": "continueErrorOutput",
       "position": [
         -20,
         450
@@ -270,8 +272,7 @@
         "options": {
           "waitForSubWorkflow": true
         }
-      },
-      "onError": "continueErrorOutput"
+      }
     },
     {
       "id": "4824e646-9f31-40fd-a5e9-5b9603c42efe",
@@ -380,9 +381,9 @@
       ],
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT public.complete_pipeline_stage(($1::jsonb->>'job_id')::uuid,($1::jsonb->>'lease_token')::uuid,'research',$1::jsonb->'result','matching',false) AS committed",
+        "query": "SELECT public.complete_pipeline_stage($1::uuid,$2::uuid,'research',jsonb_build_object('lead_id',$3::text,'status','researched'),'matching',false) AS committed",
         "options": {
-          "queryReplacement": "={{ JSON.stringify({job_id:$('Claim job').first().json.id,lease_token:$('Claim job').first().json.lease_token,result:{lead_id:$('Claim job').first().json.lead_id,status:'researched'}}) }}"
+          "queryReplacement": "={{ $('Claim job').first().json.id }},={{ $('Claim job').first().json.lease_token }},={{ $('Claim job').first().json.lead_id }}"
         }
       }
     },
@@ -404,6 +405,7 @@
       "name": "Run matching",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
+      "onError": "continueErrorOutput",
       "position": [
         1360,
         480
@@ -417,8 +419,7 @@
         "options": {
           "waitForSubWorkflow": true
         }
-      },
-      "onError": "continueErrorOutput"
+      }
     }
   ],
   "connections": {
@@ -661,10 +662,7 @@
     }
   },
   "settings": {
-    "executionOrder": "v1",
-    "timezone": "Africa/Tunis"
-  },
-  "active": false,
-  "pinData": {},
-  "versionId": "e1bd0752-6cdf-451c-bc7f-2cc8cd96fbea"
+    "timezone": "Africa/Tunis",
+    "executionOrder": "v1"
+  }
 }
