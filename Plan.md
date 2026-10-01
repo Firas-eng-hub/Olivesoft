@@ -59,6 +59,9 @@ Use the supplied filenames consistently in exports, documentation, imports, and 
 | `10_error_handler.json` | Dhiya | Missing; record execution failures; runner must also persist its own failures |
 | `11_rag_evaluation.json` | Nour | Missing; run labelled FR/EN queries and persist benchmark metrics |
 | `12_knowledge_upload.json` | Firas / Nour | Draft; platform upload to private Supabase Storage, then durable ingestion and index status |
+| `13_tender_discovery.json` | Dhiya | Existing manual TED/Tavily suggestion endpoints; retained until automatic discovery passes live checks |
+| `14_opportunity_scan.json` | Dhiya / Nour | Daily TED and Tavily scan, GLM extraction of quoted requirements, staging, deduplication, and durable intake |
+| `15_opportunity_api.json` | Dhiya | Authenticated saved-opportunity list, candidate review, and acceptance with comments |
 | Reusable validator sub-workflow | Shared | Missing; validate shared input/output schemas without assuming npm imports |
 
 `00_test.json` is an echo test, not intake. It currently has no webhook authentication and must not be counted as the authenticated feasibility test.

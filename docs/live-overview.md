@@ -1,12 +1,13 @@
 # Live dashboard overview
 
-The dashboard uses its Next.js server routes for n8n access. The browser never receives the n8n API key. Set these Vercel Production variables and redeploy:
+The Vercel project uses `dashboard` as its root directory. Its Next.js server routes call n8n, which connects to Supabase Postgres; the browser never receives an n8n or Supabase key. Set these Vercel Production variables and redeploy:
 
 | Variable | Value |
 | --- | --- |
 | `OLIVESOFT_UPLOAD_TEAM_PASSWORD` | Team password for unlocking the live dashboard and uploading files |
 | `OLIVESOFT_N8N_UPLOAD_URL` | `https://dhiya-gvhtdshje3f0ehht.swedencentral-01.azurewebsites.net/webhook/olivesoft/v1/knowledge/upload` |
 | `OLIVESOFT_N8N_UPLOAD_API_KEY` | Same value as the n8n Header Auth credential named `OLIVESOFT_N8N_UPLOAD_API_KEY` |
+| `OLIVESOFT_N8N_ASYNC_INTAKE` | Set to `1` after the durable intake and read workflows are verified |
 
 The n8n Header Auth credential must use header name `api-key`. The same credential currently protects the upload webhook, `wf5_api` read webhooks, and the `wf1_tender_detection` manual intake webhook. Keep it server-side. A later access-control pass should give different actions separate credentials and use individual team accounts.
 
@@ -25,6 +26,8 @@ The n8n Header Auth credential must use header name `api-key`. The same credenti
 The dashboard requires the team password in `x-olivesoft-upload-password` for these live routes. Its server sends `api-key` to n8n. The browser uses the team password in memory for the current page session. Do not send the n8n key to browser code or prefix it with `NEXT_PUBLIC_`.
 
 The **Find tenders** view scans TED's public Search API or Tavily Search through the published `tender_discovery` n8n workflow. The server proxy checks the same team password. Results are suggestions, not saved leads. A teammate opens the original notice, corrects title, buyer, summary, and deadline in the review form, and then submits through the existing tender intake route. The intake stores the source label and original URL in `raw_payload`. TED searches recent competition notices in IT service CPV 72000000. Tavily uses its n8n Header Auth credential; if the Tavily request fails, the workflow searches SerpApi through its n8n Query Auth credential and labels those suggestions `SerpApi`.
+
+On 2026-10-01, an automatic **Opportunities** replacement was drafted locally. The published site still uses the manual discovery flow above until migration 007, the two new workflows, the read API update, and the dashboard are deployed and verified. See [automatic opportunities rollout](opportunities.md); acceptance in that draft saves comments but does not start proposal generation.
 
 The supplied Tavily and SerpApi keys were tested directly and stored in the ignored local `n8n/.env`. The published workflow uses `OliveSoft Tavily` Header Auth with header `Authorization` and value `Bearer <Tavily key>`, and `OliveSoft SerpApi query` Query Auth with query parameter `api_key` and value `<SerpApi key>`. SerpApi's Search API requires its key as a query parameter. Rebind both credentials after importing the export. Never put either value in a workflow export.
 

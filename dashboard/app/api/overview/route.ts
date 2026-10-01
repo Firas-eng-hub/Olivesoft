@@ -8,11 +8,11 @@ export async function GET(request: Request) {
   if (!config) return Response.json({ error: "Live overview is not configured." }, { status: 503 });
   if (!authorized(request, config.teamPassword)) return Response.json({ error: "Workspace access denied." }, { status: 401 });
   const id = new URL(request.url).searchParams.get("id");
-  if (id && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return Response.json({ error: "Invalid tender ID." }, { status: 400 });
+  if (id && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return Response.json({ error: "Invalid opportunity ID." }, { status: 400 });
   try {
     if (id) {
       const result = await n8nRequest(config.origin, config.apiKey, `lead?id=${id}`);
-      if (result && typeof result === "object" && "error" in result) return Response.json({ error: "Tender not found." }, { status: 404 });
+      if (result && typeof result === "object" && "error" in result) return Response.json({ error: "Opportunity not found." }, { status: 404 });
       return Response.json({ lead: mapLead(result) }, { headers: { "Cache-Control": "no-store" } });
     }
     const leads = await n8nRequest(config.origin, config.apiKey, "leads");
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
         : cause.status === 404
           ? "The n8n leads webhook was not found. Check that wf5_api is published and the n8n URL is correct."
           : `The n8n leads webhook returned ${cause.status}.`
-      : "Could not load live tenders from n8n. Check the n8n connection and server logs.";
+      : "Could not load live opportunities from n8n. Check the n8n connection and server logs.";
     return Response.json({ error }, { status: 502 });
   }
 }

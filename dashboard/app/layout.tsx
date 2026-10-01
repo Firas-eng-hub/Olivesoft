@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "OliveSoft — Intelligence Workspace",
-  description: "An interactive command center for tender intelligence and proposal delivery.",
+  description: "An interactive command center for opportunity intelligence and proposal delivery.",
   icons: { icon: [{ url: "/olivesoft-symbol.svg", type: "image/svg+xml" }] },
 };
 

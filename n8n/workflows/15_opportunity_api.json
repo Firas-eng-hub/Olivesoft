@@ -1,0 +1,576 @@
+{
+  "name": "15_opportunity_api",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "olivesoft/v1/opportunities",
+        "responseMode": "responseNode",
+        "options": {},
+        "authentication": "headerAuth"
+      },
+      "id": "e4d9bf4c-ecc3-4aef-8e5e-4c75cddf5270",
+      "name": "GET /olivesoft/v1/opportunities",
+      "webhookId": "6ac3296e-c210-4046-af28-9ce308afb753",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -630,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "executeQuery",
+        "query": "WITH candidates AS (\n SELECT c.*,coalesce(c.lead_id,i.lead_id) AS resolved_lead_id\n FROM public.opportunity_candidates c\n LEFT JOIN public.pipeline_lead_identities i ON i.identity='team:'||c.source_url\n), ranked AS (\n SELECT c.*,row_number() OVER (\n   PARTITION BY coalesce(c.resolved_lead_id::text,c.source_url)\n   ORDER BY c.last_seen_at DESC,c.first_seen_at DESC) AS row_rank\n FROM candidates c\n)\nSELECT c.id,c.source,c.external_id,c.source_url,c.title,c.organization,c.summary,c.published_at,c.deadline,c.requirements,\n CASE WHEN c.resolved_lead_id IS NOT NULL THEN 'queued' ELSE c.status END AS status,\n c.resolved_lead_id AS lead_id,c.first_seen_at,c.last_seen_at,p.fit_score,p.mandatory_gaps,p.unknown_count,p.assessment,a.accepted_at\nFROM ranked c\nLEFT JOIN public.opportunity_assessments p ON p.lead_id=c.resolved_lead_id\nLEFT JOIN public.opportunity_acceptances a ON a.lead_id=c.resolved_lead_id\nWHERE c.row_rank=1\nORDER BY coalesce(c.published_at,c.first_seen_at::date) DESC,c.first_seen_at DESC LIMIT 200;",
+        "options": {}
+      },
+      "id": "42d7457a-5332-4e84-823b-a46ed5fcd19c",
+      "name": "List discovered opportunities",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        -390,
+        -200
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { items: $input.all().map(i => i.json).filter(row => row.id != null) } }];"
+      },
+      "id": "ce306ae0-58ba-44b7-afc1-cef62b45fdb4",
+      "name": "Wrap opportunities",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -150,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "f8e19366-3f34-49a4-a49a-6e45d857c965",
+      "name": "Respond opportunities",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        90,
+        -200
+      ]
+    },
+    {
+      "id": "b6ed7399-274e-4fc4-86d3-6baf400f703e",
+      "name": "POST /olivesoft/v1/opportunities/accept",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -630,
+        180
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "olivesoft/v1/opportunities/accept",
+        "responseMode": "responseNode",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "webhookId": "147a4c7d-41e5-407e-9d21-273f324068b4"
+    },
+    {
+      "id": "a0eb7e76-5be0-4086-96f0-1b68284d41c3",
+      "name": "Validate acceptance",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -390,
+        180
+      ],
+      "parameters": {
+        "jsCode": "const b=$json.body??$json;const id=String(b.lead_id??'');const fields=['comments','priorities','exclusions'];const values=Object.fromEntries(fields.map(k=>[k,typeof b[k]==='string'?b[k].trim():'']));const valid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)&&fields.every(k=>b[k]===undefined||typeof b[k]==='string')&&values.comments.length<=4000&&values.priorities.length<=2000&&values.exclusions.length<=2000;return [{json:{valid,lead_id:id,...values}}];"
+      }
+    },
+    {
+      "id": "0151a7db-0046-46ce-a483-c6f6ca6ae221",
+      "name": "Valid acceptance?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -150,
+        180
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1bef5a63-2418-4a39-85a0-066a39e068ab",
+              "leftValue": "={{ $json.valid }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "3cf0d6c4-84eb-4ffb-b0b9-a72f9815f2a2",
+      "name": "Save acceptance",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        90,
+        100
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT lead_id,accepted_at,conflict FROM public.accept_opportunity(($1::jsonb->>'lead_id')::uuid,$1::jsonb->>'comments',$1::jsonb->>'priorities',$1::jsonb->>'exclusions');",
+        "options": {
+          "queryReplacement": "={{ JSON.stringify($json) }}"
+        }
+      }
+    },
+    {
+      "id": "db638dd5-490f-4da5-8daf-0dde94b7f4db",
+      "name": "Acceptance conflict?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        330,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1b8f135f-affc-4b85-9ab1-5565ebd35f0d",
+              "leftValue": "={{ $json.conflict }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "9833af4a-e578-4550-9cba-3c02edc32307",
+      "name": "Respond accepted",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        570,
+        20
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({lead_id:$json.lead_id,accepted_at:$json.accepted_at}) }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "54267973-740b-4c2e-bef2-71edcfd3d581",
+      "name": "Respond not assessed",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        570,
+        180
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({code:'NOT_ASSESSED',message:'Opportunity needs a completed fit assessment before acceptance.'}) }}",
+        "options": {
+          "responseCode": 409
+        }
+      }
+    },
+    {
+      "id": "b795d010-45d3-40e5-b28c-d403e68c6e53",
+      "name": "Respond invalid acceptance",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        570,
+        300
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({code:'INVALID_ACCEPTANCE',message:'A lead ID and valid guidance fields are required.'}) }}",
+        "options": {
+          "responseCode": 400
+        }
+      }
+    },
+    {
+      "id": "9f8814a3-97dd-4e23-9973-616ea0448dc1",
+      "name": "POST /olivesoft/v1/opportunities/review",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -630,
+        580
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "olivesoft/v1/opportunities/review",
+        "responseMode": "responseNode",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "webhookId": "147a4c7d-41e5-407e-9d21-273f324068b4"
+    },
+    {
+      "id": "e7bb9553-8361-4aed-a85b-367956547822",
+      "name": "Validate candidate review",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -390,
+        580
+      ],
+      "parameters": {
+        "jsCode": "const b=$json.body??$json;const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;const key=String(b.idempotency_key??'');const input=b.input??{};const req=Array.isArray(input.requirements)?input.requirements:[];const title=String(input.title??'').trim(),org=String(input.organization??'').trim(),summary=String(input.summary??'').trim(),date=String(input.deadline??'');const dateValid=/^\\d{4}-\\d{2}-\\d{2}$/.test(date)&&!Number.isNaN(Date.parse(date))&&new Date(date).toISOString().slice(0,10)===date&&date>=new Date().toISOString().slice(0,10);const valid=uuid.test(String(b.candidate_id??''))&&key.length>=8&&key.length<=200&&input&&typeof input==='object'&&!Array.isArray(input)&&title.length>=4&&title.length<=100&&org.length>=2&&org.length<=80&&summary.length>=12&&summary.length<=700&&dateValid&&req.length>=1&&req.length<=50&&req.every(x=>typeof x==='string'&&x.trim().length>=4&&x.length<=500);return [{json:{valid,candidate_id:String(b.candidate_id??''),idempotency_key:key,input:{title,organization:org,summary,deadline:date,requirements:req.map(x=>x.trim())}}}];"
+      }
+    },
+    {
+      "id": "d0fb1dc0-b67a-4947-b1e7-8b5289e0b0e3",
+      "name": "Valid candidate review?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -150,
+        580
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1bef5a63-2418-4a39-85a0-066a39e068ab",
+              "leftValue": "={{ $json.valid }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "3c3254fe-0e59-4f59-b775-c91fbeee8701",
+      "name": "Complete candidate intake",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        90,
+        500
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT job_id,lead_id,status,conflict FROM public.complete_opportunity_candidate(($1::jsonb->>'candidate_id')::uuid,$1::jsonb->>'idempotency_key',$1::jsonb->'input');",
+        "options": {
+          "queryReplacement": "={{ JSON.stringify($json) }}"
+        }
+      }
+    },
+    {
+      "id": "6560f88e-78be-4060-a836-ff8bed46d6bd",
+      "name": "Candidate review conflict?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        330,
+        500
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1b8f135f-affc-4b85-9ab1-5565ebd35f0d",
+              "leftValue": "={{ $json.conflict }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "aa7163d7-7c97-4274-b03a-641e1b570060",
+      "name": "Respond candidate queued",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        570,
+        420
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({job_id:$json.job_id,lead_id:$json.lead_id,status:$json.status}) }}",
+        "options": {
+          "responseCode": 202
+        }
+      }
+    },
+    {
+      "id": "a950a05b-f172-46c8-9e49-934aef9293ca",
+      "name": "Respond candidate conflict",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        570,
+        580
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({code:'CANDIDATE_CONFLICT',message:'Candidate is expired or conflicts with an existing review.'}) }}",
+        "options": {
+          "responseCode": "={{ JSON.stringify({code:'NOT_ASSESSED',message:'Opportunity needs a completed fit assessment before acceptance.'}) }}"
+        }
+      }
+    },
+    {
+      "id": "1d9567ee-ffd0-4b2d-ae99-1b4c198166a9",
+      "name": "Respond invalid review",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        90,
+        750
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({code:'INVALID_REVIEW',message:'Complete the title, organization, deadline, summary, and requirements.'}) }}",
+        "options": {
+          "responseCode": "={{ JSON.stringify({code:'INVALID_ACCEPTANCE',message:'A lead ID and valid guidance fields are required.'}) }}"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "GET /olivesoft/v1/opportunities": {
+      "main": [
+        [
+          {
+            "node": "List discovered opportunities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List discovered opportunities": {
+      "main": [
+        [
+          {
+            "node": "Wrap opportunities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wrap opportunities": {
+      "main": [
+        [
+          {
+            "node": "Respond opportunities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST /olivesoft/v1/opportunities/accept": {
+      "main": [
+        [
+          {
+            "node": "Validate acceptance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate acceptance": {
+      "main": [
+        [
+          {
+            "node": "Valid acceptance?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid acceptance?": {
+      "main": [
+        [
+          {
+            "node": "Save acceptance",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond invalid acceptance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save acceptance": {
+      "main": [
+        [
+          {
+            "node": "Acceptance conflict?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Acceptance conflict?": {
+      "main": [
+        [
+          {
+            "node": "Respond not assessed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond accepted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST /olivesoft/v1/opportunities/review": {
+      "main": [
+        [
+          {
+            "node": "Validate candidate review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate candidate review": {
+      "main": [
+        [
+          {
+            "node": "Valid candidate review?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid candidate review?": {
+      "main": [
+        [
+          {
+            "node": "Complete candidate intake",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond invalid review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complete candidate intake": {
+      "main": [
+        [
+          {
+            "node": "Candidate review conflict?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Candidate review conflict?": {
+      "main": [
+        [
+          {
+            "node": "Respond candidate conflict",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond candidate queued",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {},
+  "tags": []
+}

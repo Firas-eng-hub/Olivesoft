@@ -22,13 +22,13 @@ const cloudEvidence = [
   evidence("e-1", "Cloud platform delivery", "Internal project · PRJ-014", "Migration of 120 workloads to a managed cloud platform with a phased cutover and rollback plan.", "PRJ-014"),
   evidence("e-2", "Platform engineer profile", "Internal CV · CV-008", "Eight years of Kubernetes and infrastructure automation experience across regulated environments.", "CV-008"),
   evidence("e-3", "Security operating model", "Internal project · PRJ-006", "Documented access controls, audit trails, and security review gates for a public-sector delivery.", "PRJ-006"),
-  evidence("e-4", "City digital transformation program", "Public tender brief · demo fixture", "The city seeks a scalable platform with secure migration, observability, and knowledge transfer."),
+  evidence("e-4", "City digital transformation program", "Public opportunity brief · demo fixture", "The city seeks a scalable platform with secure migration, observability, and knowledge transfer."),
 ];
 
 export const seedData: DashboardData = {
   leads: [
     {
-      id: "OS-2026-041", title: "National Cloud Modernization Program", organization: "Ministry of Digital Affairs", sector: "Public sector", location: "Tunis, Tunisia", summary: "Modernize critical public services through a secure cloud platform, phased migration, and a strong operational handover.", stage: "matched", score: 94, coverage: 63, deadline: "2026-10-18", detectedAt: "2026-09-25T09:25:00.000Z", tags: ["Cloud", "DevOps", "Security"], priority: "High", source: "Public tender portal", evidence: cloudEvidence, artifacts: [],
+      id: "OS-2026-041", title: "National Cloud Modernization Program", organization: "Ministry of Digital Affairs", sector: "Public sector", location: "Tunis, Tunisia", summary: "Modernize critical public services through a secure cloud platform, phased migration, and a strong operational handover.", stage: "matched", score: 94, coverage: 63, deadline: "2026-10-18", detectedAt: "2026-09-25T09:25:00.000Z", tags: ["Cloud", "DevOps", "Security"], priority: "High", source: "Public procurement portal", evidence: cloudEvidence, artifacts: [],
       requirements: [
         match("R-01", "Cloud migration strategy", "supported", ["e-1", "e-4"], true, "Relevant delivery experience and a documented migration approach."),
         match("R-02", "Kubernetes platform engineering", "supported", ["e-2"], true, "Candidate profile demonstrates platform experience; availability requires confirmation."),

@@ -1,4 +1,4 @@
-import type { DashboardData, Evidence, Job, Lead, LeadStage, RequirementMatch } from "./types";
+import type { DashboardData, Evidence, Job, Lead, LeadStage, ProfileAssessment, RequirementMatch } from "./types";
 
 type RecordValue = Record<string, unknown>;
 
@@ -24,6 +24,12 @@ function score(value: unknown): number | null {
   const n = Number(value);
   if (value === null || value === undefined || value === "" || !Number.isFinite(n)) return null;
   return Math.max(0, Math.min(100, Math.round(n > 0 && n <= 1 ? n * 100 : n)));
+}
+
+function percentage(value: unknown): number | null {
+  if (value === null || value === undefined || value === "") return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? Math.max(0, Math.min(100, Math.round(n))) : null;
 }
 
 function stage(value: unknown): LeadStage {
@@ -99,13 +105,22 @@ export function mapLead(value: unknown): Lead {
   const status = stage(row.status);
   return {
     id: String(row.id ?? ""),
-    title: string(row.title, "Untitled tender"),
+    title: string(row.title, "Untitled opportunity"),
     organization,
     sector: string(row.sector ?? extracted.sector, "Unclassified"),
     location: string(extracted.location, "Location pending"),
-    summary: string(extracted.summary ?? raw.summary, "Tender details are being processed."),
+    summary: string(extracted.summary ?? raw.summary, "Opportunity details are being processed."),
     stage: status,
-    score: score(row.relevance_score),
+    score: percentage(row.fit_score),
+    relevanceScore: score(row.relevance_score),
+    assessment: (["matches_profile", "review_required", "low_fit", "insufficient_evidence"].includes(String(row.assessment))
+      ? String(row.assessment) : "insufficient_evidence") as ProfileAssessment,
+    mandatoryGaps: Number(row.mandatory_gaps ?? 0),
+    sourceUrl: string(raw.source_url ?? extracted.source_url),
+    acceptedAt: date(row.accepted_at),
+    acceptanceComments: string(row.acceptance_comments),
+    acceptancePriorities: string(row.acceptance_priorities),
+    acceptanceExclusions: string(row.acceptance_exclusions),
     coverage,
     deadline: date(row.deadline),
     detectedAt: date(row.created_at) ?? new Date(0).toISOString(),

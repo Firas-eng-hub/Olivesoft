@@ -1,6 +1,7 @@
 export type LeadStage = "detected" | "researched" | "matched" | "proposal_ready" | "failed";
 export type MatchStatus = "supported" | "partial" | "unsupported" | "unknown";
 export type JobState = "queued" | "running" | "completed" | "failed";
+export type ProfileAssessment = "matches_profile" | "review_required" | "low_fit" | "insufficient_evidence";
 
 export interface Evidence {
   id: string;
@@ -48,6 +49,14 @@ export interface Lead {
   summary: string;
   stage: LeadStage;
   score: number | null;
+  relevanceScore?: number | null;
+  assessment?: ProfileAssessment;
+  mandatoryGaps?: number;
+  sourceUrl?: string;
+  acceptedAt?: string | null;
+  acceptanceComments?: string;
+  acceptancePriorities?: string;
+  acceptanceExclusions?: string;
   coverage: number | null;
   deadline: string | null;
   detectedAt: string;

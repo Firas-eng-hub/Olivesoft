@@ -39,7 +39,7 @@
       "parameters": {
         "resource": "database",
         "operation": "executeQuery",
-        "query": "SELECT id, title, source, extracted, raw_payload, relevance_score, status, deadline, created_at, updated_at\nFROM leads\nORDER BY updated_at DESC\nLIMIT 200;",
+        "query": "SELECT l.id,l.title,l.source,l.extracted,l.raw_payload,l.relevance_score,l.status,l.deadline,l.created_at,l.updated_at,\n p.fit_score,p.mandatory_gaps,p.unknown_count,p.assessment,a.accepted_at,a.comments AS acceptance_comments,a.priorities AS acceptance_priorities,a.exclusions AS acceptance_exclusions\nFROM public.leads l LEFT JOIN public.opportunity_assessments p ON p.lead_id=l.id\nLEFT JOIN public.opportunity_acceptances a ON a.lead_id=l.id\nORDER BY l.updated_at DESC LIMIT 200;",
         "options": {}
       },
       "id": "pg-leads",
@@ -111,7 +111,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT l.id,l.title,l.source,l.raw_payload,l.extracted,l.relevance_score,l.status,l.deadline,l.created_at,l.updated_at,p.sector,p.evidence AS research_evidence,\n (SELECT json_agg(m ORDER BY m.score DESC) FROM matches m WHERE m.lead_id=l.id) AS matches,\n (SELECT json_agg(j ORDER BY j.requirement_id) FROM public.requirement_judgments j WHERE j.lead_id=l.id) AS judgments,\n (SELECT json_agg(json_build_object('id',a.id,'kind',a.kind,'mime_type',a.mime_type,'size_bytes',a.size_bytes,'created_at',a.created_at))\n  FROM public.pipeline_artifacts a JOIN public.pipeline_artifact_bundles b ON b.job_id=a.job_id\n  WHERE a.lead_id=l.id AND b.state='ready' AND a.verified_at IS NOT NULL) AS artifacts\n FROM leads l LEFT JOIN LATERAL (SELECT pr.sector,pr.evidence FROM prospects pr WHERE pr.lead_id=l.id ORDER BY pr.created_at DESC LIMIT 1) p ON true WHERE l.id=$1::uuid;",
+        "query": "SELECT l.id,l.title,l.source,l.raw_payload,l.extracted,l.relevance_score,l.status,l.deadline,l.created_at,l.updated_at,p.sector,p.evidence AS research_evidence,fit.fit_score,fit.mandatory_gaps,fit.unknown_count,fit.assessment,acceptance.accepted_at,acceptance.comments AS acceptance_comments,acceptance.priorities AS acceptance_priorities,acceptance.exclusions AS acceptance_exclusions,\n (SELECT json_agg(m ORDER BY m.score DESC) FROM matches m WHERE m.lead_id=l.id) AS matches,\n (SELECT json_agg(j ORDER BY j.requirement_id) FROM public.requirement_judgments j WHERE j.lead_id=l.id) AS judgments,\n (SELECT json_agg(json_build_object('id',a.id,'kind',a.kind,'mime_type',a.mime_type,'size_bytes',a.size_bytes,'created_at',a.created_at))\n  FROM public.pipeline_artifacts a JOIN public.pipeline_artifact_bundles b ON b.job_id=a.job_id\n  WHERE a.lead_id=l.id AND b.state='ready' AND a.verified_at IS NOT NULL) AS artifacts\n FROM leads l LEFT JOIN public.opportunity_assessments fit ON fit.lead_id=l.id LEFT JOIN public.opportunity_acceptances acceptance ON acceptance.lead_id=l.id LEFT JOIN LATERAL (SELECT pr.sector,pr.evidence FROM prospects pr WHERE pr.lead_id=l.id ORDER BY pr.created_at DESC LIMIT 1) p ON true WHERE l.id=$1::uuid;",
         "options": {
           "queryReplacement": "={{ $json.lead_id }}"
         }
