@@ -1,47 +1,40 @@
 {
   "name": "wf5_api",
-  "active": false,
   "nodes": [
     {
-      "parameters": {
-        "content": "WF5 — Authenticated read webhooks: GET /leads, /lead?id=UUID, /jobs, /artifact?id=UUID, /knowledge/documents. Header Auth is required on all routes. Artifact route returns metadata only; controlled file bytes are not implemented. Rebind Postgres and Header Auth credentials after import. The dashboard proxies reads through its server and never sends the n8n key to the browser.",
-        "height": 520,
-        "width": 660,
-        "color": 4
-      },
       "id": "sn-wf5-config",
       "name": "Config — WF5 API",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -688,
-        -416
-      ]
+        -1376,
+        -352
+      ],
+      "parameters": {
+        "content": "WF5 — Authenticated read webhooks: GET /leads, /lead?id=UUID, /jobs, /artifact?id=UUID, /knowledge/documents. Header Auth is required on all routes. Artifact route returns metadata only; controlled file bytes are not implemented. Rebind Postgres and Header Auth credentials after import. The dashboard proxies reads through its server and never sends the n8n key to the browser.",
+        "height": 520,
+        "width": 660,
+        "color": 4
+      }
     },
     {
-      "parameters": {
-        "path": "leads",
-        "responseMode": "responseNode",
-        "options": {},
-        "authentication": "headerAuth"
-      },
       "id": "wh-leads",
       "name": "GET /leads",
-      "webhookId": "6ac3296e-c210-4046-af28-9ce308afb753",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
         -624,
         -160
-      ]
-    },
-    {
+      ],
       "parameters": {
-        "resource": "database",
-        "operation": "executeQuery",
-        "query": "SELECT l.id,l.title,l.source,l.extracted,l.raw_payload,l.relevance_score,l.status,l.deadline,l.created_at,l.updated_at,\n p.fit_score,p.mandatory_gaps,p.unknown_count,p.assessment,a.accepted_at,a.comments AS acceptance_comments,a.priorities AS acceptance_priorities,a.exclusions AS acceptance_exclusions\nFROM public.leads l LEFT JOIN public.opportunity_assessments p ON p.lead_id=l.id\nLEFT JOIN public.opportunity_acceptances a ON a.lead_id=l.id\nORDER BY l.updated_at DESC LIMIT 200;",
+        "path": "leads",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
         "options": {}
       },
+      "webhookId": "6ac3296e-c210-4046-af28-9ce308afb753"
+    },
+    {
       "id": "pg-leads",
       "name": "List Leads",
       "type": "n8n-nodes-base.postgres",
@@ -50,12 +43,14 @@
         -368,
         -160
       ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT l.id,l.title,l.source,l.extracted,l.raw_payload,l.relevance_score,l.status,l.deadline,l.created_at,l.updated_at,\n p.fit_score,p.mandatory_gaps,p.unknown_count,p.assessment,a.accepted_at,a.comments AS acceptance_comments,a.priorities AS acceptance_priorities,a.exclusions AS acceptance_exclusions\nFROM public.leads l LEFT JOIN public.opportunity_assessments p ON p.lead_id=l.id\nLEFT JOIN public.opportunity_acceptances a ON a.lead_id=l.id\nORDER BY l.updated_at DESC LIMIT 200;",
+        "options": {}
+      },
       "alwaysOutputData": true
     },
     {
-      "parameters": {
-        "jsCode": "return [{ json: { items: $input.all().map(i => i.json).filter(row => row.id != null) } }];"
-      },
       "id": "wrap-leads",
       "name": "Wrap Leads Response",
       "type": "n8n-nodes-base.code",
@@ -63,12 +58,12 @@
       "position": [
         -96,
         -160
-      ]
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { items: $input.all().map(i => i.json).filter(row => row.id != null) } }];"
+      }
     },
     {
-      "parameters": {
-        "options": {}
-      },
       "id": "resp-leads",
       "name": "Respond Leads",
       "type": "n8n-nodes-base.respondToWebhook",
@@ -76,29 +71,29 @@
       "position": [
         160,
         -160
-      ]
+      ],
+      "parameters": {
+        "options": {}
+      }
     },
     {
-      "parameters": {
-        "path": "lead",
-        "responseMode": "responseNode",
-        "options": {},
-        "authentication": "headerAuth"
-      },
       "id": "wh-lead",
       "name": "GET /lead?id=",
-      "webhookId": "f8be17f3-5513-467f-b81d-f450b90f6f63",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
         -624,
         80
-      ]
+      ],
+      "parameters": {
+        "path": "lead",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "f8be17f3-5513-467f-b81d-f450b90f6f63"
     },
     {
-      "parameters": {
-        "jsCode": "const q = $json.query ?? {};\nreturn [{ json: { lead_id: q.id ?? '' } }];"
-      },
       "id": "resolve-lead",
       "name": "Resolve Lead Id (detail)",
       "type": "n8n-nodes-base.code",
@@ -106,16 +101,12 @@
       "position": [
         -368,
         80
-      ]
+      ],
+      "parameters": {
+        "jsCode": "const q = $json.query ?? {};\nreturn [{ json: { lead_id: q.id ?? '' } }];"
+      }
     },
     {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT l.id,l.title,l.source,l.raw_payload,l.extracted,l.relevance_score,l.status,l.deadline,l.created_at,l.updated_at,p.sector,p.evidence AS research_evidence,fit.fit_score,fit.mandatory_gaps,fit.unknown_count,fit.assessment,acceptance.accepted_at,acceptance.comments AS acceptance_comments,acceptance.priorities AS acceptance_priorities,acceptance.exclusions AS acceptance_exclusions,\n (SELECT json_agg(m ORDER BY m.score DESC) FROM matches m WHERE m.lead_id=l.id) AS matches,\n (SELECT json_agg(j ORDER BY j.requirement_id) FROM public.requirement_judgments j WHERE j.lead_id=l.id) AS judgments,\n (SELECT json_agg(json_build_object('id',a.id,'kind',a.kind,'mime_type',a.mime_type,'size_bytes',a.size_bytes,'created_at',a.created_at))\n  FROM public.pipeline_artifacts a JOIN public.pipeline_artifact_bundles b ON b.job_id=a.job_id\n  WHERE a.lead_id=l.id AND b.state='ready' AND a.verified_at IS NOT NULL) AS artifacts\n FROM leads l LEFT JOIN public.opportunity_assessments fit ON fit.lead_id=l.id LEFT JOIN public.opportunity_acceptances acceptance ON acceptance.lead_id=l.id LEFT JOIN LATERAL (SELECT pr.sector,pr.evidence FROM prospects pr WHERE pr.lead_id=l.id ORDER BY pr.created_at DESC LIMIT 1) p ON true WHERE l.id=$1::uuid;",
-        "options": {
-          "queryReplacement": "={{ $json.lead_id }}"
-        }
-      },
       "id": "pg-lead",
       "name": "Lead Detail",
       "type": "n8n-nodes-base.postgres",
@@ -124,12 +115,16 @@
         -96,
         80
       ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT l.id,l.title,l.source,l.raw_payload,l.extracted,l.relevance_score,l.status,l.deadline,l.created_at,l.updated_at,p.sector,p.evidence AS research_evidence,fit.fit_score,fit.mandatory_gaps,fit.unknown_count,fit.assessment,acceptance.accepted_at,acceptance.comments AS acceptance_comments,acceptance.priorities AS acceptance_priorities,acceptance.exclusions AS acceptance_exclusions,\n (SELECT json_agg(m ORDER BY m.score DESC) FROM matches m WHERE m.lead_id=l.id) AS matches,\n (SELECT json_agg(j ORDER BY j.requirement_id) FROM public.requirement_judgments j WHERE j.lead_id=l.id) AS judgments,\n (SELECT json_agg(json_build_object('id',a.id,'kind',a.kind,'mime_type',a.mime_type,'size_bytes',a.size_bytes,'created_at',a.created_at))\n  FROM public.pipeline_artifacts a JOIN public.pipeline_artifact_bundles b ON b.job_id=a.job_id\n  WHERE a.lead_id=l.id AND b.state='ready' AND a.verified_at IS NOT NULL) AS artifacts\n FROM leads l LEFT JOIN public.opportunity_assessments fit ON fit.lead_id=l.id LEFT JOIN public.opportunity_acceptances acceptance ON acceptance.lead_id=l.id LEFT JOIN LATERAL (SELECT pr.sector,pr.evidence FROM prospects pr WHERE pr.lead_id=l.id ORDER BY pr.created_at DESC LIMIT 1) p ON true WHERE l.id=$1::uuid;",
+        "options": {
+          "queryReplacement": "={{ $json.lead_id }}"
+        }
+      },
       "alwaysOutputData": true
     },
     {
-      "parameters": {
-        "jsCode": "const rows = $input.all().map(i => i.json).filter(row => row.id != null);\nif (!rows.length) return [{ json: { error: 'lead not found' } }];\nreturn [{ json: rows[0] }];"
-      },
       "id": "wrap-lead",
       "name": "Wrap Lead Detail",
       "type": "n8n-nodes-base.code",
@@ -137,12 +132,12 @@
       "position": [
         160,
         80
-      ]
+      ],
+      "parameters": {
+        "jsCode": "const rows = $input.all().map(i => i.json).filter(row => row.id != null);\nif (!rows.length) return [{ json: { error: 'lead not found' } }];\nreturn [{ json: rows[0] }];"
+      }
     },
     {
-      "parameters": {
-        "options": {}
-      },
       "id": "resp-lead",
       "name": "Respond Lead",
       "type": "n8n-nodes-base.respondToWebhook",
@@ -150,29 +145,29 @@
       "position": [
         432,
         80
-      ]
+      ],
+      "parameters": {
+        "options": {}
+      }
     },
     {
-      "parameters": {
-        "path": "artifact",
-        "responseMode": "responseNode",
-        "options": {},
-        "authentication": "headerAuth"
-      },
       "id": "wh-artifact",
       "name": "GET /artifact?id=",
-      "webhookId": "820a4b7e-cc82-48e4-a9ee-e7fc4ef1b97c",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
         -624,
         320
-      ]
+      ],
+      "parameters": {
+        "path": "artifact",
+        "authentication": "headerAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "820a4b7e-cc82-48e4-a9ee-e7fc4ef1b97c"
     },
     {
-      "parameters": {
-        "jsCode": "const q = $json.query ?? {};\nreturn [{ json: { artifact_id: q.id ?? '' } }];"
-      },
       "id": "resolve-artifact",
       "name": "Resolve Artifact Id",
       "type": "n8n-nodes-base.code",
@@ -180,16 +175,12 @@
       "position": [
         -368,
         320
-      ]
+      ],
+      "parameters": {
+        "jsCode": "const q = $json.query ?? {};\nreturn [{ json: { artifact_id: q.id ?? '' } }];"
+      }
     },
     {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT a.id,a.job_id,a.lead_id,a.kind,a.mime_type,a.size_bytes,b.version,a.created_at FROM public.pipeline_artifacts a JOIN public.pipeline_artifact_bundles b ON b.job_id=a.job_id WHERE a.id=$1::uuid AND b.state='ready' AND a.verified_at IS NOT NULL;",
-        "options": {
-          "queryReplacement": "={{ $json.artifact_id }}"
-        }
-      },
       "id": "pg-artifact",
       "name": "Get Artifact",
       "type": "n8n-nodes-base.postgres",
@@ -197,12 +188,16 @@
       "position": [
         -96,
         320
-      ]
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT a.id,a.job_id,a.lead_id,a.kind,a.mime_type,a.size_bytes,b.version,a.created_at FROM public.pipeline_artifacts a JOIN public.pipeline_artifact_bundles b ON b.job_id=a.job_id WHERE a.id=$1::uuid AND b.state='ready' AND a.verified_at IS NOT NULL;",
+        "options": {
+          "queryReplacement": "={{ $json.artifact_id }}"
+        }
+      }
     },
     {
-      "parameters": {
-        "jsCode": "const rows = $input.all().map(i => i.json);\nif (!rows.length) {\n  return [{ json: { error: 'artifact not found' } }];\n}\nreturn [{ json: rows[0] }];"
-      },
       "id": "wrap-artifact",
       "name": "Wrap Artifact",
       "type": "n8n-nodes-base.code",
@@ -210,12 +205,12 @@
       "position": [
         160,
         320
-      ]
+      ],
+      "parameters": {
+        "jsCode": "const rows = $input.all().map(i => i.json);\nif (!rows.length) {\n  return [{ json: { error: 'artifact not found' } }];\n}\nreturn [{ json: rows[0] }];"
+      }
     },
     {
-      "parameters": {
-        "options": {}
-      },
       "id": "resp-artifact",
       "name": "Respond Artifact",
       "type": "n8n-nodes-base.respondToWebhook",
@@ -223,7 +218,10 @@
       "position": [
         432,
         320
-      ]
+      ],
+      "parameters": {
+        "options": {}
+      }
     },
     {
       "id": "wh-jobs-v1",
@@ -231,14 +229,13 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -600,
-        850
+        -608,
+        864
       ],
       "parameters": {
-        "httpMethod": "GET",
         "path": "jobs",
-        "responseMode": "responseNode",
         "authentication": "headerAuth",
+        "responseMode": "responseNode",
         "options": {}
       },
       "webhookId": "a807383a-2311-483c-bb06-4915f7394303"
@@ -249,8 +246,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -350,
-        850
+        -352,
+        864
       ],
       "parameters": {
         "operation": "executeQuery",
@@ -265,8 +262,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -100,
-        850
+        -96,
+        864
       ],
       "parameters": {
         "jsCode": "return [{ json: { items: $input.all().map(i => i.json).filter(row => row.id != null) } }];"
@@ -278,11 +275,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        150,
-        850
+        160,
+        864
       ],
       "parameters": {
-        "respondWith": "firstIncomingItem",
         "options": {
           "responseHeaders": {
             "entries": [
@@ -301,14 +297,13 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -600,
-        1100
+        -608,
+        1104
       ],
       "parameters": {
-        "httpMethod": "GET",
         "path": "knowledge/documents",
-        "responseMode": "responseNode",
         "authentication": "headerAuth",
+        "responseMode": "responseNode",
         "options": {}
       },
       "webhookId": "8ec23caa-8fc7-430e-b92c-00dc02119c42"
@@ -319,8 +314,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -350,
-        1100
+        -352,
+        1104
       ],
       "parameters": {
         "operation": "executeQuery",
@@ -334,11 +329,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -100,
-        1100
+        -96,
+        1104
       ],
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "return [{ json: { items: $input.all().map(item => item.json).filter(row => row.id != null) } }];"
       }
     },
@@ -348,11 +342,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        150,
-        1100
+        160,
+        1104
       ],
       "parameters": {
-        "respondWith": "firstIncomingItem",
         "options": {
           "responseHeaders": {
             "entries": [
@@ -371,14 +364,13 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -600,
+        -608,
         1200
       ],
       "parameters": {
-        "httpMethod": "GET",
         "path": "artifact/download",
-        "responseMode": "responseNode",
         "authentication": "headerAuth",
+        "responseMode": "responseNode",
         "options": {}
       },
       "webhookId": "05dc87f6-54b4-469a-a9bb-753a33e1d795"
@@ -389,7 +381,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -370,
+        -368,
         1200
       ],
       "parameters": {
@@ -402,7 +394,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
       "position": [
-        -140,
+        -144,
         1200
       ],
       "parameters": {
@@ -419,7 +411,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        90,
+        96,
         1200
       ],
       "parameters": {
@@ -453,7 +445,7 @@
       "typeVersion": 4.2,
       "position": [
         320,
-        1100
+        1104
       ],
       "parameters": {
         "method": "POST",
@@ -474,8 +466,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        550,
-        1100
+        560,
+        1104
       ],
       "parameters": {
         "jsCode": "const a=$('Lookup ready artifact').first().json; const s=$json.signedURL??$json.signedUrl; if(!s||typeof s!=='string')throw Error('Storage did not return a signed URL'); return [{json:{id:a.id,kind:a.kind,mime_type:a.mime_type,size_bytes:a.size_bytes,signed_url:s}}];"
@@ -487,8 +479,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        780,
-        1100
+        784,
+        1104
       ],
       "parameters": {
         "respondWith": "json",
@@ -503,7 +495,7 @@
       "typeVersion": 1.1,
       "position": [
         320,
-        1350
+        1360
       ],
       "parameters": {
         "respondWith": "json",
@@ -781,5 +773,8 @@
     "executionOrder": "v1",
     "availableInMCP": true,
     "binaryMode": "separate"
-  }
+  },
+  "active": true,
+  "pinData": {},
+  "tags": []
 }

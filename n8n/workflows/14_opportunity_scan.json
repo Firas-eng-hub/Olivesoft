@@ -36,7 +36,7 @@
         "url": "https://api.ted.europa.eu/v3/notices/search",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({query:'classification-cpv=72000000 AND notice-type=cn-standard AND publication-date>='+$now.minus({days:3}).toFormat('yyyyMMdd'),fields:['publication-number','notice-title','buyer-name','publication-date','description-proc','description-lot','deadline-receipt-tender-date-lot'],page:1,limit:250,paginationMode:'PAGE_NUMBER'}) }}",
+        "jsonBody": "={{ JSON.stringify({query:'classification-cpv=72000000 AND notice-type=cn-standard AND publication-date>='+$now.minus({days:3}).toFormat('yyyyMMdd'),fields:['publication-number','notice-title','buyer-name','publication-date','description-proc','description-lot','deadline-receipt-tender-date-lot'],page:1,limit:2,paginationMode:'PAGE_NUMBER'}) }}",
         "options": {
           "timeout": 30000,
           "pagination": {
@@ -52,9 +52,9 @@
                 ]
               },
               "paginationCompleteWhen": "other",
-              "completeExpression": "={{ ($response.body.notices ?? []).length === 0 || ($response.body.totalNoticeCount != null && ($pageCount + 1) * 250 >= Number($response.body.totalNoticeCount)) }}",
+              "completeExpression": "={{ ($response.body.notices ?? []).length === 0 || ($response.body.totalNoticeCount != null && ($pageCount + 1) * 2 >= Number($response.body.totalNoticeCount)) }}",
               "limitPagesFetched": true,
-              "maxRequests": 60
+              "maxRequests": 1
             }
           }
         }
@@ -90,7 +90,7 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({query:'software development cloud services public procurement tender',include_domains:['ted.europa.eu','find-tender.service.gov.uk'],search_depth:'basic',time_range:'week',max_results:20,include_raw_content:'text'}) }}",
+        "jsonBody": "={{ JSON.stringify({query:'software development cloud services public procurement tender',include_domains:['ted.europa.eu','find-tender.service.gov.uk'],search_depth:'basic',time_range:'week',max_results:2,include_raw_content:'text'}) }}",
         "options": {
           "timeout": 30000
         }
@@ -343,9 +343,11 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "timezone": "Africa/Tunis",
+    "executionOrder": "v1",
+    "availableInMCP": true
   },
-  "active": false,
+  "active": true,
   "pinData": {},
   "tags": []
 }

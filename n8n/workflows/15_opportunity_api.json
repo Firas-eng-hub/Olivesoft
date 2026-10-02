@@ -2,29 +2,23 @@
   "name": "15_opportunity_api",
   "nodes": [
     {
+      "id": "e4d9bf4c-ecc3-4aef-8e5e-4c75cddf5270",
+      "name": "GET /olivesoft/v1/opportunities",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -630,
+        -200
+      ],
       "parameters": {
         "path": "olivesoft/v1/opportunities",
         "responseMode": "responseNode",
         "options": {},
         "authentication": "headerAuth"
       },
-      "id": "e4d9bf4c-ecc3-4aef-8e5e-4c75cddf5270",
-      "name": "GET /olivesoft/v1/opportunities",
-      "webhookId": "6ac3296e-c210-4046-af28-9ce308afb753",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [
-        -630,
-        -200
-      ]
+      "webhookId": "6ac3296e-c210-4046-af28-9ce308afb753"
     },
     {
-      "parameters": {
-        "resource": "database",
-        "operation": "executeQuery",
-        "query": "WITH candidates AS (\n SELECT c.*,coalesce(c.lead_id,i.lead_id) AS resolved_lead_id\n FROM public.opportunity_candidates c\n LEFT JOIN public.pipeline_lead_identities i ON i.identity='team:'||c.source_url\n), ranked AS (\n SELECT c.*,row_number() OVER (\n   PARTITION BY coalesce(c.resolved_lead_id::text,c.source_url)\n   ORDER BY c.last_seen_at DESC,c.first_seen_at DESC) AS row_rank\n FROM candidates c\n)\nSELECT c.id,c.source,c.external_id,c.source_url,c.title,c.organization,c.summary,c.published_at,c.deadline,c.requirements,\n CASE WHEN c.resolved_lead_id IS NOT NULL THEN 'queued' ELSE c.status END AS status,\n c.resolved_lead_id AS lead_id,c.first_seen_at,c.last_seen_at,p.fit_score,p.mandatory_gaps,p.unknown_count,p.assessment,a.accepted_at\nFROM ranked c\nLEFT JOIN public.opportunity_assessments p ON p.lead_id=c.resolved_lead_id\nLEFT JOIN public.opportunity_acceptances a ON a.lead_id=c.resolved_lead_id\nWHERE c.row_rank=1\nORDER BY coalesce(c.published_at,c.first_seen_at::date) DESC,c.first_seen_at DESC LIMIT 200;",
-        "options": {}
-      },
       "id": "42d7457a-5332-4e84-823b-a46ed5fcd19c",
       "name": "List discovered opportunities",
       "type": "n8n-nodes-base.postgres",
@@ -33,12 +27,15 @@
         -390,
         -200
       ],
+      "parameters": {
+        "resource": "database",
+        "operation": "executeQuery",
+        "query": "WITH candidates AS (\n SELECT c.*,coalesce(c.lead_id,i.lead_id) AS resolved_lead_id\n FROM public.opportunity_candidates c\n LEFT JOIN public.pipeline_lead_identities i ON i.identity='team:'||c.source_url\n), ranked AS (\n SELECT c.*,row_number() OVER (\n   PARTITION BY coalesce(c.resolved_lead_id::text,c.source_url)\n   ORDER BY c.last_seen_at DESC,c.first_seen_at DESC) AS row_rank\n FROM candidates c\n)\nSELECT c.id,c.source,c.external_id,c.source_url,c.title,c.organization,c.summary,c.published_at,c.deadline,c.requirements,\n CASE WHEN c.resolved_lead_id IS NOT NULL THEN 'queued' ELSE c.status END AS status,\n c.resolved_lead_id AS lead_id,c.first_seen_at,c.last_seen_at,p.fit_score,p.mandatory_gaps,p.unknown_count,p.assessment,a.accepted_at\nFROM ranked c\nLEFT JOIN public.opportunity_assessments p ON p.lead_id=c.resolved_lead_id\nLEFT JOIN public.opportunity_acceptances a ON a.lead_id=c.resolved_lead_id\nWHERE c.row_rank=1\nORDER BY coalesce(c.published_at,c.first_seen_at::date) DESC,c.first_seen_at DESC LIMIT 200;",
+        "options": {}
+      },
       "alwaysOutputData": true
     },
     {
-      "parameters": {
-        "jsCode": "return [{ json: { items: $input.all().map(i => i.json).filter(row => row.id != null) } }];"
-      },
       "id": "ce306ae0-58ba-44b7-afc1-cef62b45fdb4",
       "name": "Wrap opportunities",
       "type": "n8n-nodes-base.code",
@@ -46,14 +43,12 @@
       "position": [
         -150,
         -200
-      ]
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { items: $input.all().map(i => i.json).filter(row => row.id != null) } }];"
+      }
     },
     {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ JSON.stringify($json) }}",
-        "options": {}
-      },
       "id": "f8e19366-3f34-49a4-a49a-6e45d857c965",
       "name": "Respond opportunities",
       "type": "n8n-nodes-base.respondToWebhook",
@@ -61,7 +56,12 @@
       "position": [
         90,
         -200
-      ]
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      }
     },
     {
       "id": "b6ed7399-274e-4fc4-86d3-6baf400f703e",
@@ -568,9 +568,10 @@
     }
   },
   "settings": {
+    "timezone": "Africa/Tunis",
     "executionOrder": "v1"
   },
-  "active": false,
+  "active": true,
   "pinData": {},
   "tags": []
 }
